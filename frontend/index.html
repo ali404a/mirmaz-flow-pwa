@@ -776,6 +776,7 @@ function safeUrl(u){u=String(u||'').trim();if(!u)return '#';const low=u.toLowerC
 const NAV=[
   {id:'home',title:'الرئيسية',svg:'home'},
   {id:'maps',title:'خرائط المهام',svg:'maps'},
+  {id:'partnerships',title:'الشراكات',svg:'team'},
   {id:'mytasks',title:'مهامي',svg:'mytasks'},
   {id:'personal',title:'مهامي الخاصة',svg:'personal'},
   {id:'calendar',title:'التقويم',svg:'calendar'},
@@ -787,14 +788,19 @@ const NAV=[
 ];
 function renderNav(){
   const unread=store.notifications?store.notifications.filter(n=>!n.read).length:0;
-  document.getElementById('sbNav').innerHTML=NAV.map(n=>{
+  const u = userById(store.currentUser);
+  let navItems = NAV;
+  if(u && u.role === 'شريك خارجي') { navItems = NAV.filter(n => ['partnerships', 'settings', 'notifications'].includes(n.id)); }
+  document.getElementById('sbNav').innerHTML=navItems.map(n=>{
     const badge=(n.id==='notifications'&&unread)?`<span class="sb-badge">${unread}</span>`:'';
     const onClick = (n.id==='chat') ? `openTeamsPopup(event)` : `go('${n.id}')`;
     return `<button class="sb-btn ${page===n.id?'on':''}" onclick="${onClick}">${icon(n.svg,20)}${n.title}${badge}</button>`;
   }).join('');
   const bn = document.getElementById('bottomNav');
   if(bn) {
-    const mobileNavIds = ['home', 'maps', 'mytasks', 'notifications'];
+    let mobileNavIds = ['home', 'maps', 'mytasks', 'notifications'];
+    const u = userById(store.currentUser);
+    if (u && u.role === 'شريك خارجي') mobileNavIds = ['partnerships', 'settings', 'notifications'];
     let bnHtml = NAV.filter(n => mobileNavIds.includes(n.id)).map(n=>{
       const badge=(n.id==='notifications'&&unread)?`<span class="bn-badge">${unread}</span>`:'';
       const onClick = (n.id==='chat') ? `openTeamsPopup(event)` : `go('${n.id}')`;
@@ -831,7 +837,7 @@ function go(p) {
 function getVisibleTasks() {
   const u = userById(store.currentUser);
   if (u && u.role === 'شريك خارجي') {
-    return store.tasks.filter(t => t.stages.some(s => s.person === u.id));
+    return store.tasks.filter(t => t.isPartnership && t.stages.some(s => s.person === u.id));
   }
   return store.tasks;
 }
@@ -1080,12 +1086,20 @@ function viewHome(){
   </div>`;
 }
 function viewMaps(){
-  let tasks=[...getVisibleTasks()].sort((a,b)=>PRIORITIES[b.priority].rank-PRIORITIES[a.priority].rank);
+  let tasks=[...getVisibleTasks()].filter(t=>!t.isPartnership).sort((a,b)=>PRIORITIES[b.priority].rank-PRIORITIES[a.priority].rank);
   if(searchQuery){const q=searchQuery.trim();
     tasks=tasks.filter(t=>t.title.includes(q)||t.desc.includes(q)||BRANDS[t.brand].name.includes(q)||t.stages.some(s=>s.person&&userById(s.person).name.includes(q)));}
   const critN=tasks.filter(t=>t.priority==='critical').length;
   const canCreate=['كوردنيتر','مانيجر','الإدارة'].includes(userById(store.currentUser).role);
   return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${tasks.length}</strong> خريطة مهمة ${searchQuery?`<span class="crit-tag" style="background:var(--blue-50);color:var(--blue-600)">🔍 "${esc(searchQuery)}"</span>`:''} ${critN?`<span class="crit-tag">🔥 ${critN} قصوى</span>`:''}</div>${canCreate?`<button class="pill-blue" onclick="openTaskModal()">+ تاسك جديد</button>`:''}</div>${tasks.length?`<div class="maps-grid">${tasks.map(taskMap).join('')}</div>`:'<div class="empty card">لا توجد نتائج مطابقة للبحث</div>'}`;
+}
+function viewPartnerships(){
+  let tasks=[...getVisibleTasks()].filter(t=>t.isPartnership).sort((a,b)=>PRIORITIES[b.priority].rank-PRIORITIES[a.priority].rank);
+  if(searchQuery){const q=searchQuery.trim();
+    tasks=tasks.filter(t=>t.title.includes(q)||t.desc.includes(q)||BRANDS[t.brand].name.includes(q)||t.stages.some(s=>s.person&&userById(s.person).name.includes(q)));}
+  const critN=tasks.filter(t=>t.priority==='critical').length;
+  const canCreate=['كوردنيتر','مانيجر','الإدارة'].includes(userById(store.currentUser).role);
+  return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${tasks.length}</strong> شراكة ${searchQuery?`<span class="crit-tag" style="background:var(--blue-50);color:var(--blue-600)">🔍 "${esc(searchQuery)}"</span>`:''} ${critN?`<span class="crit-tag">🔥 ${critN} قصوى</span>`:''}</div>${canCreate?`<button class="pill-blue" onclick="openTaskModal(null,true)">+ إضافة شراكة</button>`:''}</div>${tasks.length?`<div class="maps-grid">${tasks.map(taskMap).join('')}</div>`:'<div class="empty card">لا توجد شراكات</div>'}`;
 }
 function viewMyTasks(){
   const u=store.currentUser,mine=[];
@@ -1095,7 +1109,7 @@ function viewMyTasks(){
   return `<div class="mylist">${mine.map(({task,st})=>{const k=STAGE_KINDS[st.kind],ns=NSTATE[st.state],b=BRANDS[task.brand],p=PRIORITIES[task.priority];
     return `<div class="myitem" style="--c:${k.color}"><div class="myitem-top"><span class="chip" style="background:${k.color}15;color:${k.color}">${icon(k.svg,14)} ${k.ar}</span><span class="chip ${task.priority==='critical'?'chip-crit':''}" style="${task.priority==='critical'?'':`background:${p.color}18;color:${p.color}`}">${p.emoji} ${p.name}</span></div><h4>${esc(task.title)}</h4><div class="myitem-task">${b.emoji} ${b.name} · ⏱ ${task.due}</div><div class="myitem-foot"><span class="chip" style="background:${ns.color}18;color:${ns.color}">${ns.ar}</span><button class="btn-sm btn-blue" onclick="openFromMy('${task.id}','${st.id}')">فتح في الخريطة ←</button></div></div>`;}).join('')}</div>`;
 }
-function openFromMy(tid,sid){page='maps';openNode={};openNode[tid]=sid;render();}
+function openFromMy(tid,sid){const t=store.tasks.find(x=>x.id===tid);page=t&&t.isPartnership?'partnerships':'maps';openNode={};openNode[tid]=sid;render();}
 let calSelDay=null; // اليوم المختار
 let calY=2026,calM=5; // الشهر المعروض (يونيو 2026 افتراضياً)
 function calPrev(){calM--;if(calM<0){calM=11;calY--;}calSelDay=null;render();}
@@ -1489,15 +1503,17 @@ function addSection(){const s=document.getElementById('newSection').value;if(!s|
 function delSection(i){store.sections.splice(i,1);save();render();}
 
 let tForm=null,tEditId=null;
-function openTaskModal(editId){
+function openTaskModal(editId, isPartnership = false){
   tEditId=editId||null;
   if(editId){
     const t=store.tasks.find(x=>x.id===editId);
     const pSt=t.stages.find(s=>STAGE_KINDS[s.kind]&&STAGE_KINDS[s.kind].isPublish);
     tForm={brand:t.brand,priority:t.priority,title:t.title,desc:t.desc,due:t.due,pubDate:pSt?pSt.publishDate||'':'',coordNote:t.coordNote||'',coordLink:t.coordLink||'',
+      isPartnership: t.isPartnership,
       stages:t.stages.map(s=>({...s}))};
   }else{
     tForm={brand:'academy',priority:'normal',title:'',desc:'',due:'2026-06-28',pubDate:'',coordNote:'',coordLink:'',
+      isPartnership,
       stages:store.sections.map((kind,i)=>({id:'s'+(i+1),kind,person:'',state:'pending',text:'',note:'',link:'',reason:'',publishDate:''}))};
   }
   renderTaskModal();
@@ -1526,7 +1542,7 @@ function tSubmit(){
     t.brand=tForm.brand;t.title=title;t.desc=desc;t.due=due;t.priority=tForm.priority;t.coordNote=coordNote;t.coordLink=coordLink;t.stages=tForm.stages;
     addNotif('assign','تم تعديل المهمة',title+' — تم تحديث بياناتها');
   }else{
-    const task={id:'t'+Date.now(),brand:tForm.brand,title,desc,due,priority:tForm.priority,coordinator:store.currentUser,coordNote,coordLink,stages:tForm.stages};
+    const task={id:'t'+Date.now(),brand:tForm.brand,title,desc,due,priority:tForm.priority,coordinator:store.currentUser,coordNote,coordLink,stages:tForm.stages,isPartnership:tForm.isPartnership};
     store.tasks.unshift(task);
     addNotif(tForm.priority==='critical'?'critical':'assign',tForm.priority==='critical'?'مهمة قصوى جديدة':'تاسك جديد',title+' — '+BRANDS[tForm.brand].name);
   }
@@ -1567,11 +1583,11 @@ function renderTaskModal(){
     <div class="modal-foot"><span style="font-size:12px;color:var(--ink-400)">${tForm.stages.length} مراحل</span><button class="pill-blue" onclick="tSubmit()">${isEdit?'✓ حفظ التعديلات':'✓ إنشاء التاسك وخريطته'}</button></div>
   </div></div>`;
 }
-const META={home:['لوحة التحكم 👋','مرحباً، إليك نظرة عامة على أداء الإنتاج اليوم'],maps:['خرائط المهام','كل تاسك خريطته الخاصة — اضغط أي مرحلة لفتحها وإضافة محتواها'],mytasks:['مهامي','المراحل المعيّنة لك عبر كل المهام'],personal:['مهامي الخاصة','مساحة شخصية معزولة — يراها صاحبها فقط'],calendar:['تقويم النشر','مواعيد النشر تتزامن تلقائياً من خرائط المهام'],chat:['المحادثة','دردشة الفريق مدعومة بـ Microsoft Teams — مشفّرة وآمنة'],analytics:['التقارير والتحليلات','أداء الفريق والإنتاج حسب الجهة والأولوية'],team:['الفريق','كل موظف وإحصائياته ومهامه'],notifications:['الإشعارات','آخر التنبيهات والتحديثات'],settings:['إعدادات المانيجر','إدارة الموظفين والأقسام المتاحة']};
+const META={home:['لوحة التحكم 👋','مرحباً، إليك نظرة عامة على أداء الإنتاج اليوم'],maps:['خرائط المهام','كل تاسك خريطته الخاصة — اضغط أي مرحلة لفتحها وإضافة محتواها'],partnerships:['الشراكات','المهام المخصصة للشركات الخارجية وشركاء مرماز'],mytasks:['مهامي','المراحل المعيّنة لك عبر كل المهام'],personal:['مهامي الخاصة','مساحة شخصية معزولة — يراها صاحبها فقط'],calendar:['تقويم النشر','مواعيد النشر تتزامن تلقائياً من خرائط المهام'],chat:['المحادثة','دردشة الفريق مدعومة بـ Microsoft Teams — مشفّرة وآمنة'],analytics:['التقارير والتحليلات','أداء الفريق والإنتاج حسب الجهة والأولوية'],team:['الفريق','كل موظف وإحصائياته ومهامه'],notifications:['الإشعارات','آخر التنبيهات والتحديثات'],settings:['إعدادات المانيجر','إدارة الموظفين والأقسام المتاحة']};
 function render(){renderNav();renderRoleSwitch();renderSummary();
   const unread=store.notifications?store.notifications.filter(n=>!n.read).length:0;
   const bd=document.getElementById('bellDot');if(bd){if(unread){bd.textContent=unread;bd.style.display='grid';}else bd.style.display='none';}
-  document.getElementById('pageTitle').textContent=META[page][0];document.getElementById('pageSub').textContent=META[page][1];const v=document.getElementById('view');if(page==='home')v.innerHTML=viewHome();else if(page==='maps')v.innerHTML=viewMaps();else if(page==='mytasks')v.innerHTML=viewMyTasks();else if(page==='personal')v.innerHTML=viewPersonal();else if(page==='calendar')v.innerHTML=viewCalendar();else if(page==='chat')v.innerHTML=viewChat();else if(page==='analytics')v.innerHTML=viewAnalytics();else if(page==='team')v.innerHTML=viewTeam();else if(page==='notifications')v.innerHTML=viewNotifications();else if(page==='settings')v.innerHTML=viewSettings();}
+  document.getElementById('pageTitle').textContent=META[page][0];document.getElementById('pageSub').textContent=META[page][1];const v=document.getElementById('view');if(page==='home')v.innerHTML=viewHome();else if(page==='maps')v.innerHTML=viewMaps();else if(page==='partnerships')v.innerHTML=viewPartnerships();else if(page==='mytasks')v.innerHTML=viewMyTasks();else if(page==='personal')v.innerHTML=viewPersonal();else if(page==='calendar')v.innerHTML=viewCalendar();else if(page==='chat')v.innerHTML=viewChat();else if(page==='analytics')v.innerHTML=viewAnalytics();else if(page==='team')v.innerHTML=viewTeam();else if(page==='notifications')v.innerHTML=viewNotifications();else if(page==='settings')v.innerHTML=viewSettings();}
 render();
 </script>
 </body>
