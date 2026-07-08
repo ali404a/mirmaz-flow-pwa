@@ -635,8 +635,8 @@ input,select,textarea{font-family:inherit}
       <div id="view"></div>
     </main>
   </div>
+  <nav class="bottom-nav" id="bottomNav"></nav>
 </div>
-<nav class="bottom-nav" id="bottomNav"></nav>
 <div id="modalRoot"></div>
 <script>
 /* ============ مكتبة أيقونات SVG مصمّمة خصيصاً (ستايل موحّد) ============ */
@@ -939,8 +939,8 @@ function nodePanel(task,st){
         <div class="np-field"><label>📅 يوم النشر</label><input type="date" value="${st.publishDate||''}" ${canEdit?'':'disabled'} onchange="setPublishDate('${task.id}','${st.id}',this.value)"></div>
         <div class="np-field"><label>🕐 ساعة النشر</label><input type="time" value="${st.publishTime||'12:00'}" ${canEdit?'':'disabled'} onchange="setNodeField('${task.id}','${st.id}','publishTime',this.value)"></div>
       </div>
-      <div class="np-field"><label>رابط المنشور النهائي (بعد النشر على المنصة)</label><input value="${esc(st.link)}" ${canEdit?'':'disabled'} onchange="setNodeField('${task.id}','${st.id}','link',this.value)" placeholder="instagram.com/p/..."></div>
-      <div class="np-field"><label>ملاحظات النشر</label><textarea ${canEdit?'':'disabled'} onchange="setNodeField('${task.id}','${st.id}','note',this.value)" placeholder="ملاحظات">${esc(st.note)}</textarea></div>`;
+      <div class="np-field"><label>رابط المنشور النهائي (اختياري)</label><input value="${esc(st.link)}" ${canEdit?'':'disabled'} onchange="setNodeField('${task.id}','${st.id}','link',this.value)" placeholder="instagram.com/p/..."></div>
+      <div class="np-field"><label>ملاحظات النشر (اختياري)</label><textarea ${canEdit?'':'disabled'} onchange="setNodeField('${task.id}','${st.id}','note',this.value)" placeholder="ملاحظات">${esc(st.note)}</textarea></div>`;
 
       inner=ready+sched;
       if(st.state==='published'){
@@ -963,7 +963,7 @@ function nodePanel(task,st){
     if(st.lastEditBy){auditHtml=`<div class="audit-row">${icon('edit',13)} آخر تعديل: <b>${esc(userById(st.lastEditBy).name)}</b> · ${esc(st.lastEditAt||'')}</div>`;}
     if(k.hasText)inner+=`<div class="np-field"><label>${st.kind==='caption'?'نص الكابشن':'نص التصميم'} والتفاصيل</label><textarea ${ro?'disabled':''} onchange="stageEdit('${task.id}','${st.id}','text',this.value)" placeholder="اكتب المحتوى هنا...">${esc(st.text)}</textarea></div>`;
     inner+=`<div class="np-field"><label>تفاصيل / ملاحظات</label><textarea ${ro?'disabled':''} onchange="stageEdit('${task.id}','${st.id}','note',this.value)" placeholder="ملاحظات إضافية...">${esc(st.note)}</textarea></div>
-      <div class="np-field"><label>رابط الملف (درايف / فيقما)</label><input value="${esc(st.link)}" ${ro?'disabled':''} onchange="stageEdit('${task.id}','${st.id}','link',this.value)" placeholder="drive.google.com/..."></div>`;
+      <div class="np-field"><label>رابط الملف (درايف / فيقما) - اختياري</label><input value="${esc(st.link)}" ${ro?'disabled':''} onchange="stageEdit('${task.id}','${st.id}','link',this.value)" placeholder="drive.google.com/..."></div>`;
     inner+=auditHtml;
     if(canEdit){
       if(locked){
