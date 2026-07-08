@@ -781,16 +781,26 @@ function renderNav(){
   const unread=store.notifications?store.notifications.filter(n=>!n.read).length:0;
   document.getElementById('sbNav').innerHTML=NAV.map(n=>{
     const badge=(n.id==='notifications'&&unread)?`<span class="sb-badge">${unread}</span>`:'';
-    return `<button class="sb-btn ${page===n.id?'on':''}" onclick="go('${n.id}')">${icon(n.svg,20)}${n.title}${badge}</button>`;
+    const onClick = (n.id==='chat') ? `openTeamsPopup(event)` : `go('${n.id}')`;
+    return `<button class="sb-btn ${page===n.id?'on':''}" onclick="${onClick}">${icon(n.svg,20)}${n.title}${badge}</button>`;
   }).join('');
   const bn = document.getElementById('bottomNav');
   if(bn) {
     const mobileNavIds = ['home', 'maps', 'mytasks', 'chat', 'notifications'];
     bn.innerHTML = NAV.filter(n => mobileNavIds.includes(n.id)).map(n=>{
       const badge=(n.id==='notifications'&&unread)?`<span class="bn-badge">${unread}</span>`:'';
-      return `<button class="bn-btn ${page===n.id?'on':''}" onclick="go('${n.id}')">${icon(n.svg,22)}<span>${n.title.split(' ')[0]}</span>${badge}</button>`;
+      const onClick = (n.id==='chat') ? `openTeamsPopup(event)` : `go('${n.id}')`;
+      return `<button class="bn-btn ${page===n.id?'on':''}" onclick="${onClick}">${icon(n.svg,22)}<span>${n.title.split(' ')[0]}</span>${badge}</button>`;
     }).join('');
   }
+}
+function openTeamsPopup(e) {
+  if (e) e.preventDefault();
+  const width = 650;
+  const height = Math.min(800, screen.height - 100);
+  const left = (screen.width - width) / 2;
+  const top = (screen.height - height) / 2;
+  window.open('https://teams.microsoft.com/', 'MSTeamsPopup', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes,status=no,toolbar=no,menubar=no,location=no`);
 }
 function go(p){page=p;render();}
 function renderSummary(){
