@@ -1390,7 +1390,7 @@ function saveEdit(tid,sid){
   // أعِد كل المراحل التالية (مراجعة/موافقة/نشر) للانتظار
   const idx=t.stages.findIndex(s=>s.id===sid);let reverted=false;
   for(let i=idx+1;i<t.stages.length;i++){const ns=t.stages[i],nk=STAGE_KINDS[ns.kind];
-    if((nk.ar.includes('مراجعة')||nk.isApproval||nk.isPublish)&&['done','approved','approval','published','working'].includes(ns.state)){
+    if((nk.ar.includes('مراجعة')||nk.isApproval||nk.isPublish)&&['done','approved','approval','published','working','rejected'].includes(ns.state)){
       ns.state='pending';if(nk.isApproval)ns.reason='';reverted=true;}}
   if(reverted)t.stages.forEach(s=>{if(STAGE_KINDS[s.kind].ar.includes('مراجعة')||STAGE_KINDS[s.kind].isApproval)s._needsRecheck=true;});
   addNotif('critical','تعديل يتطلب إعادة تدقيق',userById(store.currentUser).name+' عدّل «'+k.ar+'» في "'+t.title+'" — أُعيدت للتدقيق ثم موافقة الإدارة');
