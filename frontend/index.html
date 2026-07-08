@@ -688,7 +688,7 @@ const SVG={
 function logoSVG(size=40){return `<svg viewBox="0 0 1000 1000" width="${size}" height="${size}" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,1000) scale(0.1,-0.1)"><path d="M2491 7900 c-107 -23 -202 -98 -249 -198 -23 -49 -27 -70 -27 -147 0 -77 4 -98 27 -147 15 -32 46 -76 70 -99 48 -46 2194 -1348 2324 -1410 222 -106 499 -110 718 -10 111 50 2297 1382 2338 1424 174 179 103 486 -133 573 -56 21 -181 21 -234 1 -22 -8 -521 -307 -1110 -664 -588 -357 -1091 -662 -1116 -676 -52 -31 -123 -36 -167 -13 -15 8 -517 311 -1117 673 -600 362 -1108 666 -1130 675 -53 21 -139 29 -194 18z M1195 7064 c-180 -45 -301 -210 -281 -384 9 -75 57 -170 110 -217 24 -21 194 -127 377 -236 184 -108 340 -201 348 -206 10 -6 -6 -31 -66 -102 -373 -445 -668 -981 -847 -1538 -167 -517 -245 -1112 -217 -1637 20 -376 36 -445 120 -536 167 -182 462 -135 573 90 27 56 30 147 12 462 -42 725 126 1458 478 2095 130 235 359 556 521 732 l57 61 386 -228 c212 -126 388 -230 390 -232 2 -3 -31 -45 -73 -94 -414 -482 -681 -1070 -773 -1702 -54 -376 -36 -953 35 -1099 36 -72 96 -130 172 -165 55 -26 77 -31 143 -31 66 0 88 5 143 31 116 54 192 157 204 274 3 29 -2 114 -11 188 -20 170 -21 465 -1 631 66 568 324 1115 716 1521 l74 77 495 -295 c608 -363 615 -367 720 -367 67 0 88 5 142 30 35 17 288 164 562 327 274 163 504 296 510 296 15 0 185 -189 263 -291 282 -370 457 -796 525 -1279 17 -126 15 -549 -3 -690 -17 -120 -11 -189 20 -254 109 -223 405 -270 572 -88 98 106 123 250 123 702 0 314 -9 418 -59 665 -115 572 -371 1093 -753 1533 -35 40 -61 76 -58 79 3 4 178 109 388 234 l383 227 59 -61 c73 -77 207 -244 289 -360 376 -531 602 -1116 693 -1789 23 -167 30 -632 13 -815 -17 -186 -15 -235 12 -309 30 -81 112 -162 194 -194 206 -78 432 45 474 260 37 194 46 719 17 1015 -94 948 -463 1829 -1066 2544 -48 56 -59 75 -49 82 8 5 165 98 349 207 373 220 421 257 460 357 60 156 10 324 -127 421 -94 68 -229 80 -336 31 -28 -13 -847 -495 -1819 -1070 -972 -576 -1772 -1047 -1778 -1047 -7 0 -810 473 -1786 1051 -976 578 -1796 1060 -1822 1071 -46 20 -155 32 -197 22z"/></g></svg>`;}
 function icon(name,size=20,extra=''){return `<svg class="ico ${extra}" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${SVG[name]||SVG.dot}</svg>`;}
 
-const BRANDS={academy:{id:'academy',name:'mirmaz Academy',emoji:'🎓',color:'#2F6BFF',soft:'#E3EBFF'},zone:{id:'zone',name:'mirmaz Zone',emoji:'⚡',color:'#7B3FF2',soft:'#EFE6FF'}};
+const BRANDS={academy:{id:'academy',name:'mirmaz Academy',emoji:'🎓',color:'#2F6BFF',soft:'#E3EBFF'},zone:{id:'zone',name:'mirmaz Zone',emoji:'⚡',color:'#7B3FF2',soft:'#EFE6FF'},partners:{id:'partners',name:'الشراكات',emoji:'🤝',color:'#0FB67E',soft:'#E5F8F0'}};
 const PRIORITIES={normal:{id:'normal',name:'عادية',emoji:'🟢',color:'#21C07A',rank:1},medium:{id:'medium',name:'متوسطة',emoji:'🟡',color:'#F6A609',rank:2},critical:{id:'critical',name:'قصوى',emoji:'🔥',color:'#FF5470',rank:3}};
 const NSTATE={pending:{ar:'بالانتظار',color:'#8995AE',svg:'dot'},working:{ar:'قيد العمل',color:'#2F6BFF',svg:'dot'},done:{ar:'مُنجز',color:'#21C07A',svg:'check'},approval:{ar:'طلب موافقة',color:'#F6A609',svg:'clock'},approved:{ar:'موافق عليه',color:'#21C07A',svg:'check'},rejected:{ar:'مرفوض',color:'#FF5470',svg:'cross'},published:{ar:'تم النشر',color:'#16B981',svg:'check'}};
 const STAGE_KINDS={
@@ -828,13 +828,20 @@ function go(p) {
   if(ov) ov.classList.remove('open');
   render();
 }
+function getVisibleTasks() {
+  const u = userById(store.currentUser);
+  if (u && u.role === 'شريك خارجي') {
+    return store.tasks.filter(t => t.stages.some(s => s.person === u.id));
+  }
+  return store.tasks;
+}
 function renderSummary(){
   const u=store.currentUser;
   let mine=0,done=0;
-  store.tasks.forEach(t=>t.stages.forEach(st=>{if(st.person===u){mine++;if(['done','approved'].includes(st.state))done++;}}));
+  getVisibleTasks().forEach(t=>t.stages.forEach(st=>{if(st.person===u){mine++;if(['done','approved'].includes(st.state))done++;}}));
   const pct=mine?Math.round(done/mine*100):0;
-  const totalTasks=store.tasks.length;
-  const crit=store.tasks.filter(t=>t.priority==='critical').length;
+  const totalTasks=getVisibleTasks().length;
+  const crit=getVisibleTasks().filter(t=>t.priority==='critical').length;
   const el=document.getElementById('sbSummary');
   if(!el)return;
   el.innerHTML=`<h5>ملخّص سريع</h5>
@@ -1019,9 +1026,9 @@ function taskMap(task){
   </div>`;
 }
 function viewHome(){
-  const tasks=store.tasks;
+  const tasks=getVisibleTasks();
   let totalStages=0,doneStages=0,critTasks=0,pubScheduled=0;
-  const brandCount={academy:0,zone:0};
+  const brandCount={academy:0,zone:0,partners:0};
   tasks.forEach(t=>{brandCount[t.brand]++;if(t.priority==='critical')critTasks++;
     t.stages.forEach(st=>{totalStages++;if(['done','approved'].includes(st.state))doneStages++;
       if(STAGE_KINDS[st.kind].isPublish&&st.publishDate)pubScheduled++;});});
@@ -1073,7 +1080,7 @@ function viewHome(){
   </div>`;
 }
 function viewMaps(){
-  let tasks=[...store.tasks].sort((a,b)=>PRIORITIES[b.priority].rank-PRIORITIES[a.priority].rank);
+  let tasks=[...getVisibleTasks()].sort((a,b)=>PRIORITIES[b.priority].rank-PRIORITIES[a.priority].rank);
   if(searchQuery){const q=searchQuery.trim();
     tasks=tasks.filter(t=>t.title.includes(q)||t.desc.includes(q)||BRANDS[t.brand].name.includes(q)||t.stages.some(s=>s.person&&userById(s.person).name.includes(q)));}
   const critN=tasks.filter(t=>t.priority==='critical').length;
@@ -1082,7 +1089,7 @@ function viewMaps(){
 }
 function viewMyTasks(){
   const u=store.currentUser,mine=[];
-  store.tasks.forEach(t=>t.stages.forEach(st=>{if(st.person===u)mine.push({task:t,st});}));
+  getVisibleTasks().forEach(t=>t.stages.forEach(st=>{if(st.person===u)mine.push({task:t,st});}));
   mine.sort((a,b)=>PRIORITIES[b.task.priority].rank-PRIORITIES[a.task.priority].rank);
   if(!mine.length)return `<div class="empty card">لا توجد مهام معيّنة لك حالياً. بدّل المستخدم من الأعلى لتجربة الأدوار.</div>`;
   return `<div class="mylist">${mine.map(({task,st})=>{const k=STAGE_KINDS[st.kind],ns=NSTATE[st.state],b=BRANDS[task.brand],p=PRIORITIES[task.priority];
@@ -1096,7 +1103,7 @@ function calNext(){calM++;if(calM>11){calM=0;calY++;}calSelDay=null;render();}
 function calToday(){calY=2026;calM=5;calSelDay=null;render();}
 function calEvents(){
   const events=[];
-  store.tasks.forEach(t=>t.stages.forEach(st=>{
+  getVisibleTasks().forEach(t=>t.stages.forEach(st=>{
     if(STAGE_KINDS[st.kind].isPublish&&st.publishDate){
       const link=st.note&&st.note.includes('.')?st.note:(st.link||'');
       events.push({date:st.publishDate,time:st.publishTime||'',title:t.title,brand:t.brand,taskId:t.id,stageId:st.id,person:st.person,state:st.state,link});
@@ -1200,9 +1207,9 @@ function addEventOnDay(ds){
   const day=parseInt(ds.split('-')[2]);if(ds.startsWith('2026-06'))calSelDay=day;render();
 }
 function viewAnalytics(){
-  const tasks=store.tasks;
+  const tasks=getVisibleTasks();
   // إحصائيات حسب البراند
-  const byBrand={academy:{total:0,done:0},zone:{total:0,done:0}};
+  const byBrand={academy:{total:0,done:0},zone:{total:0,done:0},partners:{total:0,done:0}};
   // إحصائيات حسب الموظف
   const byUser={};store.team.forEach(u=>byUser[u.id]={total:0,done:0});
   // توزيع الأولويات
@@ -1253,7 +1260,7 @@ function viewTeam(){
   // لكل موظف: عدد مهامه وحالاتها
   const data=store.team.map(u=>{
     let total=0,done=0,working=0,pending=0;
-    store.tasks.forEach(t=>t.stages.forEach(st=>{if(st.person===u.id){total++;
+    getVisibleTasks().forEach(t=>t.stages.forEach(st=>{if(st.person===u.id){total++;
       if(['done','approved'].includes(st.state))done++;else if(st.state==='working')working++;else pending++;}}));
     return{u,total,done,working,pending};
   });
@@ -1372,7 +1379,7 @@ function sendChat(){
   setTimeout(()=>{const m=document.getElementById('chatMsgs');if(m)m.scrollTop=m.scrollHeight;const ci=document.getElementById('chatInput');if(ci)ci.focus();},50);
 }
 function viewSettings(){
-  const roles=['الإدارة','مانيجر','كوردنيتر','مصمم','كاتب محتوى','كاتب كابشن','مونتير'];
+  const roles=['الإدارة','مانيجر','كوردنيتر','مصمم','كاتب محتوى','كاتب كابشن','مونتير','شريك خارجي'];
   const avail=Object.entries(STAGE_KINDS).filter(([k])=>!store.sections.includes(k));
   return `<div class="set-grid">
     <div class="set-card card fade-up"><h3>👥 الموظفون</h3><p>المانيجر يضيف الموظفين — يظهرون في القوائم المنسدلة عند إنشاء التاسك.</p>
