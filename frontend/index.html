@@ -892,7 +892,10 @@ function nodePanel(task,st){
   }
   if(k.isApproval){
     if(st.state==='approved')inner=`<div class="np-content" style="color:var(--green-ok)">✓ تمت الموافقة — انتقلت المهمة لمرحلة النشر.</div>`;
-    else if(st.state==='rejected')inner=`<div class="np-reject"><label>سبب الرفض</label><div class="np-content" style="margin-top:8px;color:var(--red)">${esc(st.reason||'—')}</div></div>`;
+    else if(st.state==='rejected'){
+      inner=`<div class="np-reject"><label>سبب الرفض</label><div class="np-content" style="margin-top:8px;color:var(--red)">${esc(st.reason||'—')}</div></div>`;
+      if(isAdmin)inner+=`<div class="np-actions" style="margin-top:10px"><button class="btn-sm btn-green" onclick="approveNode('${task.id}','${st.id}')">✓ تغيير إلى موافقة</button><button class="btn-sm btn-red" onclick="rejectNode('${task.id}','${st.id}')">✕ تحديث سبب الرفض</button></div>`;
+    }
     else{inner=`<div class="np-content">بانتظار موافقة الإدارة بعد اكتمال المراجعة.</div>`;
       if(isAdmin)inner+=`<div class="np-actions"><button class="btn-sm btn-green" onclick="approveNode('${task.id}','${st.id}')">✓ موافقة</button><button class="btn-sm btn-red" onclick="rejectNode('${task.id}','${st.id}')">✕ رفض (مع السبب)</button></div>`;
       else inner+=`<p style="font-size:12px;color:var(--ink-400);margin-top:8px">الموافقة من صلاحية الإدارة فقط.</p>`;}
