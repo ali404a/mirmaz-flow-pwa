@@ -1,0 +1,93 @@
+<!-- =====================================================================
+     mirmaz FLOW — شاشة تسجيل الدخول
+     انسخ هذا القسم وألصقه داخل <body> في index.html (قبل باقي المحتوى).
+     يظهر تلقائياً إذا لم يكن المستخدم مسجّلاً، ويختفي بعد الدخول.
+     ===================================================================== -->
+
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-logo"><svg viewBox="0 0 1000 1000" width="28" height="28" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,1000) scale(0.1,-0.1)"><path d="M2491 7900 c-107 -23 -202 -98 -249 -198 -23 -49 -27 -70 -27 -147 0 -77 4 -98 27 -147 15 -32 46 -76 70 -99 48 -46 2194 -1348 2324 -1410 222 -106 499 -110 718 -10 111 50 2297 1382 2338 1424 174 179 103 486 -133 573 -56 21 -181 21 -234 1 -22 -8 -521 -307 -1110 -664 -588 -357 -1091 -662 -1116 -676 -52 -31 -123 -36 -167 -13 -15 8 -517 311 -1117 673 -600 362 -1108 666 -1130 675 -53 21 -139 29 -194 18z M1195 7064 c-180 -45 -301 -210 -281 -384 9 -75 57 -170 110 -217 24 -21 194 -127 377 -236 184 -108 340 -201 348 -206 10 -6 -6 -31 -66 -102 -373 -445 -668 -981 -847 -1538 -167 -517 -245 -1112 -217 -1637 20 -376 36 -445 120 -536 167 -182 462 -135 573 90 27 56 30 147 12 462 -42 725 126 1458 478 2095 130 235 359 556 521 732 l57 61 386 -228 c212 -126 388 -230 390 -232 2 -3 -31 -45 -73 -94 -414 -482 -681 -1070 -773 -1702 -54 -376 -36 -953 35 -1099 36 -72 96 -130 172 -165 55 -26 77 -31 143 -31 66 0 88 5 143 31 116 54 192 157 204 274 3 29 -2 114 -11 188 -20 170 -21 465 -1 631 66 568 324 1115 716 1521 l74 77 495 -295 c608 -363 615 -367 720 -367 67 0 88 5 142 30 35 17 288 164 562 327 274 163 504 296 510 296 15 0 185 -189 263 -291 282 -370 457 -796 525 -1279 17 -126 15 -549 -3 -690 -17 -120 -11 -189 20 -254 109 -223 405 -270 572 -88 98 106 123 250 123 702 0 314 -9 418 -59 665 -115 572 -371 1093 -753 1533 -35 40 -61 76 -58 79 3 4 178 109 388 234 l383 227 59 -61 c73 -77 207 -244 289 -360 376 -531 602 -1116 693 -1789 23 -167 30 -632 13 -815 -17 -186 -15 -235 12 -309 30 -81 112 -162 194 -194 206 -78 432 45 474 260 37 194 46 719 17 1015 -94 948 -463 1829 -1066 2544 -48 56 -59 75 -49 82 8 5 165 98 349 207 373 220 421 257 460 357 60 156 10 324 -127 421 -94 68 -229 80 -336 31 -28 -13 -847 -495 -1819 -1070 -972 -576 -1772 -1047 -1778 -1047 -7 0 -810 473 -1786 1051 -976 578 -1796 1060 -1822 1071 -46 20 -155 32 -197 22z"/></g></svg></div>
+      <div><b>mirmaz</b><span>FLOW</span></div>
+    </div>
+    <h2>تسجيل الدخول</h2>
+    <p class="login-sub">أدخل بيانات حسابك للمتابعة</p>
+
+    <div class="login-field">
+      <label>البريد الإلكتروني</label>
+      <input id="loginEmail" type="email" placeholder="you@mirmaz.com" autocomplete="username">
+    </div>
+    <div class="login-field">
+      <label>كلمة المرور</label>
+      <input id="loginPass" type="password" placeholder="••••••••" autocomplete="current-password"
+             onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+
+    <div id="loginError" class="login-error" style="display:none"></div>
+    <button id="loginBtn" class="login-btn" onclick="doLogin()">دخول</button>
+
+    <div class="login-note">
+      🔒 الحسابات يُنشئها السوبر أدمن — لا يوجد تسجيل ذاتي.
+    </div>
+  </div>
+</div>
+
+<style>
+.login-screen{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;
+  background:linear-gradient(135deg,#EEF3FE,#F3F0FC);font-family:'Cairo',sans-serif}
+.login-card{width:380px;max-width:92vw;background:#fff;border-radius:24px;padding:34px;
+  box-shadow:0 30px 80px rgba(20,40,90,.18);text-align:center}
+.login-brand{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:26px}
+.login-logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#2F6BFF,#7B3FF2);
+  color:#fff;display:grid;place-items:center}
+.login-logo svg{width:28px;height:28px}
+.login-brand b{font-size:20px;font-weight:800;display:block;line-height:1}
+.login-brand span{font-size:11px;letter-spacing:3px;color:#8995AE}
+.login-card h2{font-size:22px;font-weight:800;margin-bottom:6px}
+.login-sub{font-size:13px;color:#8995AE;margin-bottom:24px}
+.login-field{text-align:right;margin-bottom:16px}
+.login-field label{font-size:12.5px;font-weight:700;color:#4A5568;display:block;margin-bottom:7px}
+.login-field input{width:100%;height:48px;border:1.5px solid #E2E8F0;border-radius:13px;
+  padding:0 16px;font-size:14px;font-family:inherit;transition:all .2s}
+.login-field input:focus{outline:none;border-color:#2F6BFF;box-shadow:0 0 0 3px rgba(47,107,255,.12)}
+.login-error{background:#FFE9EC;color:#D92D4E;font-size:12.5px;font-weight:600;
+  padding:11px;border-radius:11px;margin-bottom:14px}
+.login-btn{width:100%;height:50px;border-radius:14px;background:linear-gradient(135deg,#2F6BFF,#1E5BFF);
+  color:#fff;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;
+  box-shadow:0 12px 30px rgba(47,107,255,.3);transition:transform .2s}
+.login-btn:hover{transform:translateY(-2px)}
+.login-btn:disabled{opacity:.6;cursor:wait}
+.login-note{margin-top:20px;font-size:11.5px;color:#8995AE;line-height:1.6}
+</style>
+
+<script>
+// منطق الدخول — يعتمد على supabase-client.js
+async function doLogin(){
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  const err   = document.getElementById('loginError');
+  const btn   = document.getElementById('loginBtn');
+  err.style.display='none';
+  if(!email || !pass){ err.textContent='أدخل البريد وكلمة المرور'; err.style.display='block'; return; }
+  btn.disabled=true; btn.textContent='جارٍ الدخول...';
+  try{
+    await login(email, pass);
+    document.getElementById('loginScreen').style.display='none';
+    if(typeof bootApp==='function') await bootApp();  // حمّل التطبيق بعد الدخول
+  }catch(e){
+    err.textContent = e.message==='Invalid login credentials'
+      ? 'البريد أو كلمة المرور غير صحيحة' : (e.message||'تعذّر الدخول');
+    err.style.display='block';
+  }finally{
+    btn.disabled=false; btn.textContent='دخول';
+  }
+}
+// عند فتح الصفحة: إن كانت هناك جلسة، اخفِ شاشة الدخول وحمّل التطبيق
+window.addEventListener('DOMContentLoaded', async ()=>{
+  const ok = await initSession();
+  if(ok){
+    document.getElementById('loginScreen').style.display='none';
+    if(typeof bootApp==='function') await bootApp();
+  }
+});
+</script>
