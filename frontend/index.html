@@ -355,7 +355,13 @@ input,select,textarea{font-family:inherit}
 .bn-btn .ico{width:22px;height:22px;}
 .bn-badge{position:absolute;top:-4px;right:12px;background:var(--red);color:#fff;font-size:9px;font-weight:800;padding:2px 5px;border-radius:10px;line-height:1;}
 @media(max-width:900px){.set-grid,.an-grid,.home-grid{grid-template-columns:1fr}.stat-row{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:768px){.sidebar{display:none}.role-switch{display:none}.me-info{display:none}.content{padding:16px;padding-bottom:90px;height:100vh}.bottom-nav{display:flex}}
+@media(max-width:768px){
+  .role-switch{display:none}.me-info{display:none}.content{padding:16px;padding-bottom:90px;height:100vh}.bottom-nav{display:flex}
+  .sidebar{display:flex;position:fixed;top:0;right:-300px;bottom:0;width:260px;z-index:100;background:var(--surface);box-shadow:-4px 0 24px rgba(0,0,0,0.1);transition:right 0.3s cubic-bezier(0.4, 0, 0.2, 1);padding-bottom:env(safe-area-inset-bottom);border-left:none}
+  .sidebar.open{right:0}
+  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:99;backdrop-filter:blur(3px)}
+  .sidebar-overlay.open{display:block}
+}
 /* ===== تطبيق الزجاجية اللامعة على كل البوكسات ===== */
 .stat,.panel,.tmap,.team-card,.notif,.myitem,.flt{
   position:relative;
@@ -601,6 +607,7 @@ input,select,textarea{font-family:inherit}
 </head>
 <body>
 <div class="ambient"><span></span><span></span></div>
+<div class="sidebar-overlay" id="sbOverlay" onclick="toggleSidebar()"></div>
 <div class="shell">
   <aside class="sidebar">
     <div class="sb-logo">
@@ -648,6 +655,7 @@ const SVG={
   cross:'<path d="M6 6l12 12M18 6 6 18"/>',
   pause:'<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>',
   // التنقّل
+  menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',
   home:'<path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>',
   maps:'<circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="12" r="2.5"/><path d="M8.5 6H14a2 2 0 0 1 2 2v1.5M8.5 18H14a2 2 0 0 0 2-2v-1.5"/>',
   mytasks:'<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
@@ -786,12 +794,14 @@ function renderNav(){
   }).join('');
   const bn = document.getElementById('bottomNav');
   if(bn) {
-    const mobileNavIds = ['home', 'maps', 'mytasks', 'chat', 'notifications'];
-    bn.innerHTML = NAV.filter(n => mobileNavIds.includes(n.id)).map(n=>{
+    const mobileNavIds = ['home', 'maps', 'mytasks', 'notifications'];
+    let bnHtml = NAV.filter(n => mobileNavIds.includes(n.id)).map(n=>{
       const badge=(n.id==='notifications'&&unread)?`<span class="bn-badge">${unread}</span>`:'';
       const onClick = (n.id==='chat') ? `openTeamsPopup(event)` : `go('${n.id}')`;
       return `<button class="bn-btn ${page===n.id?'on':''}" onclick="${onClick}">${icon(n.svg,22)}<span>${n.title.split(' ')[0]}</span>${badge}</button>`;
     }).join('');
+    bnHtml += `<button class="bn-btn" onclick="toggleSidebar()">${icon('menu',22)}<span>المزيد</span></button>`;
+    bn.innerHTML = bnHtml;
   }
 }
 function openTeamsPopup(e) {
@@ -802,7 +812,22 @@ function openTeamsPopup(e) {
   const top = (screen.height - height) / 2;
   window.open('https://teams.microsoft.com/', 'MSTeamsPopup', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes,status=no,toolbar=no,menubar=no,location=no`);
 }
-function go(p){page=p;render();}
+function toggleSidebar() {
+  const sb = document.querySelector('.sidebar');
+  const ov = document.getElementById('sbOverlay');
+  if (sb && ov) {
+    sb.classList.toggle('open');
+    ov.classList.toggle('open');
+  }
+}
+function go(p) {
+  page=p;
+  const sb = document.querySelector('.sidebar');
+  const ov = document.getElementById('sbOverlay');
+  if(sb) sb.classList.remove('open');
+  if(ov) ov.classList.remove('open');
+  render();
+}
 function renderSummary(){
   const u=store.currentUser;
   let mine=0,done=0;
