@@ -607,6 +607,50 @@ input,select,textarea{font-family:inherit}
 </head>
 <body>
 <div class="ambient"><span></span><span></span></div>
+
+<div id="loginScreen" style="position:fixed;inset:0;background:var(--bg);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;">
+  <div class="card" style="width:100%;max-width:400px;padding:32px;display:flex;flex-direction:column;gap:20px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.1);">
+    <h1 style="color:var(--blue-600);margin:0;font-size:28px;">Mirmaz Flow</h1>
+    <p style="color:var(--ink-500);margin:0">تسجيل الدخول للمنظومة</p>
+    <div id="loginError" style="color:var(--red);font-size:14px;display:none;">بيانات الدخول غير صحيحة</div>
+    <div style="display:flex;flex-direction:column;gap:12px;text-align:right;">
+      <label style="font-weight:bold;color:var(--ink-700)">اسم المستخدم</label>
+      <input type="text" id="loginUser" class="tmap-in" placeholder="Username" style="padding:12px;font-size:16px;">
+      
+      <label style="font-weight:bold;color:var(--ink-700)">كلمة المرور</label>
+      <div style="position:relative;display:flex;align-items:center;">
+        <input type="password" id="loginPass" class="tmap-in" placeholder="Password" style="padding:12px;font-size:16px;width:100%;">
+        <button onclick="togglePassword()" style="position:absolute;left:10px;background:none;border:none;color:var(--ink-500);cursor:pointer;padding:5px;">👁</button>
+      </div>
+    </div>
+    <button class="pill-blue" onclick="performLogin()" style="padding:14px;font-size:16px;margin-top:10px;">تسجيل الدخول</button>
+  </div>
+</div>
+<script>
+function togglePassword(){
+  const p=document.getElementById('loginPass');
+  p.type = p.type==='password'?'text':'password';
+}
+function performLogin(){
+  const u=document.getElementById('loginUser').value.trim();
+  const p=document.getElementById('loginPass').value.trim();
+  const user = store.team.find(x => (x.user||x.id) === u && (x.pass||'1234') === p);
+  if(user){
+    localStorage.setItem('mirmaz_session', user.id);
+    store.currentUser = user.id;
+    document.getElementById('loginScreen').style.display='none';
+    document.querySelector('.shell').style.display='flex';
+    render();
+  } else {
+    document.getElementById('loginError').style.display='block';
+  }
+}
+function logout(){
+  localStorage.removeItem('mirmaz_session');
+  location.reload();
+}
+</script>
+
 <div class="shell">
 <div class="sidebar-overlay" id="sbOverlay" onclick="toggleSidebar()"></div>
   <aside class="sidebar">
@@ -3139,11 +3183,11 @@ function renderTaskModal(){
 const META={home:['لوحة التحكم 👋','مرحباً، إليك نظرة عامة على أداء الإنتاج اليوم'],maps:['خرائط المهام','كل تاسك خريطته الخاصة — اضغط أي مرحلة لفتحها وإضافة محتواها'],partnerships:['الشراكات','المهام المخصصة للشركات الخارجية وشركاء مرماز'],sheet:['الشيت 📋','جدول المهام والتفاصيل الخاصة للأساتذة'],mytasks:['مهامي','المراحل المعيّنة لك عبر كل المهام'],personal:['مهامي الخاصة','مساحة شخصية معزولة — يراها صاحبها فقط'],calendar:['تقويم النشر','مواعيد النشر تتزامن تلقائياً من خرائط المهام'],chat:['المحادثة','دردشة الفريق مدعومة بـ Microsoft Teams — مشفّرة وآمنة'],analytics:['التقارير والتحليلات','أداء الفريق والإنتاج حسب الجهة والأولوية'],team:['الفريق','كل موظف وإحصائياته ومهامه'],notifications:['الإشعارات','آخر التنبيهات والتحديثات'],settings:['إعدادات المانيجر','إدارة الموظفين والأقسام المتاحة']};
 function render(){renderNav();
   if(!store.currentUser) {
-    document.querySelector('.app-layout').style.display = 'none';
+    document.querySelector('.shell').style.display = 'none';
     document.getElementById('loginScreen').style.display = 'flex';
     return;
   } else {
-    document.querySelector('.app-layout').style.display = 'flex';
+    document.querySelector('.shell').style.display = 'flex';
     const ls = document.getElementById('loginScreen');
     if(ls) ls.style.display = 'none';
   }
