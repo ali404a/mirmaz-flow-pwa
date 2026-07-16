@@ -2999,27 +2999,40 @@ function viewTeam(){
   const canEdit = ['الإدارة','مانيجر','كوردنيتر'].includes(u.role);
   if(!canEdit) return '<div class="empty card">غير مصرح لك بعرض هذه الصفحة</div>';
 
-  return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${store.team.length}</strong> أعضاء</div>
-  <button class="pill-blue" onclick="openProfileModal()">+ إضافة موظف</button></div>
-  <div class="maps-grid">
-    ${store.team.map(member=>{
-      let tCount=0, dCount=0;
-      store.tasks.forEach(t=>t.stages.forEach(s=>{if(s.person===member.id){tCount++;if(['done','approved'].includes(s.state))dCount++;}}));
-      const rate = tCount ? Math.round(dCount/tCount*100) : 0;
-      return `<div class="card fade-up" style="padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px;">
-        <div style="width:70px;height:70px;border-radius:50%;background:${member.av}18;color:${member.av};display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:bold;">${member.name[0]}</div>
-        <div style="text-align:center;">
-          <h3 style="margin:0;color:var(--ink-700)">${esc(member.name)}</h3>
-          <p style="margin:4px 0 0 0;color:var(--ink-500);font-size:14px">${esc(member.role)}</p>
-        </div>
-        <div style="width:100%;height:1px;background:var(--line);margin:8px 0"></div>
-        <div style="display:flex;width:100%;justify-content:space-between;font-size:13px;color:var(--ink-600);margin-bottom:12px;">
-          <span>المهام: <strong>${tCount}</strong></span>
-          <span>الإنجاز: <strong style="color:var(--green-ok)">${rate}%</strong></span>
-        </div>
-        <button class="btn-sm btn-gray" style="width:100%;justify-content:center" onclick="currentProfileId='${member.id}';render()">عرض التفاصيل والملف</button>
-      </div>`;
-    }).join('')}
+  return `<div class="maps-bar fade-up" style="direction:rtl; text-align:right;"><div class="maps-count"><strong>${store.team.length}</strong> أعضاء</div>
+  <button class="pill-blue" onclick="openProfileModal()">+ إضافة موظف جديد</button></div>
+  <div class="card fade-up" style="overflow-x:auto; margin-top:12px; direction:rtl; text-align:right;">
+    <table class="sh-table" style="width:100%; border-collapse:collapse; font-size:14px; text-align:right;">
+      <thead style="background:var(--surface-2);">
+        <tr>
+          <th style="padding:14px 18px; border-bottom:1px solid var(--line);">الموظف</th>
+          <th style="padding:14px 18px; border-bottom:1px solid var(--line);">المسمى الوظيفي</th>
+          <th style="padding:14px 18px; border-bottom:1px solid var(--line); text-align:center;">المهام النشطة</th>
+          <th style="padding:14px 18px; border-bottom:1px solid var(--line); text-align:center;">معدل الإنجاز</th>
+          <th style="padding:14px 18px; border-bottom:1px solid var(--line); text-align:center; width:200px;">الإجراءات</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${store.team.map(member=>{
+          let tCount=0, dCount=0;
+          store.tasks.forEach(t=>t.stages.forEach(s=>{if(s.person===member.id){tCount++;if(['done','approved'].includes(s.state))dCount++;}}));
+          const rate = tCount ? Math.round(dCount/tCount*100) : 0;
+          return `<tr style="border-bottom:1px solid var(--line); transition:background 0.2s;" onmouseover="this.style.background='var(--surface-2)'" onmouseout="this.style.background='transparent'">
+            <td style="padding:14px 18px; display:flex; align-items:center; gap:12px;">
+              <span style="width:34px; height:34px; border-radius:50%; background:${member.av}18; color:${member.av}; display:grid; place-items:center; font-weight:bold; font-size:14px;">${member.name[0]}</span>
+              <strong style="color:var(--ink-850);">${esc(member.name)}</strong>
+            </td>
+            <td style="padding:14px 18px; color:var(--ink-600);">${esc(member.role)}</td>
+            <td style="padding:14px 18px; text-align:center; font-weight:bold;">${tCount}</td>
+            <td style="padding:14px 18px; text-align:center; color:${rate > 50 ? 'var(--green-ok)' : 'var(--amber)'}; font-weight:bold;">${rate}%</td>
+            <td style="padding:14px 18px; text-align:center; display:flex; gap:8px; justify-content:center; align-items:center;">
+              <button class="btn-sm" style="background:var(--line); color:var(--ink-700); border:none;" onclick="currentProfileId='${member.id}';render()">عرض الملف</button>
+              ${member.id !== store.currentUser ? `<button class="btn-sm" style="background:var(--red-soft); color:var(--red); border:none;" onclick="deleteProfile('${member.id}')">حذف</button>` : ''}
+            </td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
   </div>`;
 }
 
@@ -3075,11 +3088,11 @@ function openProfileModal(uid = null){
     let mine=[];
     store.tasks.forEach(t=>t.stages.forEach(st=>{if(st.person===uid)mine.push({task:t,st});}));
     if(mine.length) {
-      myTasksHTML = `<h4 style="margin-top:20px;border-top:1px solid var(--line);padding-top:16px;">المهام الحالية (${mine.length})</h4>
-      <div style="max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;">
-        ${mine.map(m=>`<div style="background:var(--surface-2);padding:10px;border-radius:6px;font-size:13px;">
+      myTasksHTML = `<h4 style="margin-top:20px; border-top:1px solid var(--line); padding-top:16px;">المهام الحالية (${mine.length})</h4>
+      <div style="max-height:180px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
+        ${mine.map(m=>`<div style="background:var(--surface-2); padding:10px; border-radius:6px; font-size:13px;">
           <strong>${esc(m.task.title)}</strong> - ${(STAGE_KINDS[m.st.kind]||{ar:'غير معروف'}).ar}
-          <span style="float:left;color:${m.st.state==='done'?'var(--green-ok)':'var(--amber)'}">${m.st.state==='done'?'منجز':'قيد العمل'}</span>
+          <span style="float:left; color:${m.st.state==='done'?'var(--green-ok)':'var(--amber)'}">${m.st.state==='done'?'منجز':'قيد العمل'}</span>
         </div>`).join('')}
       </div>`;
     }
@@ -3087,28 +3100,28 @@ function openProfileModal(uid = null){
 
   document.getElementById('modalRoot').innerHTML = `<div class="ov" onclick="if(event.target===this)closeProfileModal()">
     <div class="modal fade-up" style="max-width:500px; text-align:right; direction:rtl;">
-      <div class="modal-head"><h3>${uid ? 'تعديل بيانات العضو' : 'إضافة موظف جديد'}</h3><button class="modal-close" onclick="closeProfileModal()">${icon('cross',20)}</button></div>
-      <div class="modal-body" style="display:flex;flex-direction:column;gap:16px;max-height:70vh;overflow-y:auto;padding-right:4px;">
-        <label class="tmap-f"><span>الاسم الكامل</span><input type="text" id="prof_name" value="${esc(u.name)}" ${!canEdit?'disabled':''}></label>
-        <label class="tmap-f"><span>الدور الوظيفي</span>
-          <select id="prof_role" ${!canEdit?'disabled':''}>
+      <div class="modal-head"><h3>${uid ? 'تعديل بيانات العضو' : 'إضافة موظف جديد'}</h3><button class="modal-close" onclick="closeProfileModal()">✕</button></div>
+      <div class="modal-body" style="display:flex; flex-direction:column; gap:12px; max-height:75vh; overflow-y:auto;">
+        <div class="fld"><label>الاسم الكامل</label><input type="text" id="prof_name" value="${esc(u.name)}" ${!canEdit?'disabled':''}></div>
+        <div class="fld"><label>الدور الوظيفي</label>
+          <select id="prof_role" dots;${!canEdit?'disabled':''}>
             ${store.roles.map(r=>`<option ${u.role===r?'selected':''}>${r}</option>`).join('')}
           </select>
-        </label>
-        <div style="display:flex;gap:16px;">
-          <label class="tmap-f" style="flex:1"><span>رقم الهاتف</span><input type="text" id="prof_phone" value="${esc(u.phone||'')}" placeholder="07..." ${!canEdit?'disabled':''}></label>
-          <label class="tmap-f" style="flex:1"><span>معرف التليجرام</span><input type="text" id="prof_telegram" value="${esc(u.telegram||'')}" placeholder="@username" ${!canEdit?'disabled':''}></label>
         </div>
-        <div style="display:flex;gap:16px;">
-          <label class="tmap-f" style="flex:1"><span>اسم المستخدم (Login)</span><input type="text" id="prof_user" value="${esc(u.user||'')}" ${!canEdit?'disabled':''}></label>
-          <label class="tmap-f" style="flex:1"><span>كلمة المرور (Password)</span><input type="text" id="prof_pass" value="${esc(u.pass||'')}" ${!canEdit?'disabled':''}></label>
+        <div class="fld-row">
+          <div class="fld"><label>رقم الهاتف</label><input type="text" id="prof_phone" value="${esc(u.phone||'')}" placeholder="07" ${!canEdit?'disabled':''}></div>
+          <div class="fld"><label>معرف التليجرام</label><input type="text" id="prof_telegram" value="${esc(u.telegram||'')}" placeholder="@username" ${!canEdit?'disabled':''}></div>
         </div>
-        <label class="tmap-f"><span>اللون الرمزي</span><input type="color" id="prof_av" value="${u.av}" ${!canEdit?'disabled':''} style="width:100%;height:40px;border:none;border-radius:6px;cursor:pointer;"></label>
+        <div class="fld-row">
+          <div class="fld"><label>اسم المستخدم (Login)</label><input type="text" id="prof_user" value="${esc(u.user||'')}" dots;${!canEdit?'disabled':''}></div>
+          <div class="fld"><label>كلمة المرور (Password)</label><input type="text" id="prof_pass" value="${esc(u.pass||'')}" dots;${!canEdit?'disabled':''}></div>
+        </div>
+        <div class="fld"><label>اللون الرمزي</label><input type="color" id="prof_av" value="${u.av}" ${!canEdit?'disabled':''} style="width:100%; height:42px; border:1.5px solid var(--line); border-radius:12px; cursor:pointer; background:none; padding:4px;"></div>
         ${myTasksHTML}
       </div>
-      ${canEdit ? `<div class="modal-foot">
-        ${uid && uid !== store.currentUser ? `<button class="btn-sm" style="color:var(--red);background:var(--red-soft);" onclick="deleteProfile('${uid}')">حذف الموظف</button>` : '<div></div>'}
-        <button class="pill-blue" onclick="saveProfile()">${uid ? '✓ حفظ التعديلات' : '✓ إضافة الموظف'}</button>
+      ${canEdit ? `<div class="modal-foot" style="display:flex; gap:12px;">
+        <button class="pill-blue" style="flex:2; justify-content:center;" onclick="saveProfile()">${uid ? '✓ حفظ التعديلات' : '✓ إضافة الموظف'}</button>
+        <button class="btn-gray" style="flex:1; justify-content:center; border-radius:100px;" onclick="closeProfileModal()">إلغاء</button>
       </div>` : ''}
     </div>
   </div>`;
@@ -3210,10 +3223,10 @@ function openPersonalModal(pid = null) {
   
   document.getElementById('modalRoot').innerHTML = `<div class="ov" onclick="if(event.target===this)closePersonalModal()">
     <div class="modal fade-up" style="max-width:400px; text-align:right; direction:rtl;">
-      <div class="modal-head"><h3>${pid ? 'تعديل المهمة الخاصة' : 'إضافة مهمة خاصة جديدة'}</h3><button class="modal-close" onclick="closePersonalModal()">${icon('cross',20)}</button></div>
-      <div class="modal-body" style="display:flex; flex-direction:column; gap:16px;">
-        <label class="tmap-f"><span>عنوان المهمة</span><input type="text" id="ptTitle" value="${esc(pt.title)}" placeholder="اكتب العنوان هنا..."></label>
-        <label class="tmap-f"><span>التفاصيل والوصف</span><textarea id="ptDesc" placeholder="التفاصيل الإضافية..." style="height:100px; padding:8px; border:1px solid var(--line); border-radius:6px; background:var(--surface); color:var(--ink-700); outline:none;">${esc(pt.desc)}</textarea></label>
+      <div class="modal-head"><h3>${pid ? 'تعديل المهمة الخاصة' : 'إضافة مهمة خاصة جديدة'}</h3><button class="modal-close" onclick="closePersonalModal()">✕</button></div>
+      <div class="modal-body" style="display:flex; flex-direction:column; gap:12px;">
+        <div class="fld"><label>عنوان المهمة</label><input type="text" id="ptTitle" value="${esc(pt.title)}" placeholder="اكتب العنوان هنا..."></div>
+        <div class="fld"><label>التفاصيل والوصف</label><textarea id="ptDesc" placeholder="التفاصيل الإضافية..." style="min-height:100px;">${esc(pt.desc)}</textarea></div>
       </div>
       <div style="display:flex; gap:12px; margin-top:20px;">
         <button class="pill-blue" style="flex:1; justify-content:center;" onclick="savePersonalTask()">حفظ</button>
