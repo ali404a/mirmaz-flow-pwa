@@ -563,6 +563,29 @@ input,select,textarea{font-family:inherit}
 .share-btn.teams{background:linear-gradient(135deg,#5059C9,#7B83EB);color:#fff;border:none}
 .share-btn.jump:hover{border-color:var(--blue-400);color:var(--blue-600)}
 .share-btn.copy:hover{border-color:var(--green-ok);color:var(--green-ok)}
+
+/* Public Dashboard custom styles */
+#publicDashboard::-webkit-scrollbar {
+  width: 8px;
+}
+#publicDashboard::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.01);
+}
+#publicDashboard::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+}
+#publicDashboard::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.2);
+}
+#dashboardTableContainer table {
+  width: 100%;
+  border-collapse: collapse;
+}
+#dashboardTableContainer th, #dashboardTableContainer td {
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
 /* ===== واجهة المحادثة (تيمز) ===== */
 .chat-teams-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;background:linear-gradient(135deg,#EEF0FB,#F3F0FC);border:1px solid #5059C922;border-radius:14px;padding:12px 16px;margin-bottom:16px}
 .ctb-left{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--ink-700)}
@@ -603,28 +626,73 @@ input,select,textarea{font-family:inherit}
 .chat-send:hover{transform:scale(1.05)}
 @media(max-width:820px){.chat-wrap{grid-template-columns:1fr}.chat-side{display:none}}
 
+
+@keyframes moveBlob1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(50px, 30px) scale(1.1); }
+}
+@keyframes moveBlob2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-30px, -50px) scale(1.2); }
+}
+@keyframes pulse {
+  0% { transform: scale(0.95); opacity: 0.6; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.6; }
+}
 </style>
 </head>
 <body>
 <div class="ambient"><span></span><span></span></div>
 
-<div id="loginScreen" style="position:fixed;inset:0;background:var(--bg);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;">
-  <div class="card" style="width:100%;max-width:400px;padding:32px;display:flex;flex-direction:column;gap:20px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.1);">
-    <h1 style="color:var(--blue-600);margin:0;font-size:28px;">Mirmaz Flow</h1>
-    <p style="color:var(--ink-500);margin:0">تسجيل الدخول للمنظومة</p>
-    <div id="loginError" style="color:var(--red);font-size:14px;display:none;">بيانات الدخول غير صحيحة</div>
-    <div style="display:flex;flex-direction:column;gap:12px;text-align:right;">
-      <label style="font-weight:bold;color:var(--ink-700)">اسم المستخدم</label>
-      <input type="text" id="loginUser" class="tmap-in" placeholder="Username" style="padding:12px;font-size:16px;">
+<div id="loginScreen" style="position:fixed;inset:0;background:#050914;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden;font-family:'Inter', sans-serif;">
+  <div style="position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(47,107,255,0.12);filter:blur(80px);top:-50px;right:-50px;animation:moveBlob1 8s infinite alternate;"></div>
+  <div style="position:absolute;width:400px;height:400px;border-radius:50%;background:rgba(139,92,246,0.08);filter:blur(100px);bottom:-100px;left:-100px;animation:moveBlob2 10s infinite alternate;"></div>
+  
+  <div class="card" style="width:100%;max-width:420px;padding:40px;display:flex;flex-direction:column;gap:24px;text-align:center;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);backdrop-filter:blur(20px);box-shadow:0 20px 50px rgba(0,0,0,0.3);position:relative;z-index:10;border-radius:20px;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+      <div style="font-size:32px;font-weight:800;background:linear-gradient(45deg, #3b82f6, #8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">mirmaz FLOW</div>
+      <p style="color:rgba(255,255,255,0.4);margin:0;font-size:15px;">نظام إدارة خطوط الإنتاج والمحتوى</p>
+    </div>
+    
+    <div id="loginError" style="color:var(--red);font-size:14px;display:none;background:rgba(255,84,112,0.1);padding:10px;border-radius:8px;border:1px solid rgba(255,84,112,0.2);direction:rtl;">بيانات الدخول غير صحيحة، يرجى المحاولة مرة أخرى</div>
+    
+    <div style="display:flex;flex-direction:column;gap:16px;text-align:right;">
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <label style="font-weight:bold;color:rgba(255,255,255,0.8);font-size:14px;">اسم المستخدم</label>
+        <input type="text" id="loginUser" class="tmap-in" placeholder="Username" style="padding:14px;font-size:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);color:#fff;border-radius:10px;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+      </div>
       
-      <label style="font-weight:bold;color:var(--ink-700)">كلمة المرور</label>
-      <div style="position:relative;display:flex;align-items:center;">
-        <input type="password" id="loginPass" class="tmap-in" placeholder="Password" style="padding:12px;font-size:16px;width:100%;">
-        <button onclick="togglePassword()" style="position:absolute;left:10px;background:none;border:none;color:var(--ink-500);cursor:pointer;padding:5px;">👁</button>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <label style="font-weight:bold;color:rgba(255,255,255,0.8);font-size:14px;">كلمة المرور</label>
+        <div style="position:relative;display:flex;align-items:center;">
+          <input type="password" id="loginPass" class="tmap-in" placeholder="Password" style="padding:14px;font-size:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);color:#fff;border-radius:10px;outline:none;width:100%;transition:border-color 0.2s;direction:ltr;text-align:right;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+          <button onclick="togglePassword()" style="position:absolute;left:12px;background:none;border:none;color:rgba(255,255,255,0.4);cursor:pointer;padding:5px;font-size:18px;">👁</button>
+        </div>
       </div>
     </div>
-    <button class="pill-blue" onclick="performLogin()" style="padding:14px;font-size:16px;margin-top:10px;">تسجيل الدخول</button>
+    
+    <div style="display:flex;flex-direction:column;gap:12px;margin-top:10px;">
+      <button class="pill-blue" onclick="performLogin()" style="padding:14px;font-size:16px;font-weight:bold;background:#3b82f6;color:#fff;border:none;border-radius:10px;cursor:pointer;box-shadow:0 4px 12px rgba(59,130,246,0.3);transition:background 0.2s;justify-content:center;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">تسجيل الدخول</button>
+      
+      <div style="display:flex;align-items:center;gap:8px;margin:8px 0;color:rgba(255,255,255,0.2);justify-content:center;"><hr style="flex:1;border:none;border-top:1px solid rgba(255,255,255,0.08)">أو<hr style="flex:1;border:none;border-top:1px solid rgba(255,255,255,0.08)"></div>
+      
+      <button onclick="enterPublicDashboard()" style="padding:14px;font-size:15px;font-weight:bold;background:rgba(255,255,255,0.05);color:#fff;border:1px solid rgba(255,255,255,0.1);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.08)';this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.borderColor='rgba(255,255,255,0.1)'">
+        <span>📊 الوصول السريع للمهام (لوحة العرض)</span>
+      </button>
+    </div>
   </div>
+</div>
+
+<div id="publicDashboard" style="display:none; position:fixed; inset:0; background:radial-gradient(circle at top right, #0d1527, #050914); color:#fff; z-index:999999; overflow-y:auto; padding:40px; font-family:'Inter', sans-serif;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:20px; direction: rtl;">
+    <div>
+      <h1 style="margin:0; font-size:32px; font-weight:800; background:linear-gradient(45deg, #3b82f6, #8b5cf6); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">لوحة متابعة المهام والإنتاج 📊</h1>
+      <p style="margin:8px 0 0 0; color:rgba(255,255,255,0.5); font-size:16px;">تحديث تلقائي لحظي لشاشة العرض بقسم التسويق</p>
+    </div>
+    <button class="pill-blue" onclick="exitPublicDashboard()" style="background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.1); padding:10px 20px; font-size:15px;">تسجيل الدخول 🔑</button>
+  </div>
+  <div id="dashboardTableContainer" class="card" style="padding:0; overflow:hidden; border:1px solid rgba(255,255,255,0.05); background:rgba(255,255,255,0.02); backdrop-filter:blur(20px); border-radius:16px;"></div>
 </div>
 <script>
 function togglePassword(){
@@ -730,6 +798,8 @@ const SVG={
 function logoSVG(size=40){return `<svg viewBox="0 0 1000 1000" width="${size}" height="${size}" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,1000) scale(0.1,-0.1)"><path d="M2491 7900 c-107 -23 -202 -98 -249 -198 -23 -49 -27 -70 -27 -147 0 -77 4 -98 27 -147 15 -32 46 -76 70 -99 48 -46 2194 -1348 2324 -1410 222 -106 499 -110 718 -10 111 50 2297 1382 2338 1424 174 179 103 486 -133 573 -56 21 -181 21 -234 1 -22 -8 -521 -307 -1110 -664 -588 -357 -1091 -662 -1116 -676 -52 -31 -123 -36 -167 -13 -15 8 -517 311 -1117 673 -600 362 -1108 666 -1130 675 -53 21 -139 29 -194 18z M1195 7064 c-180 -45 -301 -210 -281 -384 9 -75 57 -170 110 -217 24 -21 194 -127 377 -236 184 -108 340 -201 348 -206 10 -6 -6 -31 -66 -102 -373 -445 -668 -981 -847 -1538 -167 -517 -245 -1112 -217 -1637 20 -376 36 -445 120 -536 167 -182 462 -135 573 90 27 56 30 147 12 462 -42 725 126 1458 478 2095 130 235 359 556 521 732 l57 61 386 -228 c212 -126 388 -230 390 -232 2 -3 -31 -45 -73 -94 -414 -482 -681 -1070 -773 -1702 -54 -376 -36 -953 35 -1099 36 -72 96 -130 172 -165 55 -26 77 -31 143 -31 66 0 88 5 143 31 116 54 192 157 204 274 3 29 -2 114 -11 188 -20 170 -21 465 -1 631 66 568 324 1115 716 1521 l74 77 495 -295 c608 -363 615 -367 720 -367 67 0 88 5 142 30 35 17 288 164 562 327 274 163 504 296 510 296 15 0 185 -189 263 -291 282 -370 457 -796 525 -1279 17 -126 15 -549 -3 -690 -17 -120 -11 -189 20 -254 109 -223 405 -270 572 -88 98 106 123 250 123 702 0 314 -9 418 -59 665 -115 572 -371 1093 -753 1533 -35 40 -61 76 -58 79 3 4 178 109 388 234 l383 227 59 -61 c73 -77 207 -244 289 -360 376 -531 602 -1116 693 -1789 23 -167 30 -632 13 -815 -17 -186 -15 -235 12 -309 30 -81 112 -162 194 -194 206 -78 432 45 474 260 37 194 46 719 17 1015 -94 948 -463 1829 -1066 2544 -48 56 -59 75 -49 82 8 5 165 98 349 207 373 220 421 257 460 357 60 156 10 324 -127 421 -94 68 -229 80 -336 31 -28 -13 -847 -495 -1819 -1070 -972 -576 -1772 -1047 -1778 -1047 -7 0 -810 473 -1786 1051 -976 578 -1796 1060 -1822 1071 -46 20 -155 32 -197 22z"/></g></svg>`;}
 function icon(name,size=20,extra=''){return `<svg class="ico ${extra}" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${SVG[name]||SVG.dot}</svg>`;}
 
+const DEFAULT_ROLES = ['الإدارة','مانيجر','كوردنيتر','مصمم','كاتب محتوى','كاتب كابشن','مونتير','شريك خارجي'];
+let roles = DEFAULT_ROLES;
 const BRANDS={academy:{id:'academy',name:'mirmaz Academy',emoji:'🎓',color:'#2F6BFF',soft:'#E3EBFF'},zone:{id:'zone',name:'mirmaz Zone',emoji:'⚡',color:'#7B3FF2',soft:'#EFE6FF'}};
 const PRIORITIES={normal:{id:'normal',name:'عادية',emoji:'🟢',color:'#21C07A',rank:1},medium:{id:'medium',name:'متوسطة',emoji:'🟡',color:'#F6A609',rank:2},critical:{id:'critical',name:'قصوى',emoji:'🔥',color:'#FF5470',rank:3}};
 const NSTATE={pending:{ar:'بالانتظار',color:'#8995AE',svg:'dot'},working:{ar:'قيد العمل',color:'#2F6BFF',svg:'dot'},done:{ar:'مُنجز',color:'#21C07A',svg:'check'},approval:{ar:'طلب موافقة',color:'#F6A609',svg:'clock'},approved:{ar:'موافق عليه',color:'#21C07A',svg:'check'},rejected:{ar:'مرفوض',color:'#FF5470',svg:'cross'},published:{ar:'تم النشر',color:'#16B981',svg:'check'}};
@@ -801,7 +871,9 @@ function defaultChat(){return{
     c4:[{from:'u4',text:'رفعت تصميم البوست على الدرايف',time:'12:30'}],
   }
 };}
-function load(){try{const r=localStorage.getItem(KEY);if(r){const d=JSON.parse(r);if(!d.notifications)d.notifications=DEFAULT_NOTIFS;if(!d.personal)d.personal={};if(!d.chat)d.chat=defaultChat();if(!d.sheet)d.sheet=[];if(!d.tasks.find(x=>x.isSeeded2026)){d.tasks.push(...[
+function load(){try{const r=localStorage.getItem(KEY);if(r){const d=JSON.parse(r);if(!d.notifications)d.notifications=DEFAULT_NOTIFS;
+if(!d.roles)d.roles=DEFAULT_ROLES;
+roles=d.roles;if(!d.personal)d.personal={};if(!d.chat)d.chat=defaultChat();if(!d.sheet)d.sheet=[];if(!d.tasks.find(x=>x.isSeeded2026)){d.tasks.push(...[
   {
     "id": "s01784189535263",
     "title": "عقيل الزبيدي",
@@ -2259,7 +2331,7 @@ function load(){try{const r=localStorage.getItem(KEY);if(r){const d=JSON.parse(r
       }
     ]
   }
-]);d.tasks.forEach(t=>t.isSeeded2026=true);} d.tasks.forEach(t=>t.stages.forEach(s=>{if(s.isPublish && !s.kind)s.kind='publish';})); return d;}}catch(e){}return {team:DEFAULT_TEAM.map(u=>({...u, user: u.id, pass: '1234'})),sections:DEFAULT_SECTIONS,tasks:seedTasks().map(t=>({ ...t, stages: t.stages.map(s => (s.isPublish && !s.kind) ? { ...s, kind: 'publish' } : s) })),notifications:DEFAULT_NOTIFS,personal:{u3:[{id:'p1',title:'تعلّم اختصارات After Effects',desc:'مراجعة 10 اختصارات جديدة لتسريع المونتاج',done:false},{id:'p2',title:'تنظيم مجلد المراجع',desc:'ترتيب ملفات Drive حسب البراند',done:true}]},chat:defaultChat(),sheet:[],currentUser:null};}
+]);d.tasks.forEach(t=>t.isSeeded2026=true);} d.tasks.forEach(t=>t.stages.forEach(s=>{if(s.isPublish && !s.kind)s.kind='publish';})); return d;}}catch(e){}return {team:DEFAULT_TEAM.map(u=>({...u, user: u.id, pass: '1234'})),sections:DEFAULT_SECTIONS,tasks:seedTasks().map(t=>({ ...t, stages: t.stages.map(s => (s.isPublish && !s.kind) ? { ...s, kind: 'publish' } : s) })),notifications:DEFAULT_NOTIFS,personal:{u3:[{id:'p1',title:'تعلّم اختصارات After Effects',desc:'مراجعة 10 اختصارات جديدة لتسريع المونتاج',done:false},{id:'p2',title:'تنظيم مجلد المراجع',desc:'ترتيب ملفات Drive حسب البراند',done:true}]},chat:defaultChat(),sheet:[],currentUser:null,roles:DEFAULT_ROLES};}
 let store=load();
 function save(){localStorage.setItem(KEY,JSON.stringify(store));}
 const userById=id=>store.team.find(u=>u.id===id)||{name:'؟',av:'#8995AE',role:''};
@@ -2445,13 +2517,15 @@ function toggleSidebar() {
     ov.classList.toggle('open');
   }
 }
-function go(p) {
+function go(p, q = '') {
   page=p;
+  searchQuery=q;
   const sb = document.querySelector('.sidebar');
   const ov = document.getElementById('sbOverlay');
   if(sb) sb.classList.remove('open');
   if(ov) ov.classList.remove('open');
   render();
+  const si=document.getElementById('searchInput');if(si){si.value=searchQuery;}
 }
 function getVisibleTasks() {
   const u = userById(store.currentUser);
@@ -2700,7 +2774,7 @@ function viewHome(){
     </div>`;
   };
 
-  return `<div class="stat-row fade-up">${stats.map(s=>`<div class="stat" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'" onclick="if(s.query) { searchQuery = s.query; } go(s.page)">
+  return `<div class="stat-row fade-up">${stats.map(s=>`<div class="stat" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'" onclick="go('${s.page}', '${s.query || ""}')">
     <div class="stat-top"><div class="stat-ico" style="background:${s.sc};color:${s.c}">${icon(s.ic,20)}</div><span class="stat-delta ${s.up?'up':'down'}">${s.up?'↑':'•'} ${s.d}</span></div>
     <b>${s.v}</b><span>${s.l}</span></div>`).join('')}</div>
   <div class="home-grid">
@@ -2990,9 +3064,7 @@ let profileEditId = null;
 function openProfileModal(uid = null){
   const canEdit = ['الإدارة','مانيجر','كوردنيتر'].includes(userById(store.currentUser).role);
   profileEditId = uid;
-  let u = uid ? store.team.find(x=>x.id===uid) : {id:'u'+Date.now(), name:'', role:'مصمم', av:'#3B6FF0', user:'', pass:''};
-  
-  const roles=['الإدارة','مانيجر','كوردنيتر','مصمم','كاتب محتوى','كاتب كابشن','مونتير','شريك خارجي'];
+  let u = uid ? store.team.find(x=>x.id===uid) : {id:'u'+Date.now(), name:'', role:'مصمم', av:'#3B6FF0', user:'', pass:'', phone:'', telegram:''};
   
   let myTasksHTML = '';
   if(uid) {
@@ -3000,28 +3072,30 @@ function openProfileModal(uid = null){
     store.tasks.forEach(t=>t.stages.forEach(st=>{if(st.person===uid)mine.push({task:t,st});}));
     if(mine.length) {
       myTasksHTML = `<h4 style="margin-top:20px;border-top:1px solid var(--line);padding-top:16px;">المهام الحالية (${mine.length})</h4>
-      <div style="max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;">
+      <div style="max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;">
         ${mine.map(m=>`<div style="background:var(--surface-2);padding:10px;border-radius:6px;font-size:13px;">
           <strong>${esc(m.task.title)}</strong> - ${(STAGE_KINDS[m.st.kind]||{ar:'غير معروف'}).ar}
           <span style="float:left;color:${m.st.state==='done'?'var(--green-ok)':'var(--amber)'}">${m.st.state==='done'?'منجز':'قيد العمل'}</span>
         </div>`).join('')}
       </div>`;
-    } else {
-      myTasksHTML = `<div style="margin-top:20px;color:var(--ink-500);font-size:14px;text-align:center;">لا توجد مهام حالية</div>`;
     }
   }
 
   const m=document.createElement('div');
   m.className='modal-overlay';
   m.innerHTML=`<div class="modal fade-up" style="max-width:500px;">
-    <div class="modal-head"><h3>${uid ? 'ملف الموظف' : 'إضافة موظف جديد'}</h3><button class="modal-close" onclick="closeProfileModal()">${icon('cross',20)}</button></div>
-    <div class="modal-body" style="display:flex;flex-direction:column;gap:16px;">
+    <div class="modal-head"><h3>${uid ? 'تعديل بيانات العضو' : 'إضافة موظف جديد'}</h3><button class="modal-close" onclick="closeProfileModal()">${icon('cross',20)}</button></div>
+    <div class="modal-body" style="display:flex;flex-direction:column;gap:16px;max-height:70vh;overflow-y:auto;padding-right:4px;direction:rtl;text-align:right;">
       <label class="tmap-f"><span>الاسم الكامل</span><input type="text" id="prof_name" value="${esc(u.name)}" ${!canEdit?'disabled':''}></label>
-      <label class="tmap-f"><span>الدور (المنصب)</span>
+      <label class="tmap-f"><span>الدور الوظيفي</span>
         <select id="prof_role" ${!canEdit?'disabled':''}>
-          ${roles.map(r=>`<option ${u.role===r?'selected':''}>${r}</option>`).join('')}
+          ${store.roles.map(r=>`<option ${u.role===r?'selected':''}>${r}</option>`).join('')}
         </select>
       </label>
+      <div style="display:flex;gap:16px;">
+        <label class="tmap-f" style="flex:1"><span>رقم الهاتف</span><input type="text" id="prof_phone" value="${esc(u.phone||'')}" placeholder="07..." ${!canEdit?'disabled':''}></label>
+        <label class="tmap-f" style="flex:1"><span>معرف التليجرام</span><input type="text" id="prof_telegram" value="${esc(u.telegram||'')}" placeholder="@username" ${!canEdit?'disabled':''}></label>
+      </div>
       <div style="display:flex;gap:16px;">
         <label class="tmap-f" style="flex:1"><span>اسم المستخدم (Login)</span><input type="text" id="prof_user" value="${esc(u.user||'')}" ${!canEdit?'disabled':''}></label>
         <label class="tmap-f" style="flex:1"><span>كلمة المرور (Password)</span><input type="text" id="prof_pass" value="${esc(u.pass||'')}" ${!canEdit?'disabled':''}></label>
@@ -3040,6 +3114,8 @@ function closeProfileModal(){document.getElementById('modalRoot').innerHTML=''; 
 function saveProfile(){
   const name = document.getElementById('prof_name').value.trim();
   const role = document.getElementById('prof_role').value;
+  const phone = document.getElementById('prof_phone').value.trim();
+  const telegram = document.getElementById('prof_telegram').value.trim();
   const user = document.getElementById('prof_user').value.trim();
   const pass = document.getElementById('prof_pass').value.trim();
   const av = document.getElementById('prof_av').value;
@@ -3048,9 +3124,9 @@ function saveProfile(){
   
   if(profileEditId) {
     const u = store.team.find(x=>x.id===profileEditId);
-    if(u) { u.name=name; u.role=role; u.user=user; u.pass=pass; u.av=av; }
+    if(u) { u.name=name; u.role=role; u.phone=phone; u.telegram=telegram; u.user=user; u.pass=pass; u.av=av; }
   } else {
-    store.team.push({id:'u'+Date.now(), name, role, user, pass, av});
+    store.team.push({id:'u'+Date.now(), name, role, phone, telegram, user, pass, av});
   }
   save(); closeProfileModal(); render();
 }
@@ -3061,42 +3137,55 @@ function deleteProfile(uid) {
   }
 }
 
-function viewSettings(){ return `<div class="set-grid">
-    <div class="set-card card fade-up"><h3>👥 الموظفون</h3><p>المانيجر يضيف الموظفين — يظهرون في القوائم المنسدلة عند إنشاء التاسك.</p>
-      <div class="set-list">${store.team.map(u=>`<div class="set-row"><span class="ico" style="background:${u.av}18;color:${u.av}">${u.name[0]}</span><span class="nm">${esc(u.name)}<div class="rl">${esc(u.role)}</div></span><button class="set-del" onclick="delTeam('${u.id}')">${icon("cross",15)}</button></div>`).join('')}</div>
-      <div class="set-add"><input id="newName" placeholder="اسم الموظف"><select id="newRole">${roles.map(r=>`<option>${r}</option>`).join('')}</select><button class="pill-blue" onclick="addTeam()" style="height:42px">+ إضافة</button></div>
+function viewSettings(){
+  const canEdit = ['الإدارة','مانيجر','كوردنيتر'].includes(userById(store.currentUser).role);
+  if(!canEdit) return '<div class="empty card">غير مصرح لك بعرض هذه الصفحة</div>';
+  const avail = Object.entries(STAGE_KINDS).filter(([k,v])=>!store.sections.includes(k));
+  return `<div class="set-grid" style="direction:rtl;text-align:right;">
+    <div class="set-card card fade-up">
+      <h3>👥 الموظفون</h3>
+      <p>إدارة أعضاء الفريق وصلاحياتهم.</p>
+      <div class="set-list">${store.team.map(u=>`<div class="set-row"><span class="ico" style="background:${u.av}18;color:${u.av}">${u.name[0]}</span><span class="nm">${esc(u.name)}<div class="rl">${esc(u.role)}</div></span><button class="set-del" onclick="deleteProfile('${u.id}')">${icon("cross",15)}</button></div>`).join('')}</div>
+      <div class="set-add"><button class="pill-blue" onclick="openProfileModal()" style="height:42px;width:100%;justify-content:center;">+ إضافة موظف جديد</button></div>
     </div>
-    <div class="set-card card fade-up"><h3>🧩 الأقسام (مراحل العمل)</h3><p>المانيجر يحدّد الأقسام المتاحة — الكوردنيتر يختار منها عند بناء خريطة التاسك.</p>
+    
+    <div class="set-card card fade-up">
+      <h3>💼 المسميات الوظيفية</h3>
+      <p>إضافة أو حذف المسميات الوظيفية المتاحة في المنظومة.</p>
+      <div class="set-list">${store.roles.map((r,i)=>`<div class="set-row"><span class="nm">${esc(r)}</span><button class="set-del" onclick="deleteRole(${i})">${icon("cross",15)}</button></div>`).join('')}</div>
+      <div class="set-add"><input id="newRoleName" placeholder="المسمى الجديد..." style="flex:1;"><button class="pill-blue" onclick="addRole()" style="height:42px">+ إضافة</button></div>
+    </div>
+
+    <div class="set-card card fade-up">
+      <h3>🧩 الأقسام (مراحل العمل)</h3>
+      <p>تحديد الأقسام المتاحة للكوردنيتر عند إنشاء خريطة المهام.</p>
       <div class="set-list">${store.sections.map((s,i)=>{const k=(STAGE_KINDS[s]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true});return `<div class="set-row"><span class="ico" style="background:${k.color}18;color:${k.color}">${icon(k.svg,16)}</span><span class="nm">${k.ar}</span><button class="set-del" onclick="delSection(${i})">${icon("cross",15)}</button></div>`;}).join('')}</div>
-      <div class="set-add"><select id="newSection">${avail.length?avail.map(([k,v])=>`<option value="${k}">${v.ar}</option>`).join(''):'<option value="">كل الأقسام مُضافة</option>'}</select><button class="pill-blue" onclick="addSection()" style="height:42px">+ إضافة</button></div>
+      <div class="set-add"><select id="newSection" style="flex:1;">${avail.length?avail.map(([k,v])=>`<option value="${k}">${v.ar}</option>`).join(''):'<option value="">كل الأقسام مُضافة</option>'}</select><button class="pill-blue" onclick="addSection()" style="height:42px">+ إضافة</button></div>
     </div>
   </div>`;
 }
 
-function addPersonalTask() {
-  const t = prompt('عنوان المهمة الخاصة:');
-  if(!t) return;
-  const d = prompt('التفاصيل (اختياري):');
-  const uid = store.currentUser;
-  if(!store.personal[uid]) store.personal[uid]=[];
-  store.personal[uid].push({id:'p'+Date.now(), title:t, desc:d||'', done:false});
+function addRole() {
+  const r = document.getElementById('newRoleName').value.trim();
+  if(!r) return;
+  if(!store.roles) store.roles = DEFAULT_ROLES;
+  store.roles.push(r);
   save();
   render();
 }
-function editPersonalTask(pid) {
-  const uid = store.currentUser;
-  const pt = store.personal[uid].find(x=>x.id===pid);
-  if(!pt) return;
-  const t = prompt('عنوان المهمة:', pt.title);
-  if(!t) return;
-  const d = prompt('التفاصيل:', pt.desc);
-  pt.title = t;
-  pt.desc = d||'';
+function deleteRole(idx) {
+  if(!confirm('حذف هذا المسمى الوظيفي؟')) return;
+  store.roles.splice(idx,1);
   save();
   render();
 }
+
+
+let personalEditId = null;
+function addPersonalTask() { openPersonalModal(); }
+function editPersonalTask(pid) { openPersonalModal(pid); }
 function deletePersonalTask(pid) {
-  if(!confirm('حذف المهمة؟')) return;
+  if(!confirm('حذف المهمة الخاصة؟')) return;
   const uid = store.currentUser;
   store.personal[uid] = store.personal[uid].filter(x=>x.id!==pid);
   save();
@@ -3106,6 +3195,65 @@ function togglePersonalTask(pid) {
   const uid = store.currentUser;
   const pt = store.personal[uid].find(x=>x.id===pid);
   if(pt) { pt.done = !pt.done; save(); render(); }
+}
+function openPersonalModal(pid = null) {
+  personalEditId = pid;
+  const uid = store.currentUser;
+  let pt = pid ? store.personal[uid].find(x=>x.id===pid) : {title: '', desc: ''};
+  
+  const m=document.createElement('div');
+  m.className='modal-overlay';
+  m.innerHTML = `<div class="modal fade-up" style="max-width:400px; padding:24px; direction:rtl; text-align:right;">
+    <h3 style="margin-top:0">${pid ? 'تعديل المهمة الخاصة' : 'إضافة مهمة خاصة جديدة'}</h3>
+    <div style="display:flex; flex-direction:column; gap:16px; margin: 16px 0;">
+      <label class="tmap-f"><span>عنوان المهمة</span><input type="text" id="ptTitle" value="${esc(pt.title)}" placeholder="اكتب العنوان هنا..."></label>
+      <label class="tmap-f"><span>التفاصيل والوصف</span><textarea id="ptDesc" placeholder="التفاصيل الإضافية..." style="height:100px; padding:8px; border:1px solid var(--line); border-radius:6px; background:var(--surface); color:var(--ink-700); outline:none;">${esc(pt.desc)}</textarea></label>
+    </div>
+    <div style="display:flex; gap:12px; margin-top:20px;">
+      <button class="pill-blue" style="flex:1; justify-content:center;" onclick="savePersonalTask()">حفظ</button>
+      <button class="btn-gray" style="flex:1; justify-content:center; border-radius:100px;" onclick="closePersonalModal()">إلغاء</button>
+    </div>
+  </div>`;
+  document.getElementById('modalRoot').appendChild(m);
+}
+function closePersonalModal() {
+  document.getElementById('modalRoot').innerHTML = '';
+  personalEditId = null;
+}
+function savePersonalTask() {
+  const t = document.getElementById('ptTitle').value.trim();
+  const d = document.getElementById('ptDesc').value.trim();
+  if(!t) return alert('يرجى إدخال عنوان المهمة');
+  
+  const uid = store.currentUser;
+  if(!store.personal[uid]) store.personal[uid] = [];
+  
+  if(personalEditId) {
+    const pt = store.personal[uid].find(x=>x.id===personalEditId);
+    if(pt) { pt.title = t; pt.desc = d; }
+  } else {
+    store.personal[uid].push({ id: 'p' + Date.now(), title: t, desc: d, done: false });
+  }
+  save();
+  closePersonalModal();
+  render();
+}
+function viewNotifications(){
+  const notifs = store.notifications || [];
+  notifs.forEach(n => n.read = true);
+  save();
+  const bd=document.getElementById('bellDot');if(bd) bd.style.display='none';
+  return `<div class="maps-bar fade-up" style="direction:rtl;text-align:right;"><div class="maps-count"><strong>${notifs.length}</strong> الإشعارات</div></div>
+  <div style="max-width: 600px; margin: 20px auto; display: flex; flex-direction: column; gap: 12px; direction:rtl; text-align:right;">
+    ${notifs.map(n => `<div class="card fade-up" style="padding: 16px; border-right: 4px solid ${n.type==='critical'?'var(--red)':'var(--blue)'}; display: flex; gap: 12px; align-items: flex-start;">
+      <div style="font-size: 24px;">${n.type==='critical'?'🔥':'🔔'}</div>
+      <div style="flex: 1;">
+        <div style="font-weight: bold; margin-bottom: 4px; color: var(--ink-700);">${esc(n.title)}</div>
+        <div style="font-size: 14px; color: var(--ink-500); margin-bottom: 8px;">${esc(n.body)}</div>
+        <div style="font-size: 12px; color: var(--ink-400);">${esc(n.time)}</div>
+      </div>
+    </div>`).join('')}
+  </div>`;
 }
 function viewPersonal(){
   const uid = store.currentUser;
@@ -3307,15 +3455,140 @@ function renderTaskModal(){
   </div></div>`;
 }
 const META={home:['لوحة التحكم 👋','مرحباً، إليك نظرة عامة على أداء الإنتاج اليوم'],maps:['خرائط المهام','كل تاسك خريطته الخاصة — اضغط أي مرحلة لفتحها وإضافة محتواها'],partnerships:['الشراكات','المهام المخصصة للشركات الخارجية وشركاء مرماز'],sheet:['الشيت 📋','جدول المهام والتفاصيل الخاصة للأساتذة'],mytasks:['مهامي','المراحل المعيّنة لك عبر كل المهام'],personal:['مهامي الخاصة','مساحة شخصية معزولة — يراها صاحبها فقط'],calendar:['تقويم النشر','مواعيد النشر تتزامن تلقائياً من خرائط المهام'],chat:['المحادثة','دردشة الفريق مدعومة بـ Microsoft Teams — مشفّرة وآمنة'],analytics:['التقارير والتحليلات','أداء الفريق والإنتاج حسب الجهة والأولوية'],team:['الفريق','كل موظف وإحصائياته ومهامه'],notifications:['الإشعارات','آخر التنبيهات والتحديثات'],settings:['إعدادات المانيجر','إدارة الموظفين والأقسام المتاحة']};
-function render(){renderNav();
+
+function enterPublicDashboard() {
+  page = 'public_dashboard';
+  document.getElementById('loginScreen').style.display = 'none';
+  document.querySelector('.shell').style.display = 'none';
+  document.getElementById('publicDashboard').style.display = 'block';
+  renderPublicDashboard();
+  
+  if(window.dashboardInterval) clearInterval(window.dashboardInterval);
+  window.dashboardInterval = setInterval(() => {
+    if(page === 'public_dashboard') {
+      try {
+        const r = localStorage.getItem(KEY);
+        if(r) {
+          store = JSON.parse(r);
+          renderPublicDashboard();
+        }
+      } catch(e) {}
+    } else {
+      clearInterval(window.dashboardInterval);
+    }
+  }, 3000);
+}
+
+function exitPublicDashboard() {
+  page = 'home';
+  if(window.dashboardInterval) clearInterval(window.dashboardInterval);
+  document.getElementById('publicDashboard').style.display = 'none';
   if(!store.currentUser) {
+    document.getElementById('loginScreen').style.display = 'flex';
+  } else {
+    document.querySelector('.shell').style.display = 'flex';
+    render();
+  }
+}
+
+window.addEventListener('storage', (e) => {
+  if (e.key === KEY) {
+    try {
+      store = JSON.parse(e.newValue);
+      if(page === 'public_dashboard') {
+        renderPublicDashboard();
+      } else {
+        render();
+      }
+    } catch(err) {}
+  }
+});
+
+function renderPublicDashboard() {
+  const container = document.getElementById('dashboardTableContainer');
+  if(!container) return;
+  
+  const tasks = store.tasks.filter(t => !t.isPartnership);
+  const cols = [
+    { name: 'النصوص', kinds: ['caption', 'textdesign'] },
+    { name: 'التصاميم', kinds: ['design'] },
+    { name: 'التدقيق', kinds: ['review'] },
+    { name: 'الموافقة', kinds: ['approval'] },
+    { name: 'النشر', kinds: ['publish'] }
+  ];
+  
+  let html = `<table style="width:100%; border-collapse:collapse; text-align:right; direction:rtl;">
+    <thead>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02);">
+        <th style="padding:20px; color:rgba(255,255,255,0.6); font-weight:700; font-size:16px;">اسم المهمة</th>
+        ${cols.map(c => `<th style="padding:20px; text-align:center; color:rgba(255,255,255,0.6); font-weight:700; font-size:16px;">${c.name}</th>`).join('')}
+      </tr>
+    </thead>
+    <tbody>`;
+    
+  tasks.forEach(t => {
+    html += `<tr style="border-bottom:1px solid rgba(255,255,255,0.04); transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.01)'" onmouseout="this.style.background='transparent'">
+      <td style="padding:20px; font-weight:bold; font-size:16px; color:#fff;">
+        ${esc(t.title)}
+        <div style="font-size:12px; color:rgba(255,255,255,0.4); font-weight:normal; margin-top:4px;">⏱ ${esc(t.due)}</div>
+      </td>`;
+      
+    cols.forEach(c => {
+      const stages = t.stages.filter(s => c.kinds.includes(s.kind));
+      if(stages.length === 0) {
+        html += `<td style="padding:20px; text-align:center;"><span style="color:rgba(255,255,255,0.15); font-size:20px;">—</span></td>`;
+      } else {
+        let state = 'pending';
+        if(stages.every(s => ['done', 'approved', 'published'].includes(s.state))) state = 'done';
+        else if(stages.some(s => s.state === 'rejected')) state = 'rejected';
+        else if(stages.some(s => s.state === 'approval')) state = 'approval';
+        else if(stages.some(s => s.state === 'working')) state = 'working';
+        
+        let boxHtml = '';
+        if(state === 'done') {
+          boxHtml = `<div style="width:36px; height:36px; background:#21C07A25; border:2px solid #21C07A; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#21C07A; font-weight:bold; box-shadow:0 0 10px rgba(33,192,122,0.2);">✓</div>`;
+        } else if(state === 'working') {
+          boxHtml = `<div style="width:36px; height:36px; background:#2f6bff25; border:2px solid #2f6bff; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#2f6bff; position:relative; box-shadow:0 0 10px rgba(47,107,255,0.2);">
+            <div style="position:absolute; width:8px; height:8px; background:#2f6bff; border-radius:50%; animation:pulse 1.5s infinite;"></div>
+          </div>`;
+        } else if(state === 'approval') {
+          boxHtml = `<div style="width:36px; height:36px; background:#f6a60925; border:2px solid #f6a609; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#f6a609; box-shadow:0 0 10px rgba(246,166,9,0.2);">⏳</div>`;
+        } else if(state === 'rejected') {
+          boxHtml = `<div style="width:36px; height:36px; background:#ff547025; border:2px solid #ff5470; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#ff5470; font-weight:bold; box-shadow:0 0 10px rgba(255,84,112,0.2);">✕</div>`;
+        } else {
+          boxHtml = `<div style="width:36px; height:36px; background:rgba(255,255,255,0.03); border:2px solid rgba(255,255,255,0.1); border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.2);">•</div>`;
+        }
+        
+        html += `<td style="padding:20px; text-align:center;">${boxHtml}</td>`;
+      }
+    });
+    
+    html += `</tr>`;
+  });
+  
+  html += `</tbody></table>`;
+  container.innerHTML = html;
+}
+
+function render(){renderNav();
+  if(!store.currentUser && page !== 'public_dashboard') {
     document.querySelector('.shell').style.display = 'none';
     document.getElementById('loginScreen').style.display = 'flex';
     return;
   } else {
-    document.querySelector('.shell').style.display = 'flex';
-    const ls = document.getElementById('loginScreen');
-    if(ls) ls.style.display = 'none';
+    if(page === 'public_dashboard') {
+      document.querySelector('.shell').style.display = 'none';
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('publicDashboard').style.display = 'block';
+      renderPublicDashboard();
+      return;
+    } else {
+      document.querySelector('.shell').style.display = 'flex';
+      const ls = document.getElementById('loginScreen');
+      if(ls) ls.style.display = 'none';
+      const pd = document.getElementById('publicDashboard');
+      if(pd) pd.style.display = 'none';
+    }
   }
 renderSummary();
   const unread=store.notifications?store.notifications.filter(n=>!n.read).length:0;
