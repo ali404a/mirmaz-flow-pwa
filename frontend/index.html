@@ -3575,26 +3575,34 @@ function renderTaskModal(){
 const META={home:['لوحة التحكم 👋','مرحباً، إليك نظرة عامة على أداء الإنتاج اليوم'],maps:['خرائط المهام','كل تاسك خريطته الخاصة — اضغط أي مرحلة لفتحها وإضافة محتواها'],partnerships:['الشراكات','المهام المخصصة للشركات الخارجية وشركاء مرماز'],sheet:['الشيت 📋','جدول المهام والتفاصيل الخاصة للأساتذة'],mytasks:['مهامي','المراحل المعيّنة لك عبر كل المهام'],personal:['مهامي الخاصة','مساحة شخصية معزولة — يراها صاحبها فقط'],calendar:['تقويم النشر','مواعيد النشر تتزامن تلقائياً من خرائط المهام'],chat:['المحادثة','دردشة الفريق مدعومة بـ Microsoft Teams — مشفّرة وآمنة'],analytics:['التقارير والتحليلات','أداء الفريق والإنتاج حسب الجهة والأولوية'],team:['الفريق','كل موظف وإحصائياته ومهامه'],notifications:['الإشعارات','آخر التنبيهات والتحديثات'],settings:['إعدادات المانيجر','إدارة الموظفين والأقسام المتاحة']};
 
 function enterPublicDashboard() {
-  page = 'public_dashboard';
-  document.getElementById('loginScreen').style.display = 'none';
-  document.querySelector('.shell').style.display = 'none';
-  document.getElementById('publicDashboard').style.display = 'block';
-  renderPublicDashboard();
-  
-  syncPull(false).then(() => {
+  try {
+    page = 'public_dashboard';
+    var ls = document.getElementById('loginScreen');
+    if(ls) ls.style.display = 'none';
+    var sh = document.querySelector('.shell');
+    if(sh) sh.style.display = 'none';
+    var pd = document.getElementById('publicDashboard');
+    if(pd) pd.style.display = 'block';
     renderPublicDashboard();
-  });
-  
-  if(window.dashboardInterval) clearInterval(window.dashboardInterval);
-  window.dashboardInterval = setInterval(() => {
-    if(page === 'public_dashboard') {
-      syncPull(false).then(() => {
-        renderPublicDashboard();
-      });
-    } else {
-      clearInterval(window.dashboardInterval);
-    }
-  }, 5000);
+    
+    syncPull(false).then(function() {
+      renderPublicDashboard();
+    }).catch(function(e) { console.warn('syncPull error:', e); });
+    
+    if(window.dashboardInterval) clearInterval(window.dashboardInterval);
+    window.dashboardInterval = setInterval(function() {
+      if(page === 'public_dashboard') {
+        syncPull(false).then(function() {
+          renderPublicDashboard();
+        }).catch(function(e) { console.warn('syncPull error:', e); });
+      } else {
+        clearInterval(window.dashboardInterval);
+      }
+    }, 5000);
+  } catch(err) {
+    console.error('enterPublicDashboard error:', err);
+    alert('خطأ في فتح لوحة العرض: ' + err.message);
+  }
 }
 
 function exitPublicDashboard() {
