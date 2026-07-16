@@ -2489,7 +2489,7 @@ function renderRoleSwitch(){
 function switchUser(id){store.currentUser=id;save();render();}
 
 function nodeCard(task,st,idx){
-  const k=(STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}),person=st.person?userById(st.person):null,ns=NSTATE[st.state];
+  const k=(STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}),person=st.person?userById(st.person):null,ns=NSTATE[st.state]||{ar:'غير معروف',color:'#999',svg:'dot'};
   const opened=openNode[task.id]===st.id;
   const prevDone=idx>0?['done','approved'].includes(task.stages[idx-1].state):true;
   // تحديد حالة الدائرة بصرياً
@@ -2722,20 +2722,28 @@ function viewHome(){
   </div>`;
 }
 function viewMaps(){
-  let tasks=[...getVisibleTasks()].filter(t=>!t.isPartnership).sort((a,b)=>(PRIORITIES[b.priority]||{rank:0}).rank-(PRIORITIES[a.priority]||{rank:0}).rank);
-  if(searchQuery){const q=searchQuery.trim();
-    tasks=tasks.filter(t=>t.title.includes(q)||t.desc.includes(q)||(BRANDS[t.brand]||{name:'غير معروف'}).name.includes(q)||t.stages.some(s=>{ const u = userById(s.person); return u && u.name.includes(q); }));}
-  const critN=tasks.filter(t=>t.priority==='critical').length;
-  const canCreate=['كوردنيتر','مانيجر','الإدارة'].includes(userById(store.currentUser).role);
-  return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${tasks.length}</strong> خريطة مهمة ${searchQuery?`<span class="crit-tag" style="background:var(--blue-50);color:var(--blue-600)">🔍 "${esc(searchQuery)}"</span>`:''} ${critN?`<span class="crit-tag">🔥 ${critN} قصوى</span>`:''}</div>${canCreate?`<button class="pill-blue" onclick="openTaskModal()">+ تاسك جديد</button>`:''}</div>${tasks.length?`<div class="maps-grid">${tasks.map(taskMap).join('')}</div>`:'<div class="empty card">لا توجد نتائج مطابقة للبحث</div>'}`;
+  try {
+    let tasks=[...getVisibleTasks()].filter(t=>!t.isPartnership).sort((a,b)=>(PRIORITIES[b.priority]||{rank:0}).rank-(PRIORITIES[a.priority]||{rank:0}).rank);
+    if(searchQuery){const q=searchQuery.trim();
+      tasks=tasks.filter(t=>t.title.includes(q)||t.desc.includes(q)||(BRANDS[t.brand]||{name:'غير معروف'}).name.includes(q)||t.stages.some(s=>{ const u = userById(s.person); return u && u.name.includes(q); }));}
+    const critN=tasks.filter(t=>t.priority==='critical').length;
+    const canCreate=['كوردنيتر','مانيجر','الإدارة'].includes(userById(store.currentUser).role);
+    return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${tasks.length}</strong> خريطة مهمة ${searchQuery?`<span class="crit-tag" style="background:var(--blue-50);color:var(--blue-600)">🔍 "${esc(searchQuery)}"</span>`:''} ${critN?`<span class="crit-tag">🔥 ${critN} قصوى</span>`:''}</div>${canCreate?`<button class="pill-blue" onclick="openTaskModal()">+ تاسك جديد</button>`:''}</div>${tasks.length?`<div class="maps-grid">${tasks.map(taskMap).join('')}</div>`:'<div class="empty card">لا توجد نتائج مطابقة للبحث</div>'}`;
+  } catch(e) {
+    return `<div class="card" style="color:red; direction:ltr; text-align:left; padding:20px; font-family:monospace; white-space:pre-wrap;"><b>CRASH in viewMaps:</b>\n${e.toString()}\n${e.stack}</div>`;
+  }
 }
 function viewPartnerships(){
-  let tasks=[...getVisibleTasks()].filter(t=>t.isPartnership).sort((a,b)=>(PRIORITIES[b.priority]||{rank:0}).rank-(PRIORITIES[a.priority]||{rank:0}).rank);
-  if(searchQuery){const q=searchQuery.trim();
-    tasks=tasks.filter(t=>t.title.includes(q)||t.desc.includes(q)||(BRANDS[t.brand]||{name:'غير معروف'}).name.includes(q)||t.stages.some(s=>{ const u = userById(s.person); return u && u.name.includes(q); }));}
-  const critN=tasks.filter(t=>t.priority==='critical').length;
-  const canCreate=['كوردنيتر','مانيجر','الإدارة'].includes(userById(store.currentUser).role);
-  return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${tasks.length}</strong> شراكة ${searchQuery?`<span class="crit-tag" style="background:var(--blue-50);color:var(--blue-600)">🔍 "${esc(searchQuery)}"</span>`:''} ${critN?`<span class="crit-tag">🔥 ${critN} قصوى</span>`:''}</div>${canCreate?`<button class="pill-blue" onclick="openTaskModal(null,true)">+ إضافة شراكة</button>`:''}</div>${tasks.length?`<div class="maps-grid">${tasks.map(taskMap).join('')}</div>`:'<div class="empty card">لا توجد شراكات</div>'}`;
+  try {
+    let tasks=[...getVisibleTasks()].filter(t=>t.isPartnership).sort((a,b)=>(PRIORITIES[b.priority]||{rank:0}).rank-(PRIORITIES[a.priority]||{rank:0}).rank);
+    if(searchQuery){const q=searchQuery.trim();
+      tasks=tasks.filter(t=>t.title.includes(q)||t.desc.includes(q)||(BRANDS[t.brand]||{name:'غير معروف'}).name.includes(q)||t.stages.some(s=>{ const u = userById(s.person); return u && u.name.includes(q); }));}
+    const critN=tasks.filter(t=>t.priority==='critical').length;
+    const canCreate=['كوردنيتر','مانيجر','الإدارة'].includes(userById(store.currentUser).role);
+    return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${tasks.length}</strong> شراكة ${searchQuery?`<span class="crit-tag" style="background:var(--blue-50);color:var(--blue-600)">🔍 "${esc(searchQuery)}"</span>`:''} ${critN?`<span class="crit-tag">🔥 ${critN} قصوى</span>`:''}</div>${canCreate?`<button class="pill-blue" onclick="openTaskModal(null,true)">+ إضافة شراكة</button>`:''}</div>${tasks.length?`<div class="maps-grid">${tasks.map(taskMap).join('')}</div>`:'<div class="empty card">لا توجد شراكات</div>'}`;
+  } catch(e) {
+    return `<div class="card" style="color:red; direction:ltr; text-align:left; padding:20px; font-family:monospace; white-space:pre-wrap;"><b>CRASH in viewPartnerships:</b>\n${e.toString()}\n${e.stack}</div>`;
+  }
 }
 function viewMyTasks(){
   const u=store.currentUser,mine=[];
