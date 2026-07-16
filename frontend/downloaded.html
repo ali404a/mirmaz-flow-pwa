@@ -563,65 +563,6 @@ input,select,textarea{font-family:inherit}
 .share-btn.teams{background:linear-gradient(135deg,#5059C9,#7B83EB);color:#fff;border:none}
 .share-btn.jump:hover{border-color:var(--blue-400);color:var(--blue-600)}
 .share-btn.copy:hover{border-color:var(--green-ok);color:var(--green-ok)}
-
-/* Public Dashboard Dark Mode Styles */
-#publicDashboard::-webkit-scrollbar {
-  width: 6px;
-}
-#publicDashboard::-webkit-scrollbar-track {
-  background: transparent;
-}
-#publicDashboard::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.08);
-  border-radius: 3px;
-}
-#publicDashboard::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,255,255,0.15);
-}
-#dashboardTableContainer table {
-  width: 100%;
-  border-collapse: collapse;
-}
-#dashboardTableContainer th {
-  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
-}
-#dashboardTableContainer td {
-  border-bottom: 1px solid rgba(255,255,255,0.04) !important;
-}
-.dash-brand-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 10px;
-  border-radius: 20px;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  white-space: nowrap;
-}
-.dash-brand-badge.academy {
-  background: rgba(47,107,255,0.12);
-  color: #60a5fa;
-  border: 1px solid rgba(47,107,255,0.2);
-}
-.dash-brand-badge.zone {
-  background: rgba(123,63,242,0.12);
-  color: #a78bfa;
-  border: 1px solid rgba(123,63,242,0.2);
-}
-.dash-brand-badge.tick {
-  background: rgba(255,107,53,0.12);
-  color: #fb923c;
-  border: 1px solid rgba(255,107,53,0.2);
-}
-@keyframes dashPulse {
-  0%,100% { box-shadow: 0 0 4px rgba(47,107,255,0.3); }
-  50% { box-shadow: 0 0 12px rgba(47,107,255,0.6); }
-}
-.dash-status-working {
-  animation: dashPulse 2s ease-in-out infinite;
-}
-
 /* ===== واجهة المحادثة (تيمز) ===== */
 .chat-teams-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;background:linear-gradient(135deg,#EEF0FB,#F3F0FC);border:1px solid #5059C922;border-radius:14px;padding:12px 16px;margin-bottom:16px}
 .ctb-left{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--ink-700)}
@@ -662,98 +603,10 @@ input,select,textarea{font-family:inherit}
 .chat-send:hover{transform:scale(1.05)}
 @media(max-width:820px){.chat-wrap{grid-template-columns:1fr}.chat-side{display:none}}
 
-
-@keyframes moveBlob1 {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(50px, 30px) scale(1.1); }
-}
-@keyframes moveBlob2 {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(-30px, -50px) scale(1.2); }
-}
-@keyframes pulse {
-  0% { transform: scale(0.95); opacity: 0.6; }
-  50% { transform: scale(1.1); opacity: 1; }
-  100% { transform: scale(0.95); opacity: 0.6; }
-}
 </style>
 </head>
 <body>
 <div class="ambient"><span></span><span></span></div>
-
-<div id="loginScreen" style="position:fixed;inset:0;background:#f3f4f6;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden;font-family:'Inter', sans-serif;">
-  <div style="position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(59,130,246,0.08);filter:blur(80px);top:-50px;right:-50px;animation:moveBlob1 8s infinite alternate;"></div>
-  <div style="position:absolute;width:400px;height:400px;border-radius:50%;background:rgba(139,92,246,0.06);filter:blur(100px);bottom:-100px;left:-100px;animation:moveBlob2 10s infinite alternate;"></div>
-  
-  <div class="card" style="width:100%;max-width:420px;padding:40px;display:flex;flex-direction:column;gap:24px;text-align:center;background:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.5);backdrop-filter:blur(20px);box-shadow:0 20px 40px rgba(0,0,0,0.06);position:relative;z-index:10;border-radius:20px;">
-    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-      <div style="font-size:32px;font-weight:800;background:linear-gradient(45deg, #3b82f6, #8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">mirmaz FLOW</div>
-      <p style="color:var(--ink-500);margin:0;font-size:15px;">نظام إدارة خطوط الإنتاج والمحتوى</p>
-    </div>
-    
-    <div id="loginError" style="color:var(--red);font-size:14px;display:none;background:rgba(255,84,112,0.08);padding:10px;border-radius:8px;border:1px solid rgba(255,84,112,0.15);direction:rtl;">بيانات الدخول غير صحيحة، يرجى المحاولة مرة أخرى</div>
-    
-    <div style="display:flex;flex-direction:column;gap:16px;text-align:right;direction:rtl;">
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <label style="font-weight:bold;color:var(--ink-700);font-size:14px;">اسم المستخدم</label>
-        <input type="text" id="loginUser" class="tmap-in" placeholder="Username" style="padding:14px;font-size:16px;background:#fff;border:1.5px solid var(--line);color:var(--ink-800);border-radius:10px;outline:none;transition:border-color 0.2s;">
-      </div>
-      
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <label style="font-weight:bold;color:var(--ink-700);font-size:14px;">كلمة المرور</label>
-        <div style="position:relative;display:flex;align-items:center;">
-          <input type="password" id="loginPass" class="tmap-in" placeholder="Password" style="padding:14px;font-size:16px;background:#fff;border:1.5px solid var(--line);color:var(--ink-800);border-radius:10px;outline:none;width:100%;transition:border-color 0.2s;direction:ltr;text-align:right;">
-          <button onclick="togglePassword()" style="position:absolute;left:12px;background:none;border:none;color:var(--ink-400);cursor:pointer;padding:5px;font-size:18px;">👁</button>
-        </div>
-      </div>
-    </div>
-    
-    <div style="display:flex;flex-direction:column;gap:12px;margin-top:10px;">
-      <button class="pill-blue" onclick="performLogin()" style="padding:14px;font-size:16px;font-weight:bold;background:#3b82f6;color:#fff;border:none;border-radius:10px;cursor:pointer;box-shadow:0 4px 12px rgba(59,130,246,0.2);transition:background 0.2s;justify-content:center;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">تسجيل الدخول</button>
-      
-      <div style="display:flex;align-items:center;gap:8px;margin:8px 0;color:var(--ink-300);justify-content:center;"><hr style="flex:1;border:none;border-top:1px solid var(--line)">أو<hr style="flex:1;border:none;border-top:1px solid var(--line)"></div>
-      
-      <button onclick="enterPublicDashboard()" style="padding:14px;font-size:15px;font-weight:bold;background:#fff;color:var(--ink-700);border:1.5px solid var(--line);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;" onmouseover="this.style.background='var(--surface-2)';this.style.borderColor='var(--ink-300)'" onmouseout="this.style.background='#fff';this.style.borderColor='var(--line)'">
-        <span>📊 الوصول السريع للمهام (لوحة العرض)</span>
-      </button>
-    </div>
-  </div>
-</div>
-
-<div id="publicDashboard" style="display:none; position:fixed; inset:0; background:linear-gradient(145deg, #0a0e1a 0%, #111827 40%, #0f172a 100%); color:#e2e8f0; z-index:999999; overflow-y:auto; padding:40px; font-family:'Inter', sans-serif;">
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:32px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:20px; direction: rtl;">
-    <div>
-      <h1 style="margin:0; font-size:32px; font-weight:800; background:linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.5px;">لوحة متابعة المهام والإنتاج</h1>
-      <p style="margin:8px 0 0 0; color:#94a3b8; font-size:15px;">تحديث تلقائي لحظي — شاشة العرض الرئيسية لقسم التسويق</p>
-    </div>
-    <div style="display:flex; align-items:center; gap:14px;">
-      <div id="dashboardBrandLegend" style="display:flex; gap:10px; align-items:center;"></div>
-      <button class="pill-blue" onclick="exitPublicDashboard()" style="background:rgba(255,255,255,0.06); color:#e2e8f0; border:1px solid rgba(255,255,255,0.12); padding:10px 22px; font-size:14px; border-radius:10px; backdrop-filter:blur(10px); transition:all 0.3s; cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">🔑 تسجيل الدخول</button>
-    </div>
-  </div>
-  <div id="dashboardTableContainer" style="padding:0;"></div>
-</div>
-<script>
-function togglePassword(){
-  const p=document.getElementById('loginPass');
-  p.type = p.type==='password'?'text':'password';
-}
-function performLogin(){
-  const u=document.getElementById('loginUser').value.trim();
-  const p=document.getElementById('loginPass').value.trim();
-  const user = store.team.find(x => (x.user||x.id) === u && (x.pass||'1234') === p);
-  if(user){
-    localStorage.setItem('mirmaz_session', user.id);
-    store.currentUser = user.id; save(); document.getElementById('loginScreen').style.display='none';
-    document.querySelector('.shell').style.display='flex';
-    render();
-  } else {
-    document.getElementById('loginError').style.display='block';
-  }
-}
-function logout() { localStorage.removeItem('mirmaz_session'); if(typeof store !== 'undefined') { store.currentUser = null; save(); } location.reload(); }
-</script>
-
 <div class="shell">
 <div class="sidebar-overlay" id="sbOverlay" onclick="toggleSidebar()"></div>
   <aside class="sidebar">
@@ -763,7 +616,6 @@ function logout() { localStorage.removeItem('mirmaz_session'); if(typeof store !
     </div>
     <nav class="sb-nav" id="sbNav"></nav>
     <div class="sb-summary glass-card" id="sbSummary"></div>
-      <div style="margin-top:auto;padding-top:16px"><button onclick="logout()" style="width:100%;padding:12px;background:var(--red-soft);color:var(--red);border:none;border-radius:8px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg> تسجيل الخروج</button></div>
   </aside>
   <div class="main">
     <header class="topbar">
@@ -837,9 +689,7 @@ const SVG={
 function logoSVG(size=40){return `<svg viewBox="0 0 1000 1000" width="${size}" height="${size}" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,1000) scale(0.1,-0.1)"><path d="M2491 7900 c-107 -23 -202 -98 -249 -198 -23 -49 -27 -70 -27 -147 0 -77 4 -98 27 -147 15 -32 46 -76 70 -99 48 -46 2194 -1348 2324 -1410 222 -106 499 -110 718 -10 111 50 2297 1382 2338 1424 174 179 103 486 -133 573 -56 21 -181 21 -234 1 -22 -8 -521 -307 -1110 -664 -588 -357 -1091 -662 -1116 -676 -52 -31 -123 -36 -167 -13 -15 8 -517 311 -1117 673 -600 362 -1108 666 -1130 675 -53 21 -139 29 -194 18z M1195 7064 c-180 -45 -301 -210 -281 -384 9 -75 57 -170 110 -217 24 -21 194 -127 377 -236 184 -108 340 -201 348 -206 10 -6 -6 -31 -66 -102 -373 -445 -668 -981 -847 -1538 -167 -517 -245 -1112 -217 -1637 20 -376 36 -445 120 -536 167 -182 462 -135 573 90 27 56 30 147 12 462 -42 725 126 1458 478 2095 130 235 359 556 521 732 l57 61 386 -228 c212 -126 388 -230 390 -232 2 -3 -31 -45 -73 -94 -414 -482 -681 -1070 -773 -1702 -54 -376 -36 -953 35 -1099 36 -72 96 -130 172 -165 55 -26 77 -31 143 -31 66 0 88 5 143 31 116 54 192 157 204 274 3 29 -2 114 -11 188 -20 170 -21 465 -1 631 66 568 324 1115 716 1521 l74 77 495 -295 c608 -363 615 -367 720 -367 67 0 88 5 142 30 35 17 288 164 562 327 274 163 504 296 510 296 15 0 185 -189 263 -291 282 -370 457 -796 525 -1279 17 -126 15 -549 -3 -690 -17 -120 -11 -189 20 -254 109 -223 405 -270 572 -88 98 106 123 250 123 702 0 314 -9 418 -59 665 -115 572 -371 1093 -753 1533 -35 40 -61 76 -58 79 3 4 178 109 388 234 l383 227 59 -61 c73 -77 207 -244 289 -360 376 -531 602 -1116 693 -1789 23 -167 30 -632 13 -815 -17 -186 -15 -235 12 -309 30 -81 112 -162 194 -194 206 -78 432 45 474 260 37 194 46 719 17 1015 -94 948 -463 1829 -1066 2544 -48 56 -59 75 -49 82 8 5 165 98 349 207 373 220 421 257 460 357 60 156 10 324 -127 421 -94 68 -229 80 -336 31 -28 -13 -847 -495 -1819 -1070 -972 -576 -1772 -1047 -1778 -1047 -7 0 -810 473 -1786 1051 -976 578 -1796 1060 -1822 1071 -46 20 -155 32 -197 22z"/></g></svg>`;}
 function icon(name,size=20,extra=''){return `<svg class="ico ${extra}" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${SVG[name]||SVG.dot}</svg>`;}
 
-const DEFAULT_ROLES = ['الإدارة','مانيجر','كوردنيتر','مصمم','كاتب محتوى','كاتب كابشن','مونتير','شريك خارجي'];
-let roles = DEFAULT_ROLES;
-const BRANDS={academy:{id:'academy',name:'mirmaz Academy',emoji:'🎓',color:'#2F6BFF',soft:'#E3EBFF'},zone:{id:'zone',name:'mirmaz Zone',emoji:'⚡',color:'#7B3FF2',soft:'#EFE6FF'},tick:{id:'tick',name:'mirmaz Tick',emoji:'🎬',color:'#FF6B35',soft:'#FFF0E8'}};
+const BRANDS={academy:{id:'academy',name:'mirmaz Academy',emoji:'🎓',color:'#2F6BFF',soft:'#E3EBFF'},zone:{id:'zone',name:'mirmaz Zone',emoji:'⚡',color:'#7B3FF2',soft:'#EFE6FF'}};
 const PRIORITIES={normal:{id:'normal',name:'عادية',emoji:'🟢',color:'#21C07A',rank:1},medium:{id:'medium',name:'متوسطة',emoji:'🟡',color:'#F6A609',rank:2},critical:{id:'critical',name:'قصوى',emoji:'🔥',color:'#FF5470',rank:3}};
 const NSTATE={pending:{ar:'بالانتظار',color:'#8995AE',svg:'dot'},working:{ar:'قيد العمل',color:'#2F6BFF',svg:'dot'},done:{ar:'مُنجز',color:'#21C07A',svg:'check'},approval:{ar:'طلب موافقة',color:'#F6A609',svg:'clock'},approved:{ar:'موافق عليه',color:'#21C07A',svg:'check'},rejected:{ar:'مرفوض',color:'#FF5470',svg:'cross'},published:{ar:'تم النشر',color:'#16B981',svg:'check'}};
 const STAGE_KINDS={
@@ -910,9 +760,7 @@ function defaultChat(){return{
     c4:[{from:'u4',text:'رفعت تصميم البوست على الدرايف',time:'12:30'}],
   }
 };}
-function load(){try{const r=localStorage.getItem(KEY);if(r){const d=JSON.parse(r);if(!d.notifications)d.notifications=DEFAULT_NOTIFS;
-if(!d.roles)d.roles=DEFAULT_ROLES;
-roles=d.roles;if(!d.personal)d.personal={};if(!d.chat)d.chat=defaultChat();if(!d.sheet)d.sheet=[];if(!d.tasks.find(x=>x.isSeeded2026)){d.tasks.push(...[
+function load(){try{const r=localStorage.getItem(KEY);if(r){const d=JSON.parse(r);if(!d.notifications)d.notifications=DEFAULT_NOTIFS;if(!d.personal)d.personal={};if(!d.chat)d.chat=defaultChat();if(!d.sheet)d.sheet=[];if(!d.tasks.find(x=>x.isSeeded2026)){d.tasks.push(...[
   {
     "id": "s01784189535263",
     "title": "عقيل الزبيدي",
@@ -2370,41 +2218,9 @@ roles=d.roles;if(!d.personal)d.personal={};if(!d.chat)d.chat=defaultChat();if(!d
       }
     ]
   }
-]);d.tasks.forEach(t=>t.isSeeded2026=true);} d.tasks.forEach(t=>t.stages.forEach(s=>{if(s.isPublish && !s.kind)s.kind='publish';})); return d;}}catch(e){}return {team:DEFAULT_TEAM.map(u=>({...u, user: u.id, pass: '1234'})),sections:DEFAULT_SECTIONS,tasks:seedTasks().map(t=>({ ...t, stages: t.stages.map(s => (s.isPublish && !s.kind) ? { ...s, kind: 'publish' } : s) })),notifications:DEFAULT_NOTIFS,personal:{u3:[{id:'p1',title:'تعلّم اختصارات After Effects',desc:'مراجعة 10 اختصارات جديدة لتسريع المونتاج',done:false},{id:'p2',title:'تنظيم مجلد المراجع',desc:'ترتيب ملفات Drive حسب البراند',done:true}]},chat:defaultChat(),sheet:[],currentUser:null,roles:DEFAULT_ROLES};}
+]);d.tasks.forEach(t=>t.isSeeded2026=true);} d.tasks.forEach(t=>t.stages.forEach(s=>{if(s.isPublish && !s.kind)s.kind='publish';})); return d;}}catch(e){}return {team:DEFAULT_TEAM.map(u=>({...u, user: u.id, pass: '1234'})),sections:DEFAULT_SECTIONS,tasks:seedTasks().map(t=>({ ...t, stages: t.stages.map(s => (s.isPublish && !s.kind) ? { ...s, kind: 'publish' } : s) })),notifications:DEFAULT_NOTIFS,personal:{u3:[{id:'p1',title:'تعلّم اختصارات After Effects',desc:'مراجعة 10 اختصارات جديدة لتسريع المونتاج',done:false},{id:'p2',title:'تنظيم مجلد المراجع',desc:'ترتيب ملفات Drive حسب البراند',done:true}]},chat:defaultChat(),sheet:[],currentUser:null};}
 let store=load();
-syncPull(true);
-
-let syncPending = false;
-const CLOUD_SYNC_URL = 'https://jsonblob.com/api/jsonBlob/019f6ab0-210d-7f49-b94f-10917092524d';
-
-function syncPush() {
-  if (syncPending) return;
-  syncPending = true;
-  fetch(CLOUD_SYNC_URL, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(store)
-  })
-  .catch(e => console.warn('Cloud sync save failed:', e))
-  .finally(() => { syncPending = false; });
-}
-
-function syncPull(thenRender = true) {
-  return fetch(CLOUD_SYNC_URL)
-    .then(res => res.json())
-    .then(cloudStore => {
-      if (cloudStore && Array.isArray(cloudStore.tasks)) {
-        const curUser = store ? store.currentUser : null;
-        store = cloudStore;
-        if (curUser) store.currentUser = curUser;
-        localStorage.setItem(KEY, JSON.stringify(store));
-        if (thenRender) render();
-      }
-    })
-    .catch(e => console.warn('Cloud sync load failed:', e));
-}
-
-function save(){localStorage.setItem(KEY,JSON.stringify(store)); syncPush();}
+function save(){localStorage.setItem(KEY,JSON.stringify(store));}
 const userById=id=>store.team.find(u=>u.id===id)||{name:'؟',av:'#8995AE',role:''};
 // --- SHEET MODULE ---
 let sheetEditId = null;
@@ -2552,7 +2368,6 @@ function renderNav(){
   const u = userById(store.currentUser);
   let navItems = NAV;
   if(u && u.role === 'شريك خارجي') { navItems = NAV.filter(n => ['partnerships', 'settings', 'notifications'].includes(n.id)); }
-  else if (u && !['الإدارة','مانيجر','كوردنيتر'].includes(u.role)) { navItems = NAV.filter(n => n.id !== 'team'); }
   document.getElementById('sbNav').innerHTML=navItems.map(n=>{
     const badge=(n.id==='notifications'&&unread)?`<span class="sb-badge">${unread}</span>`:'';
     const onClick = (n.id==='chat') ? `openTeamsPopup(event)` : `go('${n.id}')`;
@@ -2588,15 +2403,13 @@ function toggleSidebar() {
     ov.classList.toggle('open');
   }
 }
-function go(p, q = '') {
+function go(p) {
   page=p;
-  searchQuery=q;
   const sb = document.querySelector('.sidebar');
   const ov = document.getElementById('sbOverlay');
   if(sb) sb.classList.remove('open');
   if(ov) ov.classList.remove('open');
   render();
-  const si=document.getElementById('searchInput');if(si){si.value=searchQuery;}
 }
 function getVisibleTasks() {
   const u = userById(store.currentUser);
@@ -2631,7 +2444,7 @@ function renderRoleSwitch(){
 function switchUser(id){store.currentUser=id;save();render();}
 
 function nodeCard(task,st,idx){
-  const k=(STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}),person=st.person?userById(st.person):null,ns=NSTATE[st.state]||{ar:'غير معروف',color:'#999',svg:'dot'};
+  const k=(STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}),person=st.person?userById(st.person):null,ns=NSTATE[st.state];
   const opened=openNode[task.id]===st.id;
   const prevDone=idx>0?['done','approved'].includes(task.stages[idx-1].state):true;
   // تحديد حالة الدائرة بصرياً
@@ -2767,7 +2580,7 @@ function nodePanel(task,st){
   return `<div class="node-panel"><div class="np-head"><div class="np-title"><span class="dot" style="background:${k.color}"></span>${k.ar} ${st.person?`— ${esc(userById(st.person).name)}`:''}</div><div class="np-head-actions"><button class="np-share" onclick="shareTask('${task.id}','${st.id}')" title="مشاركة">${icon('link',15)}</button><button class="np-close" onclick="closeNode('${task.id}')">✕</button></div></div>${inner}</div>`;
 }
 function taskMap(task){
-  const b=BRANDS[task.brand]||{name:'غير معروف',emoji:'🏷',color:'#999',soft:'#f1f1f1'}, p=PRIORITIES[task.priority]||{name:'عادي',emoji:'🟢',color:'#999',rank:0}, coord=userById(task.coordinator)||{name:'غير محدد'}, crit=task.priority==='critical';
+  const b=BRANDS[task.brand],p=PRIORITIES[task.priority],coord=userById(task.coordinator),crit=task.priority==='critical';
   const openStId=openNode[task.id],openSt=openStId?task.stages.find(s=>s.id===openStId):null;
   const doneN=task.stages.filter(s=>['done','approved','published'].includes(s.state)).length;
   const role=userById(store.currentUser).role;
@@ -2798,7 +2611,7 @@ function taskMap(task){
 function viewHome(){
   const tasks=getVisibleTasks();
   let totalStages=0,doneStages=0,critTasks=0,pubScheduled=0;
-  const brandCount={academy:0,zone:0,tick:0};
+  const brandCount={academy:0,zone:0};
   tasks.forEach(t=>{brandCount[t.brand]++;if(t.priority==='critical')critTasks++;
     t.stages.forEach(st=>{totalStages++;if(['done','approved'].includes(st.state))doneStages++;
       if((STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}).isPublish&&st.publishDate)pubScheduled++;});});
@@ -2819,7 +2632,7 @@ function viewHome(){
   // النشاطات (من المراحل المنجزة)
   const acts=[];
   tasks.forEach(t=>t.stages.forEach(st=>{if(['done','approved','working'].includes(st.state)){
-    const k=(STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}), ns=NSTATE[st.state]||{ar:'غير معروف',color:'#999'}, u=st.person?userById(st.person):null;
+    const k=(STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}),ns=NSTATE[st.state],u=st.person?userById(st.person):null;
     acts.push({ic:k.svg,c:k.color,title:k.ar+' — '+t.title,who:u?u.name:'',state:ns.ar,sc:ns.color});}}));
   const recent=acts.slice(0,6);
   // حلقات الأداء
@@ -2828,24 +2641,10 @@ function viewHome(){
     {v:Math.round(brandCount.academy/(tasks.length||1)*100),c:'#16B981',l:'حصة Academy'},
     {v:Math.round(critTasks/(tasks.length||1)*100),c:'#F43F5E',l:'نسبة العاجل'},
   ];
-  const ring=(r)=>{const R=38,C=2*Math.PI*R,off=C-(r.v/100)*C;
-    return `<div class="ring" style="position:relative;display:flex;flex-direction:column;align-items:center;padding:12px;background:var(--surface);border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.05);flex:1">
-      <svg width="90" height="90" style="filter:drop-shadow(0 4px 6px rgba(0,0,0,0.1));">
-        <defs>
-          <linearGradient id="g-${r.c.replace('#','')}" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="${r.c}" />
-            <stop offset="100%" stop-color="${r.c}88" />
-          </linearGradient>
-        </defs>
-        <circle cx="45" cy="45" r="${R}" fill="none" stroke="var(--surface-2)" stroke-width="12"/>
-        <circle cx="45" cy="45" r="${R}" fill="none" stroke="url(#g-${r.c.replace('#','')})" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}"/>
-      </svg>
-      <div class="rval" style="position:absolute;top:45px;color:${r.c};font-size:20px;font-weight:800;transform:translateY(-50%);">${r.v}%</div>
-      <p style="margin:16px 0 0 0;font-weight:bold;color:var(--ink-700);font-size:13px">${r.l}</p>
-    </div>`;
-  };
+  const ring=(r)=>{const R=30,C=2*Math.PI*R,off=C-(r.v/100)*C;
+    return `<div class="ring"><svg width="76" height="76"><circle cx="38" cy="38" r="${R}" fill="none" stroke="var(--surface-2)" stroke-width="12"/><circle cx="38" cy="38" r="${R}" fill="none" stroke="${r.c}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}"/></svg><div class="rval" style="margin-top:-50px;color:${r.c}">${r.v}%</div><p style="margin-top:30px">${r.l}</p></div>`;};
 
-  return `<div class="stat-row fade-up">${stats.map(s=>`<div class="stat" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'" onclick="go('${s.page}', '${s.query || ""}')">
+  return `<div class="stat-row fade-up">${stats.map(s=>`<div class="stat">
     <div class="stat-top"><div class="stat-ico" style="background:${s.sc};color:${s.c}">${icon(s.ic,20)}</div><span class="stat-delta ${s.up?'up':'down'}">${s.up?'↑':'•'} ${s.d}</span></div>
     <b>${s.v}</b><span>${s.l}</span></div>`).join('')}</div>
   <div class="home-grid">
@@ -2864,28 +2663,20 @@ function viewHome(){
   </div>`;
 }
 function viewMaps(){
-  try {
-    let tasks=[...getVisibleTasks()].filter(t=>!t.isPartnership).sort((a,b)=>(PRIORITIES[b.priority]||{rank:0}).rank-(PRIORITIES[a.priority]||{rank:0}).rank);
-    if(searchQuery){const q=searchQuery.trim();
-      tasks=tasks.filter(t=>t.title.includes(q)||t.desc.includes(q)||(BRANDS[t.brand]||{name:'غير معروف'}).name.includes(q)||t.stages.some(s=>{ const u = userById(s.person); return u && u.name.includes(q); }));}
-    const critN=tasks.filter(t=>t.priority==='critical').length;
-    const canCreate=['كوردنيتر','مانيجر','الإدارة'].includes(userById(store.currentUser).role);
-    return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${tasks.length}</strong> خريطة مهمة ${searchQuery?`<span class="crit-tag" style="background:var(--blue-50);color:var(--blue-600)">🔍 "${esc(searchQuery)}"</span>`:''} ${critN?`<span class="crit-tag">🔥 ${critN} قصوى</span>`:''}</div>${canCreate?`<button class="pill-blue" onclick="openTaskModal()">+ تاسك جديد</button>`:''}</div>${tasks.length?`<div class="maps-grid">${tasks.map(taskMap).join('')}</div>`:'<div class="empty card">لا توجد نتائج مطابقة للبحث</div>'}`;
-  } catch(e) {
-    return `<div class="card" style="color:red; direction:ltr; text-align:left; padding:20px; font-family:monospace; white-space:pre-wrap;"><b>CRASH in viewMaps:</b>\n${e.toString()}\n${e.stack}</div>`;
-  }
+  let tasks=[...getVisibleTasks()].filter(t=>!t.isPartnership).sort((a,b)=>(PRIORITIES[b.priority]||{rank:0}).rank-(PRIORITIES[a.priority]||{rank:0}).rank);
+  if(searchQuery){const q=searchQuery.trim();
+    tasks=tasks.filter(t=>t.title.includes(q)||t.desc.includes(q)||(BRANDS[t.brand]||{name:'غير معروف',bg:'#eee',c:'#333'}).name.includes(q)||t.stages.some(s=>s.person&&userById(s.person).name.includes(q)));}
+  const critN=tasks.filter(t=>t.priority==='critical').length;
+  const canCreate=['كوردنيتر','مانيجر','الإدارة'].includes(userById(store.currentUser).role);
+  return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${tasks.length}</strong> خريطة مهمة ${searchQuery?`<span class="crit-tag" style="background:var(--blue-50);color:var(--blue-600)">🔍 "${esc(searchQuery)}"</span>`:''} ${critN?`<span class="crit-tag">🔥 ${critN} قصوى</span>`:''}</div>${canCreate?`<button class="pill-blue" onclick="openTaskModal()">+ تاسك جديد</button>`:''}</div>${tasks.length?`<div class="maps-grid">${tasks.map(taskMap).join('')}</div>`:'<div class="empty card">لا توجد نتائج مطابقة للبحث</div>'}`;
 }
 function viewPartnerships(){
-  try {
-    let tasks=[...getVisibleTasks()].filter(t=>t.isPartnership).sort((a,b)=>(PRIORITIES[b.priority]||{rank:0}).rank-(PRIORITIES[a.priority]||{rank:0}).rank);
-    if(searchQuery){const q=searchQuery.trim();
-      tasks=tasks.filter(t=>t.title.includes(q)||t.desc.includes(q)||(BRANDS[t.brand]||{name:'غير معروف'}).name.includes(q)||t.stages.some(s=>{ const u = userById(s.person); return u && u.name.includes(q); }));}
-    const critN=tasks.filter(t=>t.priority==='critical').length;
-    const canCreate=['كوردنيتر','مانيجر','الإدارة'].includes(userById(store.currentUser).role);
-    return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${tasks.length}</strong> شراكة ${searchQuery?`<span class="crit-tag" style="background:var(--blue-50);color:var(--blue-600)">🔍 "${esc(searchQuery)}"</span>`:''} ${critN?`<span class="crit-tag">🔥 ${critN} قصوى</span>`:''}</div>${canCreate?`<button class="pill-blue" onclick="openTaskModal(null,true)">+ إضافة شراكة</button>`:''}</div>${tasks.length?`<div class="maps-grid">${tasks.map(taskMap).join('')}</div>`:'<div class="empty card">لا توجد شراكات</div>'}`;
-  } catch(e) {
-    return `<div class="card" style="color:red; direction:ltr; text-align:left; padding:20px; font-family:monospace; white-space:pre-wrap;"><b>CRASH in viewPartnerships:</b>\n${e.toString()}\n${e.stack}</div>`;
-  }
+  let tasks=[...getVisibleTasks()].filter(t=>t.isPartnership).sort((a,b)=>(PRIORITIES[b.priority]||{rank:0}).rank-(PRIORITIES[a.priority]||{rank:0}).rank);
+  if(searchQuery){const q=searchQuery.trim();
+    tasks=tasks.filter(t=>t.title.includes(q)||t.desc.includes(q)||(BRANDS[t.brand]||{name:'غير معروف',bg:'#eee',c:'#333'}).name.includes(q)||t.stages.some(s=>s.person&&userById(s.person).name.includes(q)));}
+  const critN=tasks.filter(t=>t.priority==='critical').length;
+  const canCreate=['كوردنيتر','مانيجر','الإدارة'].includes(userById(store.currentUser).role);
+  return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${tasks.length}</strong> شراكة ${searchQuery?`<span class="crit-tag" style="background:var(--blue-50);color:var(--blue-600)">🔍 "${esc(searchQuery)}"</span>`:''} ${critN?`<span class="crit-tag">🔥 ${critN} قصوى</span>`:''}</div>${canCreate?`<button class="pill-blue" onclick="openTaskModal(null,true)">+ إضافة شراكة</button>`:''}</div>${tasks.length?`<div class="maps-grid">${tasks.map(taskMap).join('')}</div>`:'<div class="empty card">لا توجد شراكات</div>'}`;
 }
 function viewMyTasks(){
   const u=store.currentUser,mine=[];
@@ -3057,152 +2848,85 @@ function viewAnalytics(){
 }
 
 
-
-let currentProfileId = null;
-
-let personalFilter = 'all'; // 'all', 'active', 'completed'
-let personalSearch = '';
-
-
 function viewTeam(){
-  if(currentProfileId) return viewProfile(currentProfileId);
-  const u = userById(store.currentUser);
-  const canEdit = ['الإدارة','مانيجر','كوردنيتر'].includes(u.role);
-  if(!canEdit) return '<div class="empty card">غير مصرح لك بعرض هذه الصفحة</div>';
-
-  return `<div class="maps-bar fade-up" style="direction:rtl; text-align:right;"><div class="maps-count"><strong>${store.team.length}</strong> أعضاء</div>
-  <button class="pill-blue" onclick="openProfileModal()">+ إضافة موظف جديد</button></div>
-  <div class="card fade-up" style="overflow-x:auto; margin-top:12px; direction:rtl; text-align:right;">
-    <table class="sh-table" style="width:100%; border-collapse:collapse; font-size:14px; text-align:right;">
-      <thead style="background:var(--surface-2);">
-        <tr>
-          <th style="padding:14px 18px; border-bottom:1px solid var(--line);">الموظف</th>
-          <th style="padding:14px 18px; border-bottom:1px solid var(--line);">المسمى الوظيفي</th>
-          <th style="padding:14px 18px; border-bottom:1px solid var(--line); text-align:center;">المهام النشطة</th>
-          <th style="padding:14px 18px; border-bottom:1px solid var(--line); text-align:center;">معدل الإنجاز</th>
-          <th style="padding:14px 18px; border-bottom:1px solid var(--line); text-align:center; width:200px;">الإجراءات</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${store.team.map(member=>{
-          let tCount=0, dCount=0;
-          store.tasks.forEach(t=>t.stages.forEach(s=>{if(s.person===member.id){tCount++;if(['done','approved'].includes(s.state))dCount++;}}));
-          const rate = tCount ? Math.round(dCount/tCount*100) : 0;
-          return `<tr style="border-bottom:1px solid var(--line); transition:background 0.2s;" onmouseover="this.style.background='var(--surface-2)'" onmouseout="this.style.background='transparent'">
-            <td style="padding:14px 18px; display:flex; align-items:center; gap:12px;">
-              <span style="width:34px; height:34px; border-radius:50%; background:${member.av}18; color:${member.av}; display:grid; place-items:center; font-weight:bold; font-size:14px;">${member.name[0]}</span>
-              <strong style="color:var(--ink-850);">${esc(member.name)}</strong>
-            </td>
-            <td style="padding:14px 18px; color:var(--ink-600);">${esc(member.role)}</td>
-            <td style="padding:14px 18px; text-align:center; font-weight:bold;">${tCount}</td>
-            <td style="padding:14px 18px; text-align:center; color:${rate > 50 ? 'var(--green-ok)' : 'var(--amber)'}; font-weight:bold;">${rate}%</td>
-            <td style="padding:14px 18px; text-align:center; display:flex; gap:8px; justify-content:center; align-items:center;">
-              <button class="btn-sm" style="background:var(--line); color:var(--ink-700); border:none;" onclick="currentProfileId='${member.id}';render()">عرض الملف</button>
-              ${member.id !== store.currentUser ? `<button class="btn-sm" style="background:var(--red-soft); color:var(--red); border:none;" onclick="deleteProfile('${member.id}')">حذف</button>` : ''}
-            </td>
-          </tr>`;
-        }).join('')}
-      </tbody>
-    </table>
+  const canEdit = ['الإدارة','مانيجر','كوردنيتر'].includes(userById(store.currentUser).role);
+  return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${store.team.length}</strong> أعضاء</div>
+  ${canEdit ? `<button class="pill-blue" onclick="openProfileModal()">+ إضافة عضو</button>` : ''}</div>
+  <div class="maps-grid">
+    ${store.team.map(u=>{
+      let tCount=0, dCount=0;
+      store.tasks.forEach(t=>t.stages.forEach(s=>{if(s.person===u.id){tCount++;if(['done','approved'].includes(s.state))dCount++;}}));
+      const rate = tCount ? Math.round(dCount/tCount*100) : 0;
+      return `<div class="card fade-up" style="padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;transition:transform 0.2s" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'" onclick="openProfileModal('${u.id}')">
+        <div style="width:70px;height:70px;border-radius:50%;background:${u.av}18;color:${u.av};display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:bold;">${u.name[0]}</div>
+        <div style="text-align:center;">
+          <h3 style="margin:0;color:var(--ink-700)">${esc(u.name)}</h3>
+          <p style="margin:4px 0 0 0;color:var(--ink-500);font-size:14px">${esc(u.role)}</p>
+        </div>
+        <div style="width:100%;height:1px;background:var(--line);margin:8px 0"></div>
+        <div style="display:flex;width:100%;justify-content:space-between;font-size:13px;color:var(--ink-600)">
+          <span>المهام: <strong>${tCount}</strong></span>
+          <span>الإنجاز: <strong style="color:var(--green-ok)">${rate}%</strong></span>
+        </div>
+      </div>`;
+    }).join('')}
   </div>`;
 }
-
-function viewProfile(uid) {
-  const member = store.team.find(x=>x.id===uid);
-  if(!member) return '<div class="empty card">المستخدم غير موجود</div>';
-  
-  let mine=[];
-  store.tasks.forEach(t=>t.stages.forEach(st=>{if(st.person===uid)mine.push({task:t,st});}));
-
-  return `<div class="maps-bar fade-up">
-    <button class="btn-sm btn-gray" onclick="currentProfileId=null;render()">${icon('arrow-right', 16)} رجوع للفريق</button>
-    <button class="btn-sm btn-blue" onclick="openProfileModal('${uid}')">${icon('edit', 14)} تعديل بيانات الموظف</button>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 2fr;gap:24px;margin-top:20px;" class="fade-up">
-    <div class="card" style="padding:24px;text-align:center;">
-      <div style="width:100px;height:100px;border-radius:50%;background:${member.av}18;color:${member.av};display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:bold;margin:0 auto 16px auto;">${member.name[0]}</div>
-      <h2 style="margin:0 0 8px 0;">${esc(member.name)}</h2>
-      <p style="margin:0 0 20px 0;color:var(--ink-500)">${esc(member.role)}</p>
-      
-      <div style="display:flex;flex-direction:column;gap:12px;text-align:right;background:var(--surface-2);padding:16px;border-radius:8px;">
-        <div><small style="color:var(--ink-400)">رقم الهاتف:</small><br><strong>${esc(member.phone||'غير محدد')}</strong></div>
-        <div><small style="color:var(--ink-400)">معرف التليجرام:</small><br><strong>${esc(member.telegram||'غير محدد')}</strong></div>
-        <div><small style="color:var(--ink-400)">اسم المستخدم (للدخول):</small><br><strong>${esc(member.user||member.id)}</strong></div>
-        <div><small style="color:var(--ink-400)">الرمز السري:</small><br><strong>${esc(member.pass||'1234')}</strong></div>
-      </div>
-    </div>
-    
-    <div class="card" style="padding:24px;">
-      <h3 style="margin:0 0 16px 0;">المهام الموكلة (${mine.length})</h3>
-      ${mine.length ? `<div style="display:flex;flex-direction:column;gap:12px;">
-        ${mine.map(m=>`<div style="border:1px solid var(--line);border-radius:8px;padding:12px;display:flex;justify-content:space-between;align-items:center;border-right:4px solid ${m.st.state==='done'?'var(--green-ok)':'var(--blue)'}">
-          <div>
-            <div style="font-weight:bold;margin-bottom:4px;">${esc(m.task.title)}</div>
-            <div style="font-size:13px;color:var(--ink-500)">${(STAGE_KINDS[m.st.kind]||{ar:'غير معروف'}).ar}</div>
-          </div>
-          <span class="chip" style="background:var(--surface-2)">${m.st.state==='done'?'✅ منجز':'⏳ قيد العمل'}</span>
-        </div>`).join('')}
-      </div>` : '<div class="empty" style="margin:0">لا توجد مهام حالية</div>'}
-    </div>
-  </div>`;
-}
-
 
 let profileEditId = null;
 function openProfileModal(uid = null){
   const canEdit = ['الإدارة','مانيجر','كوردنيتر'].includes(userById(store.currentUser).role);
   profileEditId = uid;
-  let u = uid ? store.team.find(x=>x.id===uid) : {id:'u'+Date.now(), name:'', role:'مصمم', av:'#3B6FF0', user:'', pass:'', phone:'', telegram:''};
+  let u = uid ? store.team.find(x=>x.id===uid) : {id:'u'+Date.now(), name:'', role:'مصمم', av:'#3B6FF0', user:'', pass:''};
+  
+  const roles=['الإدارة','مانيجر','كوردنيتر','مصمم','كاتب محتوى','كاتب كابشن','مونتير','شريك خارجي'];
   
   let myTasksHTML = '';
   if(uid) {
     let mine=[];
     store.tasks.forEach(t=>t.stages.forEach(st=>{if(st.person===uid)mine.push({task:t,st});}));
     if(mine.length) {
-      myTasksHTML = `<h4 style="margin-top:20px; border-top:1px solid var(--line); padding-top:16px;">المهام الحالية (${mine.length})</h4>
-      <div style="max-height:180px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
-        ${mine.map(m=>`<div style="background:var(--surface-2); padding:10px; border-radius:6px; font-size:13px;">
+      myTasksHTML = `<h4 style="margin-top:20px;border-top:1px solid var(--line);padding-top:16px;">المهام الحالية (${mine.length})</h4>
+      <div style="max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;">
+        ${mine.map(m=>`<div style="background:var(--surface-2);padding:10px;border-radius:6px;font-size:13px;">
           <strong>${esc(m.task.title)}</strong> - ${(STAGE_KINDS[m.st.kind]||{ar:'غير معروف'}).ar}
-          <span style="float:left; color:${m.st.state==='done'?'var(--green-ok)':'var(--amber)'}">${m.st.state==='done'?'منجز':'قيد العمل'}</span>
+          <span style="float:left;color:${m.st.state==='done'?'var(--green-ok)':'var(--amber)'}">${m.st.state==='done'?'منجز':'قيد العمل'}</span>
         </div>`).join('')}
       </div>`;
+    } else {
+      myTasksHTML = `<div style="margin-top:20px;color:var(--ink-500);font-size:14px;text-align:center;">لا توجد مهام حالية</div>`;
     }
   }
 
-  document.getElementById('modalRoot').innerHTML = `<div class="ov" onclick="if(event.target===this)closeProfileModal()">
-    <div class="modal fade-up" style="max-width:500px; text-align:right; direction:rtl;">
-      <div class="modal-head"><h3>${uid ? 'تعديل بيانات العضو' : 'إضافة موظف جديد'}</h3><button class="modal-close" onclick="closeProfileModal()">✕</button></div>
-      <div class="modal-body" style="display:flex; flex-direction:column; gap:12px; max-height:75vh; overflow-y:auto;">
-        <div class="fld"><label>الاسم الكامل</label><input type="text" id="prof_name" value="${esc(u.name)}" ${!canEdit?'disabled':''}></div>
-        <div class="fld"><label>الدور الوظيفي</label>
-          <select id="prof_role" dots;${!canEdit?'disabled':''}>
-            ${store.roles.map(r=>`<option ${u.role===r?'selected':''}>${r}</option>`).join('')}
-          </select>
-        </div>
-        <div class="fld-row">
-          <div class="fld"><label>رقم الهاتف</label><input type="text" id="prof_phone" value="${esc(u.phone||'')}" placeholder="07" ${!canEdit?'disabled':''}></div>
-          <div class="fld"><label>معرف التليجرام</label><input type="text" id="prof_telegram" value="${esc(u.telegram||'')}" placeholder="@username" ${!canEdit?'disabled':''}></div>
-        </div>
-        <div class="fld-row">
-          <div class="fld"><label>اسم المستخدم (Login)</label><input type="text" id="prof_user" value="${esc(u.user||'')}" dots;${!canEdit?'disabled':''}></div>
-          <div class="fld"><label>كلمة المرور (Password)</label><input type="text" id="prof_pass" value="${esc(u.pass||'')}" dots;${!canEdit?'disabled':''}></div>
-        </div>
-        <div class="fld"><label>اللون الرمزي</label><input type="color" id="prof_av" value="${u.av}" ${!canEdit?'disabled':''} style="width:100%; height:42px; border:1.5px solid var(--line); border-radius:12px; cursor:pointer; background:none; padding:4px;"></div>
-        ${myTasksHTML}
+  const m=document.createElement('div');
+  m.className='modal-overlay';
+  m.innerHTML=`<div class="modal fade-up" style="max-width:500px;">
+    <div class="modal-head"><h3>${uid ? 'ملف الموظف' : 'إضافة موظف جديد'}</h3><button class="modal-close" onclick="closeProfileModal()">${icon('cross',20)}</button></div>
+    <div class="modal-body" style="display:flex;flex-direction:column;gap:16px;">
+      <label class="tmap-f"><span>الاسم الكامل</span><input type="text" id="prof_name" value="${esc(u.name)}" ${!canEdit?'disabled':''}></label>
+      <label class="tmap-f"><span>الدور (المنصب)</span>
+        <select id="prof_role" ${!canEdit?'disabled':''}>
+          ${roles.map(r=>`<option ${u.role===r?'selected':''}>${r}</option>`).join('')}
+        </select>
+      </label>
+      <div style="display:flex;gap:16px;">
+        <label class="tmap-f" style="flex:1"><span>اسم المستخدم (Login)</span><input type="text" id="prof_user" value="${esc(u.user||'')}" ${!canEdit?'disabled':''}></label>
+        <label class="tmap-f" style="flex:1"><span>كلمة المرور (Password)</span><input type="text" id="prof_pass" value="${esc(u.pass||'')}" ${!canEdit?'disabled':''}></label>
       </div>
-      ${canEdit ? `<div class="modal-foot" style="display:flex; gap:12px;">
-        <button class="pill-blue" style="flex:2; justify-content:center;" onclick="saveProfile()">${uid ? '✓ حفظ التعديلات' : '✓ إضافة الموظف'}</button>
-        <button class="btn-gray" style="flex:1; justify-content:center; border-radius:100px;" onclick="closeProfileModal()">إلغاء</button>
-      </div>` : ''}
+      <label class="tmap-f"><span>اللون الرمزي</span><input type="color" id="prof_av" value="${u.av}" ${!canEdit?'disabled':''} style="width:100%;height:40px;border:none;border-radius:6px;cursor:pointer;"></label>
+      ${myTasksHTML}
     </div>
+    ${canEdit ? `<div class="modal-foot">
+      ${uid && uid !== store.currentUser ? `<button class="btn-sm" style="color:var(--red);background:var(--red-soft);" onclick="deleteProfile('${uid}')">حذف الموظف</button>` : '<div></div>'}
+      <button class="pill-blue" onclick="saveProfile()">${uid ? '✓ حفظ التعديلات' : '✓ إضافة الموظف'}</button>
+    </div>` : ''}
   </div>`;
+  document.getElementById('modalRoot').appendChild(m);
 }
 function closeProfileModal(){document.getElementById('modalRoot').innerHTML=''; profileEditId=null;}
 function saveProfile(){
   const name = document.getElementById('prof_name').value.trim();
   const role = document.getElementById('prof_role').value;
-  const phone = document.getElementById('prof_phone').value.trim();
-  const telegram = document.getElementById('prof_telegram').value.trim();
   const user = document.getElementById('prof_user').value.trim();
   const pass = document.getElementById('prof_pass').value.trim();
   const av = document.getElementById('prof_av').value;
@@ -3211,9 +2935,9 @@ function saveProfile(){
   
   if(profileEditId) {
     const u = store.team.find(x=>x.id===profileEditId);
-    if(u) { u.name=name; u.role=role; u.phone=phone; u.telegram=telegram; u.user=user; u.pass=pass; u.av=av; }
+    if(u) { u.name=name; u.role=role; u.user=user; u.pass=pass; u.av=av; }
   } else {
-    store.team.push({id:'u'+Date.now(), name, role, phone, telegram, user, pass, av});
+    store.team.push({id:'u'+Date.now(), name, role, user, pass, av});
   }
   save(); closeProfileModal(); render();
 }
@@ -3224,177 +2948,17 @@ function deleteProfile(uid) {
   }
 }
 
-function viewSettings(){
-  const canEdit = ['الإدارة','مانيجر','كوردنيتر'].includes(userById(store.currentUser).role);
-  if(!canEdit) return '<div class="empty card">غير مصرح لك بعرض هذه الصفحة</div>';
-  const avail = Object.entries(STAGE_KINDS).filter(([k,v])=>!store.sections.includes(k));
-  return `<div class="set-grid" style="direction:rtl;text-align:right;">
-    <div class="set-card card fade-up">
-      <h3>👥 الموظفون</h3>
-      <p>إدارة أعضاء الفريق وصلاحياتهم.</p>
-      <div class="set-list">${store.team.map(u=>`<div class="set-row"><span class="ico" style="background:${u.av}18;color:${u.av}">${u.name[0]}</span><span class="nm">${esc(u.name)}<div class="rl">${esc(u.role)}</div></span><button class="set-del" onclick="deleteProfile('${u.id}')">${icon("cross",15)}</button></div>`).join('')}</div>
-      <div class="set-add"><button class="pill-blue" onclick="openProfileModal()" style="height:42px;width:100%;justify-content:center;">+ إضافة موظف جديد</button></div>
+function viewSettings(){ return `<div class="set-grid">
+    <div class="set-card card fade-up"><h3>👥 الموظفون</h3><p>المانيجر يضيف الموظفين — يظهرون في القوائم المنسدلة عند إنشاء التاسك.</p>
+      <div class="set-list">${store.team.map(u=>`<div class="set-row"><span class="ico" style="background:${u.av}18;color:${u.av}">${u.name[0]}</span><span class="nm">${esc(u.name)}<div class="rl">${esc(u.role)}</div></span><button class="set-del" onclick="delTeam('${u.id}')">${icon("cross",15)}</button></div>`).join('')}</div>
+      <div class="set-add"><input id="newName" placeholder="اسم الموظف"><select id="newRole">${roles.map(r=>`<option>${r}</option>`).join('')}</select><button class="pill-blue" onclick="addTeam()" style="height:42px">+ إضافة</button></div>
     </div>
-    
-    <div class="set-card card fade-up">
-      <h3>💼 المسميات الوظيفية</h3>
-      <p>إضافة أو حذف المسميات الوظيفية المتاحة في المنظومة.</p>
-      <div class="set-list">${store.roles.map((r,i)=>`<div class="set-row"><span class="nm">${esc(r)}</span><button class="set-del" onclick="deleteRole(${i})">${icon("cross",15)}</button></div>`).join('')}</div>
-      <div class="set-add"><input id="newRoleName" placeholder="المسمى الجديد..." style="flex:1;"><button class="pill-blue" onclick="addRole()" style="height:42px">+ إضافة</button></div>
-    </div>
-
-    <div class="set-card card fade-up">
-      <h3>🧩 الأقسام (مراحل العمل)</h3>
-      <p>تحديد الأقسام المتاحة للكوردنيتر عند إنشاء خريطة المهام.</p>
+    <div class="set-card card fade-up"><h3>🧩 الأقسام (مراحل العمل)</h3><p>المانيجر يحدّد الأقسام المتاحة — الكوردنيتر يختار منها عند بناء خريطة التاسك.</p>
       <div class="set-list">${store.sections.map((s,i)=>{const k=(STAGE_KINDS[s]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true});return `<div class="set-row"><span class="ico" style="background:${k.color}18;color:${k.color}">${icon(k.svg,16)}</span><span class="nm">${k.ar}</span><button class="set-del" onclick="delSection(${i})">${icon("cross",15)}</button></div>`;}).join('')}</div>
-      <div class="set-add"><select id="newSection" style="flex:1;">${avail.length?avail.map(([k,v])=>`<option value="${k}">${v.ar}</option>`).join(''):'<option value="">كل الأقسام مُضافة</option>'}</select><button class="pill-blue" onclick="addSection()" style="height:42px">+ إضافة</button></div>
+      <div class="set-add"><select id="newSection">${avail.length?avail.map(([k,v])=>`<option value="${k}">${v.ar}</option>`).join(''):'<option value="">كل الأقسام مُضافة</option>'}</select><button class="pill-blue" onclick="addSection()" style="height:42px">+ إضافة</button></div>
     </div>
   </div>`;
 }
-
-function addRole() {
-  const r = document.getElementById('newRoleName').value.trim();
-  if(!r) return;
-  if(!store.roles) store.roles = DEFAULT_ROLES;
-  store.roles.push(r);
-  save();
-  render();
-}
-function deleteRole(idx) {
-  if(!confirm('حذف هذا المسمى الوظيفي؟')) return;
-  store.roles.splice(idx,1);
-  save();
-  render();
-}
-
-
-let personalEditId = null;
-function addPersonalTask() { openPersonalModal(); }
-function editPersonalTask(pid) { openPersonalModal(pid); }
-function deletePersonalTask(pid) {
-  if(!confirm('حذف المهمة الخاصة؟')) return;
-  if(!store.personal) store.personal = {};
-  const uid = store.currentUser;
-  if(!store.personal[uid]) store.personal[uid] = [];
-  store.personal[uid] = store.personal[uid].filter(x=>x.id!==pid);
-  save();
-  render();
-}
-function togglePersonalTask(pid) {
-  if(!store.personal) store.personal = {};
-  const uid = store.currentUser;
-  if(!store.personal[uid]) store.personal[uid] = [];
-  const pt = store.personal[uid].find(x=>x.id===pid);
-  if(pt) { pt.done = !pt.done; save(); render(); }
-}
-function openPersonalModal(pid = null) {
-  personalEditId = pid;
-  const uid = store.currentUser;
-  let pt = pid ? store.personal[uid].find(x=>x.id===pid) : {title: '', desc: ''};
-  
-  document.getElementById('modalRoot').innerHTML = `<div class="ov" onclick="if(event.target===this)closePersonalModal()">
-    <div class="modal fade-up" style="max-width:400px; text-align:right; direction:rtl;">
-      <div class="modal-head"><h3>${pid ? 'تعديل المهمة الخاصة' : 'إضافة مهمة خاصة جديدة'}</h3><button class="modal-close" onclick="closePersonalModal()">✕</button></div>
-      <div class="modal-body" style="display:flex; flex-direction:column; gap:12px;">
-        <div class="fld"><label>عنوان المهمة</label><input type="text" id="ptTitle" value="${esc(pt.title)}" placeholder="اكتب العنوان هنا..."></div>
-        <div class="fld"><label>التفاصيل والوصف</label><textarea id="ptDesc" placeholder="التفاصيل الإضافية..." style="min-height:100px;">${esc(pt.desc)}</textarea></div>
-      </div>
-      <div style="display:flex; gap:12px; margin-top:20px;">
-        <button class="pill-blue" style="flex:1; justify-content:center;" onclick="savePersonalTask()">حفظ</button>
-        <button class="btn-gray" style="flex:1; justify-content:center; border-radius:100px;" onclick="closePersonalModal()">إلغاء</button>
-      </div>
-    </div>
-  </div>`;
-}
-function closePersonalModal() {
-  document.getElementById('modalRoot').innerHTML = '';
-  personalEditId = null;
-}
-function savePersonalTask() {
-  const t = document.getElementById('ptTitle').value.trim();
-  const d = document.getElementById('ptDesc').value.trim();
-  if(!t) return alert('يرجى إدخال عنوان المهمة');
-  
-  if(!store.personal) store.personal = {};
-  const uid = store.currentUser;
-  if(!store.personal[uid]) store.personal[uid] = [];
-  
-  if(personalEditId) {
-    const pt = store.personal[uid].find(x=>x.id===personalEditId);
-    if(pt) { pt.title = t; pt.desc = d; }
-  } else {
-    store.personal[uid].push({ id: 'p' + Date.now(), title: t, desc: d, done: false });
-  }
-  save();
-  closePersonalModal();
-  render();
-}
-function viewNotifications(){
-  const notifs = store.notifications || [];
-  notifs.forEach(n => n.read = true);
-  save();
-  const bd=document.getElementById('bellDot');if(bd) bd.style.display='none';
-  return `<div class="maps-bar fade-up" style="direction:rtl;text-align:right;"><div class="maps-count"><strong>${notifs.length}</strong> الإشعارات</div></div>
-  <div style="max-width: 600px; margin: 20px auto; display: flex; flex-direction: column; gap: 12px; direction:rtl; text-align:right;">
-    ${notifs.map(n => `<div class="card fade-up" style="padding: 16px; border-right: 4px solid ${n.type==='critical'?'var(--red)':'var(--blue)'}; display: flex; gap: 12px; align-items: flex-start;">
-      <div style="font-size: 24px;">${n.type==='critical'?'🔥':'🔔'}</div>
-      <div style="flex: 1;">
-        <div style="font-weight: bold; margin-bottom: 4px; color: var(--ink-700);">${esc(n.title)}</div>
-        <div style="font-size: 14px; color: var(--ink-500); margin-bottom: 8px;">${esc(n.body)}</div>
-        <div style="font-size: 12px; color: var(--ink-400);">${esc(n.time)}</div>
-      </div>
-    </div>`).join('')}
-  </div>`;
-}
-function viewPersonal(){
-  if(!store.personal) store.personal = {};
-  const uid = store.currentUser;
-  let ptasks = store.personal[uid] || [];
-  
-  // Filter by search
-  if(personalSearch) {
-    const q = personalSearch.trim().toLowerCase();
-    ptasks = ptasks.filter(t => t.title.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q));
-  }
-  
-  // Filter by status tab
-  if(personalFilter === 'active') {
-    ptasks = ptasks.filter(t => !t.done);
-  } else if(personalFilter === 'completed') {
-    ptasks = ptasks.filter(t => t.done);
-  }
-
-  return `<div class="maps-bar fade-up" style="direction:rtl; text-align:right;">
-    <div style="display:flex; gap:12px; align-items:center; flex:1;">
-      <input type="text" placeholder="🔍 بحث في مهامك الخاصة" value="${esc(personalSearch)}" oninput="personalSearch=this.value;render()" style="max-width:300px; height:42px; border:1.5px solid var(--line); border-radius:10px; padding:0 12px; font-size:14px; outline:none; background:#fff;">
-      <div style="display:flex; background:var(--surface-2); border-radius:10px; padding:3px; gap:4px;">
-        <button onclick="personalFilter='all';render()" style="border:none; padding:6px 14px; font-size:13px; font-weight:700; border-radius:8px; cursor:pointer; background:${personalFilter==='all'?'#fff':'transparent'}; color:${personalFilter==='all'?'var(--blue-600)':'var(--ink-500)'}; box-shadow:${personalFilter==='all'?'var(--shadow-sm)':'none'}; transition:all 0.2s;">الكل</button>
-        <button onclick="personalFilter='active';render()" style="border:none; padding:6px 14px; font-size:13px; font-weight:700; border-radius:8px; cursor:pointer; background:${personalFilter==='active'?'#fff':'transparent'}; color:${personalFilter==='active'?'var(--blue-600)':'var(--ink-500)'}; box-shadow:${personalFilter==='active'?'var(--shadow-sm)':'none'}; transition:all 0.2s;">قيد العمل</button>
-        <button onclick="personalFilter='completed';render()" style="border:none; padding:6px 14px; font-size:13px; font-weight:700; border-radius:8px; cursor:pointer; background:${personalFilter==='completed'?'#fff':'transparent'}; color:${personalFilter==='completed'?'var(--blue-600)':'var(--ink-500)'}; box-shadow:${personalFilter==='completed'?'var(--shadow-sm)':'none'}; transition:all 0.2s;">المنجزة</button>
-      </div>
-    </div>
-    <button class="pill-blue" onclick="addPersonalTask()">+ إضافة مهمة خاصة</button>
-  </div>
-  
-  <div style="display:flex; flex-direction:column; gap:12px; margin-top:20px; direction:rtl; text-align:right;" class="fade-up">
-    ${ptasks.length ? ptasks.map(pt=>`<div class="card" style="padding:18px; display:flex; justify-content:space-between; align-items:center; border-right:4px solid ${pt.done?'var(--green-ok)':'var(--blue)'}; background:dots;${pt.done?'var(--surface-2)':'#fff'}; opacity:dots;${pt.done?0.75:1}; transition:all 0.2s;">
-      <div style="display:flex; gap:16px; align-items:flex-start; flex:1;">
-        <input type="checkbox" dots;${pt.done?'checked':''} onchange="togglePersonalTask('dots;${pt.id}')" style="width:22px; height:22px; cursor:pointer; border-radius:6px; margin-top:3px; accent-color:var(--green-ok);">
-        <div style="flex:1;">
-          <h3 style="margin:0 0 4px 0; text-decoration:dots;${pt.done?'line-through':'none'}; color:dots;${pt.done?'var(--ink-400)':'var(--ink-850)'}; font-size:16px; font-weight:700;">dots;${esc(pt.title)}</h3>
-          dots;${pt.desc ? `<p style="margin:0; color:var(--ink-500); font-size:13.5px; white-space:pre-wrap; line-height:1.6;">dots;${esc(pt.desc)}</p>` : ''}
-        </div>
-      </div>
-      <div style="display:flex; gap:8px; margin-right:16px;">
-        <button class="btn-sm" style="background:var(--surface-2); color:var(--ink-600); border:none;" onclick="editPersonalTask('dots;${pt.id}')">dots;${icon('edit', 14)} تعديل</button>
-        <button class="btn-sm" style="background:var(--red-soft); color:var(--red); border:none;" onclick="deletePersonalTask('dots;${pt.id}')">dots;${icon('trash', 14)} حذف</button>
-      </div>
-    </div>`).join('') : `<div class="empty card">${personalSearch?'لا توجد نتائج مطابقة للبحث':'لا توجد مهام خاصة مضافة حالياً'}</div>`}
-  </div>`;
-}
-
-
-
 function toggleNode(tid,sid){openNode[tid]=openNode[tid]===sid?null:sid;render();}
 function closeNode(tid){openNode[tid]=null;render();}
 function findStage(tid,sid){const t=store.tasks.find(x=>x.id===tid);return[t,t.stages.find(s=>s.id===sid)];}
@@ -3573,182 +3137,15 @@ function renderTaskModal(){
   </div></div>`;
 }
 const META={home:['لوحة التحكم 👋','مرحباً، إليك نظرة عامة على أداء الإنتاج اليوم'],maps:['خرائط المهام','كل تاسك خريطته الخاصة — اضغط أي مرحلة لفتحها وإضافة محتواها'],partnerships:['الشراكات','المهام المخصصة للشركات الخارجية وشركاء مرماز'],sheet:['الشيت 📋','جدول المهام والتفاصيل الخاصة للأساتذة'],mytasks:['مهامي','المراحل المعيّنة لك عبر كل المهام'],personal:['مهامي الخاصة','مساحة شخصية معزولة — يراها صاحبها فقط'],calendar:['تقويم النشر','مواعيد النشر تتزامن تلقائياً من خرائط المهام'],chat:['المحادثة','دردشة الفريق مدعومة بـ Microsoft Teams — مشفّرة وآمنة'],analytics:['التقارير والتحليلات','أداء الفريق والإنتاج حسب الجهة والأولوية'],team:['الفريق','كل موظف وإحصائياته ومهامه'],notifications:['الإشعارات','آخر التنبيهات والتحديثات'],settings:['إعدادات المانيجر','إدارة الموظفين والأقسام المتاحة']};
-
-function enterPublicDashboard() {
-  page = 'public_dashboard';
-  document.getElementById('loginScreen').style.display = 'none';
-  document.querySelector('.shell').style.display = 'none';
-  document.getElementById('publicDashboard').style.display = 'block';
-  renderPublicDashboard();
-  
-  syncPull(false).then(() => {
-    renderPublicDashboard();
-  });
-  
-  if(window.dashboardInterval) clearInterval(window.dashboardInterval);
-  window.dashboardInterval = setInterval(() => {
-    if(page === 'public_dashboard') {
-      syncPull(false).then(() => {
-        renderPublicDashboard();
-      });
-    } else {
-      clearInterval(window.dashboardInterval);
-    }
-  }, 5000);
-}
-
-function exitPublicDashboard() {
-  page = 'home';
-  if(window.dashboardInterval) clearInterval(window.dashboardInterval);
-  document.getElementById('publicDashboard').style.display = 'none';
-  if(!store.currentUser) {
-    document.getElementById('loginScreen').style.display = 'flex';
-  } else {
-    document.querySelector('.shell').style.display = 'flex';
-    render();
-  }
-}
-
-window.addEventListener('storage', (e) => {
-  if (e.key === KEY) {
-    try {
-      store = JSON.parse(e.newValue);
-      if(page === 'public_dashboard') {
-        renderPublicDashboard();
-      } else {
-        render();
-      }
-    } catch(err) {}
-  }
-});
-
-function renderPublicDashboard() {
-  const container = document.getElementById('dashboardTableContainer');
-  if(!container) return;
-  
-  const tasks = store.tasks.filter(t => !t.isPartnership);
-  
-  // Brand legend
-  const legendEl = document.getElementById('dashboardBrandLegend');
-  if(legendEl) {
-    const bCounts = {};
-    tasks.forEach(t => { bCounts[t.brand] = (bCounts[t.brand]||0) + 1; });
-    legendEl.innerHTML = Object.entries(BRANDS).map(([k,b]) => {
-      const cnt = bCounts[k] || 0;
-      if(cnt === 0) return '';
-      return '<span class="dash-brand-badge ' + k + '">' + b.emoji + ' ' + b.name + ' <span style="opacity:0.7;">(' + cnt + ')</span></span>';
-    }).join('');
-  }
-  
-  // Divide tasks into 2 columns
-  const mid = Math.ceil(tasks.length / 2);
-  const col1Tasks = tasks.slice(0, mid);
-  const col2Tasks = tasks.slice(mid);
-  
-  const cols = [
-    { name: 'النصوص', kinds: ['caption', 'textdesign'] },
-    { name: 'التصاميم', kinds: ['design'] },
-    { name: 'التدقيق', kinds: ['review'] },
-    { name: 'الموافقة', kinds: ['approval'] },
-    { name: 'النشر', kinds: ['publish'] }
-  ];
-  
-  const renderTable = (tableTasks) => {
-    if (tableTasks.length === 0) return '<div style="padding:40px; text-align:center; color:#475569;">لا توجد مهام</div>';
-    return '<table style="width:100%; border-collapse:collapse; text-align:right; direction:rtl;">' +
-      '<thead>' +
-        '<tr style="border-bottom:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.02);">' +
-          '<th style="padding:14px 16px; color:#94a3b8; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:0.5px;">المهمة</th>' +
-          cols.map(c => '<th style="padding:14px 10px; text-align:center; color:#94a3b8; font-weight:700; font-size:13px; width:70px;">' + c.name + '</th>').join('') +
-        '</tr>' +
-      '</thead>' +
-      '<tbody>' +
-        tableTasks.map(t => {
-          const b = BRANDS[t.brand] || {name:'غير معروف',emoji:'🏷',color:'#999'};
-          let rowHtml = '<tr style="border-bottom:1px solid rgba(255,255,255,0.04); transition:all 0.25s ease;" onmouseover="this.style.background=\'rgba(255,255,255,0.03)\'" onmouseout="this.style.background=\'transparent\'">' +
-            '<td style="padding:14px 16px; max-width:220px;">' +
-              '<div style="display:flex; align-items:center; gap:10px;">' +
-                '<div style="width:4px; height:36px; border-radius:2px; background:' + b.color + '; flex-shrink:0; opacity:0.7;"></div>' +
-                '<div style="overflow:hidden;">' +
-                  '<div style="font-weight:700; font-size:14px; color:#f1f5f9; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="' + esc(t.title) + '">' + esc(t.title) + '</div>' +
-                  '<div style="display:flex; align-items:center; gap:8px; margin-top:4px;">' +
-                    '<span class="dash-brand-badge ' + t.brand + '">' + b.emoji + ' ' + b.name + '</span>' +
-                    '<span style="font-size:11px; color:#64748b;">⏱ ' + esc(t.due) + '</span>' +
-                  '</div>' +
-                '</div>' +
-              '</div>' +
-            '</td>';
-            
-          cols.forEach(c => {
-            const stages = t.stages.filter(s => c.kinds.includes(s.kind));
-            if(stages.length === 0) {
-              rowHtml += '<td style="padding:14px 10px; text-align:center;"><span style="color:#334155; font-size:16px;">—</span></td>';
-            } else {
-              let state = 'pending';
-              if(stages.every(s => ['done', 'approved', 'published'].includes(s.state))) state = 'done';
-              else if(stages.some(s => s.state === 'rejected')) state = 'rejected';
-              else if(stages.some(s => s.state === 'approval')) state = 'approval';
-              else if(stages.some(s => s.state === 'working')) state = 'working';
-              
-              let boxHtml = '';
-              if(state === 'done') {
-                boxHtml = '<div style="width:30px; height:30px; background:rgba(33,192,122,0.1); border:1.5px solid rgba(33,192,122,0.4); border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#34d399; font-weight:bold; font-size:13px; box-shadow:0 0 8px rgba(33,192,122,0.15);">✓</div>';
-              } else if(state === 'working') {
-                boxHtml = '<div class="dash-status-working" style="width:30px; height:30px; background:rgba(47,107,255,0.1); border:1.5px solid rgba(47,107,255,0.4); border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#60a5fa; position:relative;">' +
-                  '<div style="width:7px; height:7px; background:#60a5fa; border-radius:50%; animation:pulse 1.5s infinite;"></div>' +
-                '</div>';
-              } else if(state === 'approval') {
-                boxHtml = '<div style="width:30px; height:30px; background:rgba(246,166,9,0.1); border:1.5px solid rgba(246,166,9,0.35); border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#fbbf24; font-size:13px; box-shadow:0 0 8px rgba(246,166,9,0.1);">⏳</div>';
-              } else if(state === 'rejected') {
-                boxHtml = '<div style="width:30px; height:30px; background:rgba(255,84,112,0.1); border:1.5px solid rgba(255,84,112,0.35); border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#fb7185; font-weight:bold; font-size:13px; box-shadow:0 0 8px rgba(255,84,112,0.1);">✕</div>';
-              } else {
-                boxHtml = '<div style="width:30px; height:30px; background:rgba(255,255,255,0.03); border:1.5px solid rgba(255,255,255,0.08); border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#475569; font-size:13px;">•</div>';
-              }
-              rowHtml += '<td style="padding:14px 10px; text-align:center;">' + boxHtml + '</td>';
-            }
-          });
-          
-          rowHtml += '</tr>';
-          return rowHtml;
-        }).join('') +
-      '</tbody>' +
-    '</table>';
-  };
-
-  container.style.background = 'transparent';
-  container.style.border = 'none';
-  container.style.boxShadow = 'none';
-  container.style.padding = '0';
-  
-  container.innerHTML = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap:20px; width:100%;">' +
-    '<div style="padding:0; overflow:hidden; border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.02); border-radius:16px; backdrop-filter:blur(10px);">' +
-      renderTable(col1Tasks) +
-    '</div>' +
-    '<div style="padding:0; overflow:hidden; border:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.02); border-radius:16px; backdrop-filter:blur(10px);">' +
-      renderTable(col2Tasks) +
-    '</div>' +
-  '</div>';
-}
-
 function render(){renderNav();
-  if(!store.currentUser && page !== 'public_dashboard') {
-    document.querySelector('.shell').style.display = 'none';
+  if(!store.currentUser) {
+    document.querySelector('.app-layout').style.display = 'none';
     document.getElementById('loginScreen').style.display = 'flex';
     return;
   } else {
-    if(page === 'public_dashboard') {
-      document.querySelector('.shell').style.display = 'none';
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('publicDashboard').style.display = 'block';
-      renderPublicDashboard();
-      return;
-    } else {
-      document.querySelector('.shell').style.display = 'flex';
-      const ls = document.getElementById('loginScreen');
-      if(ls) ls.style.display = 'none';
-      const pd = document.getElementById('publicDashboard');
-      if(pd) pd.style.display = 'none';
-    }
+    document.querySelector('.app-layout').style.display = 'flex';
+    const ls = document.getElementById('loginScreen');
+    if(ls) ls.style.display = 'none';
   }
 renderSummary();
   const unread=store.notifications?store.notifications.filter(n=>!n.read).length:0;
