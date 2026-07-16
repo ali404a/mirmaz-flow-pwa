@@ -645,54 +645,54 @@ input,select,textarea{font-family:inherit}
 <body>
 <div class="ambient"><span></span><span></span></div>
 
-<div id="loginScreen" style="position:fixed;inset:0;background:#050914;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden;font-family:'Inter', sans-serif;">
-  <div style="position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(47,107,255,0.12);filter:blur(80px);top:-50px;right:-50px;animation:moveBlob1 8s infinite alternate;"></div>
-  <div style="position:absolute;width:400px;height:400px;border-radius:50%;background:rgba(139,92,246,0.08);filter:blur(100px);bottom:-100px;left:-100px;animation:moveBlob2 10s infinite alternate;"></div>
+<div id="loginScreen" style="position:fixed;inset:0;background:#f3f4f6;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden;font-family:'Inter', sans-serif;">
+  <div style="position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(59,130,246,0.08);filter:blur(80px);top:-50px;right:-50px;animation:moveBlob1 8s infinite alternate;"></div>
+  <div style="position:absolute;width:400px;height:400px;border-radius:50%;background:rgba(139,92,246,0.06);filter:blur(100px);bottom:-100px;left:-100px;animation:moveBlob2 10s infinite alternate;"></div>
   
-  <div class="card" style="width:100%;max-width:420px;padding:40px;display:flex;flex-direction:column;gap:24px;text-align:center;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);backdrop-filter:blur(20px);box-shadow:0 20px 50px rgba(0,0,0,0.3);position:relative;z-index:10;border-radius:20px;">
+  <div class="card" style="width:100%;max-width:420px;padding:40px;display:flex;flex-direction:column;gap:24px;text-align:center;background:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.5);backdrop-filter:blur(20px);box-shadow:0 20px 40px rgba(0,0,0,0.06);position:relative;z-index:10;border-radius:20px;">
     <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
       <div style="font-size:32px;font-weight:800;background:linear-gradient(45deg, #3b82f6, #8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">mirmaz FLOW</div>
-      <p style="color:rgba(255,255,255,0.4);margin:0;font-size:15px;">نظام إدارة خطوط الإنتاج والمحتوى</p>
+      <p style="color:var(--ink-500);margin:0;font-size:15px;">نظام إدارة خطوط الإنتاج والمحتوى</p>
     </div>
     
-    <div id="loginError" style="color:var(--red);font-size:14px;display:none;background:rgba(255,84,112,0.1);padding:10px;border-radius:8px;border:1px solid rgba(255,84,112,0.2);direction:rtl;">بيانات الدخول غير صحيحة، يرجى المحاولة مرة أخرى</div>
+    <div id="loginError" style="color:var(--red);font-size:14px;display:none;background:rgba(255,84,112,0.08);padding:10px;border-radius:8px;border:1px solid rgba(255,84,112,0.15);direction:rtl;">بيانات الدخول غير صحيحة، يرجى المحاولة مرة أخرى</div>
     
-    <div style="display:flex;flex-direction:column;gap:16px;text-align:right;">
+    <div style="display:flex;flex-direction:column;gap:16px;text-align:right;direction:rtl;">
       <div style="display:flex;flex-direction:column;gap:8px;">
-        <label style="font-weight:bold;color:rgba(255,255,255,0.8);font-size:14px;">اسم المستخدم</label>
-        <input type="text" id="loginUser" class="tmap-in" placeholder="Username" style="padding:14px;font-size:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);color:#fff;border-radius:10px;outline:none;transition:border-color 0.2s;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+        <label style="font-weight:bold;color:var(--ink-700);font-size:14px;">اسم المستخدم</label>
+        <input type="text" id="loginUser" class="tmap-in" placeholder="Username" style="padding:14px;font-size:16px;background:#fff;border:1.5px solid var(--line);color:var(--ink-800);border-radius:10px;outline:none;transition:border-color 0.2s;">
       </div>
       
       <div style="display:flex;flex-direction:column;gap:8px;">
-        <label style="font-weight:bold;color:rgba(255,255,255,0.8);font-size:14px;">كلمة المرور</label>
+        <label style="font-weight:bold;color:var(--ink-700);font-size:14px;">كلمة المرور</label>
         <div style="position:relative;display:flex;align-items:center;">
-          <input type="password" id="loginPass" class="tmap-in" placeholder="Password" style="padding:14px;font-size:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);color:#fff;border-radius:10px;outline:none;width:100%;transition:border-color 0.2s;direction:ltr;text-align:right;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
-          <button onclick="togglePassword()" style="position:absolute;left:12px;background:none;border:none;color:rgba(255,255,255,0.4);cursor:pointer;padding:5px;font-size:18px;">👁</button>
+          <input type="password" id="loginPass" class="tmap-in" placeholder="Password" style="padding:14px;font-size:16px;background:#fff;border:1.5px solid var(--line);color:var(--ink-800);border-radius:10px;outline:none;width:100%;transition:border-color 0.2s;direction:ltr;text-align:right;">
+          <button onclick="togglePassword()" style="position:absolute;left:12px;background:none;border:none;color:var(--ink-400);cursor:pointer;padding:5px;font-size:18px;">👁</button>
         </div>
       </div>
     </div>
     
     <div style="display:flex;flex-direction:column;gap:12px;margin-top:10px;">
-      <button class="pill-blue" onclick="performLogin()" style="padding:14px;font-size:16px;font-weight:bold;background:#3b82f6;color:#fff;border:none;border-radius:10px;cursor:pointer;box-shadow:0 4px 12px rgba(59,130,246,0.3);transition:background 0.2s;justify-content:center;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">تسجيل الدخول</button>
+      <button class="pill-blue" onclick="performLogin()" style="padding:14px;font-size:16px;font-weight:bold;background:#3b82f6;color:#fff;border:none;border-radius:10px;cursor:pointer;box-shadow:0 4px 12px rgba(59,130,246,0.2);transition:background 0.2s;justify-content:center;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3b82f6'">تسجيل الدخول</button>
       
-      <div style="display:flex;align-items:center;gap:8px;margin:8px 0;color:rgba(255,255,255,0.2);justify-content:center;"><hr style="flex:1;border:none;border-top:1px solid rgba(255,255,255,0.08)">أو<hr style="flex:1;border:none;border-top:1px solid rgba(255,255,255,0.08)"></div>
+      <div style="display:flex;align-items:center;gap:8px;margin:8px 0;color:var(--ink-300);justify-content:center;"><hr style="flex:1;border:none;border-top:1px solid var(--line)">أو<hr style="flex:1;border:none;border-top:1px solid var(--line)"></div>
       
-      <button onclick="enterPublicDashboard()" style="padding:14px;font-size:15px;font-weight:bold;background:rgba(255,255,255,0.05);color:#fff;border:1px solid rgba(255,255,255,0.1);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.08)';this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.borderColor='rgba(255,255,255,0.1)'">
+      <button onclick="enterPublicDashboard()" style="padding:14px;font-size:15px;font-weight:bold;background:#fff;color:var(--ink-700);border:1.5px solid var(--line);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;" onmouseover="this.style.background='var(--surface-2)';this.style.borderColor='var(--ink-300)'" onmouseout="this.style.background='#fff';this.style.borderColor='var(--line)'">
         <span>📊 الوصول السريع للمهام (لوحة العرض)</span>
       </button>
     </div>
   </div>
 </div>
 
-<div id="publicDashboard" style="display:none; position:fixed; inset:0; background:radial-gradient(circle at top right, #0d1527, #050914); color:#fff; z-index:999999; overflow-y:auto; padding:40px; font-family:'Inter', sans-serif;">
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:20px; direction: rtl;">
+<div id="publicDashboard" style="display:none; position:fixed; inset:0; background:#f8fafc; color:var(--ink-800); z-index:999999; overflow-y:auto; padding:40px; font-family:'Inter', sans-serif;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px; border-bottom:1px solid var(--line); padding-bottom:20px; direction: rtl;">
     <div>
       <h1 style="margin:0; font-size:32px; font-weight:800; background:linear-gradient(45deg, #3b82f6, #8b5cf6); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">لوحة متابعة المهام والإنتاج 📊</h1>
-      <p style="margin:8px 0 0 0; color:rgba(255,255,255,0.5); font-size:16px;">تحديث تلقائي لحظي لشاشة العرض بقسم التسويق</p>
+      <p style="margin:8px 0 0 0; color:var(--ink-500); font-size:16px;">تحديث تلقائي لحظي لشاشة العرض بقسم التسويق</p>
     </div>
-    <button class="pill-blue" onclick="exitPublicDashboard()" style="background:rgba(255,255,255,0.08); color:#fff; border:1px solid rgba(255,255,255,0.1); padding:10px 20px; font-size:15px;">تسجيل الدخول 🔑</button>
+    <button class="pill-blue" onclick="exitPublicDashboard()" style="background:#fff; color:var(--ink-700); border:1.5px solid var(--line); padding:10px 20px; font-size:15px; box-shadow:var(--shadow-sm);">تسجيل الدخول 🔑</button>
   </div>
-  <div id="dashboardTableContainer" class="card" style="padding:0; overflow:hidden; border:1px solid rgba(255,255,255,0.05); background:rgba(255,255,255,0.02); backdrop-filter:blur(20px); border-radius:16px;"></div>
+  <div id="dashboardTableContainer" class="card" style="padding:0; overflow:hidden; border:1px solid var(--line); background:#fff; border-radius:16px; box-shadow:var(--shadow-sm);"></div>
 </div>
 <script>
 function togglePassword(){
@@ -2989,6 +2989,10 @@ function viewAnalytics(){
 
 let currentProfileId = null;
 
+let personalFilter = 'all'; // 'all', 'active', 'completed'
+let personalSearch = '';
+
+
 function viewTeam(){
   if(currentProfileId) return viewProfile(currentProfileId);
   const u = userById(store.currentUser);
@@ -3081,34 +3085,33 @@ function openProfileModal(uid = null){
     }
   }
 
-  const m=document.createElement('div');
-  m.className='modal-overlay';
-  m.innerHTML=`<div class="modal fade-up" style="max-width:500px;">
-    <div class="modal-head"><h3>${uid ? 'تعديل بيانات العضو' : 'إضافة موظف جديد'}</h3><button class="modal-close" onclick="closeProfileModal()">${icon('cross',20)}</button></div>
-    <div class="modal-body" style="display:flex;flex-direction:column;gap:16px;max-height:70vh;overflow-y:auto;padding-right:4px;direction:rtl;text-align:right;">
-      <label class="tmap-f"><span>الاسم الكامل</span><input type="text" id="prof_name" value="${esc(u.name)}" ${!canEdit?'disabled':''}></label>
-      <label class="tmap-f"><span>الدور الوظيفي</span>
-        <select id="prof_role" ${!canEdit?'disabled':''}>
-          ${store.roles.map(r=>`<option ${u.role===r?'selected':''}>${r}</option>`).join('')}
-        </select>
-      </label>
-      <div style="display:flex;gap:16px;">
-        <label class="tmap-f" style="flex:1"><span>رقم الهاتف</span><input type="text" id="prof_phone" value="${esc(u.phone||'')}" placeholder="07..." ${!canEdit?'disabled':''}></label>
-        <label class="tmap-f" style="flex:1"><span>معرف التليجرام</span><input type="text" id="prof_telegram" value="${esc(u.telegram||'')}" placeholder="@username" ${!canEdit?'disabled':''}></label>
+  document.getElementById('modalRoot').innerHTML = `<div class="ov" onclick="if(event.target===this)closeProfileModal()">
+    <div class="modal fade-up" style="max-width:500px; text-align:right; direction:rtl;">
+      <div class="modal-head"><h3>${uid ? 'تعديل بيانات العضو' : 'إضافة موظف جديد'}</h3><button class="modal-close" onclick="closeProfileModal()">${icon('cross',20)}</button></div>
+      <div class="modal-body" style="display:flex;flex-direction:column;gap:16px;max-height:70vh;overflow-y:auto;padding-right:4px;">
+        <label class="tmap-f"><span>الاسم الكامل</span><input type="text" id="prof_name" value="${esc(u.name)}" ${!canEdit?'disabled':''}></label>
+        <label class="tmap-f"><span>الدور الوظيفي</span>
+          <select id="prof_role" ${!canEdit?'disabled':''}>
+            ${store.roles.map(r=>`<option ${u.role===r?'selected':''}>${r}</option>`).join('')}
+          </select>
+        </label>
+        <div style="display:flex;gap:16px;">
+          <label class="tmap-f" style="flex:1"><span>رقم الهاتف</span><input type="text" id="prof_phone" value="${esc(u.phone||'')}" placeholder="07..." ${!canEdit?'disabled':''}></label>
+          <label class="tmap-f" style="flex:1"><span>معرف التليجرام</span><input type="text" id="prof_telegram" value="${esc(u.telegram||'')}" placeholder="@username" ${!canEdit?'disabled':''}></label>
+        </div>
+        <div style="display:flex;gap:16px;">
+          <label class="tmap-f" style="flex:1"><span>اسم المستخدم (Login)</span><input type="text" id="prof_user" value="${esc(u.user||'')}" ${!canEdit?'disabled':''}></label>
+          <label class="tmap-f" style="flex:1"><span>كلمة المرور (Password)</span><input type="text" id="prof_pass" value="${esc(u.pass||'')}" ${!canEdit?'disabled':''}></label>
+        </div>
+        <label class="tmap-f"><span>اللون الرمزي</span><input type="color" id="prof_av" value="${u.av}" ${!canEdit?'disabled':''} style="width:100%;height:40px;border:none;border-radius:6px;cursor:pointer;"></label>
+        ${myTasksHTML}
       </div>
-      <div style="display:flex;gap:16px;">
-        <label class="tmap-f" style="flex:1"><span>اسم المستخدم (Login)</span><input type="text" id="prof_user" value="${esc(u.user||'')}" ${!canEdit?'disabled':''}></label>
-        <label class="tmap-f" style="flex:1"><span>كلمة المرور (Password)</span><input type="text" id="prof_pass" value="${esc(u.pass||'')}" ${!canEdit?'disabled':''}></label>
-      </div>
-      <label class="tmap-f"><span>اللون الرمزي</span><input type="color" id="prof_av" value="${u.av}" ${!canEdit?'disabled':''} style="width:100%;height:40px;border:none;border-radius:6px;cursor:pointer;"></label>
-      ${myTasksHTML}
+      ${canEdit ? `<div class="modal-foot">
+        ${uid && uid !== store.currentUser ? `<button class="btn-sm" style="color:var(--red);background:var(--red-soft);" onclick="deleteProfile('${uid}')">حذف الموظف</button>` : '<div></div>'}
+        <button class="pill-blue" onclick="saveProfile()">${uid ? '✓ حفظ التعديلات' : '✓ إضافة الموظف'}</button>
+      </div>` : ''}
     </div>
-    ${canEdit ? `<div class="modal-foot">
-      ${uid && uid !== store.currentUser ? `<button class="btn-sm" style="color:var(--red);background:var(--red-soft);" onclick="deleteProfile('${uid}')">حذف الموظف</button>` : '<div></div>'}
-      <button class="pill-blue" onclick="saveProfile()">${uid ? '✓ حفظ التعديلات' : '✓ إضافة الموظف'}</button>
-    </div>` : ''}
   </div>`;
-  document.getElementById('modalRoot').appendChild(m);
 }
 function closeProfileModal(){document.getElementById('modalRoot').innerHTML=''; profileEditId=null;}
 function saveProfile(){
@@ -3186,13 +3189,17 @@ function addPersonalTask() { openPersonalModal(); }
 function editPersonalTask(pid) { openPersonalModal(pid); }
 function deletePersonalTask(pid) {
   if(!confirm('حذف المهمة الخاصة؟')) return;
+  if(!store.personal) store.personal = {};
   const uid = store.currentUser;
+  if(!store.personal[uid]) store.personal[uid] = [];
   store.personal[uid] = store.personal[uid].filter(x=>x.id!==pid);
   save();
   render();
 }
 function togglePersonalTask(pid) {
+  if(!store.personal) store.personal = {};
   const uid = store.currentUser;
+  if(!store.personal[uid]) store.personal[uid] = [];
   const pt = store.personal[uid].find(x=>x.id===pid);
   if(pt) { pt.done = !pt.done; save(); render(); }
 }
@@ -3201,20 +3208,19 @@ function openPersonalModal(pid = null) {
   const uid = store.currentUser;
   let pt = pid ? store.personal[uid].find(x=>x.id===pid) : {title: '', desc: ''};
   
-  const m=document.createElement('div');
-  m.className='modal-overlay';
-  m.innerHTML = `<div class="modal fade-up" style="max-width:400px; padding:24px; direction:rtl; text-align:right;">
-    <h3 style="margin-top:0">${pid ? 'تعديل المهمة الخاصة' : 'إضافة مهمة خاصة جديدة'}</h3>
-    <div style="display:flex; flex-direction:column; gap:16px; margin: 16px 0;">
-      <label class="tmap-f"><span>عنوان المهمة</span><input type="text" id="ptTitle" value="${esc(pt.title)}" placeholder="اكتب العنوان هنا..."></label>
-      <label class="tmap-f"><span>التفاصيل والوصف</span><textarea id="ptDesc" placeholder="التفاصيل الإضافية..." style="height:100px; padding:8px; border:1px solid var(--line); border-radius:6px; background:var(--surface); color:var(--ink-700); outline:none;">${esc(pt.desc)}</textarea></label>
-    </div>
-    <div style="display:flex; gap:12px; margin-top:20px;">
-      <button class="pill-blue" style="flex:1; justify-content:center;" onclick="savePersonalTask()">حفظ</button>
-      <button class="btn-gray" style="flex:1; justify-content:center; border-radius:100px;" onclick="closePersonalModal()">إلغاء</button>
+  document.getElementById('modalRoot').innerHTML = `<div class="ov" onclick="if(event.target===this)closePersonalModal()">
+    <div class="modal fade-up" style="max-width:400px; text-align:right; direction:rtl;">
+      <div class="modal-head"><h3>${pid ? 'تعديل المهمة الخاصة' : 'إضافة مهمة خاصة جديدة'}</h3><button class="modal-close" onclick="closePersonalModal()">${icon('cross',20)}</button></div>
+      <div class="modal-body" style="display:flex; flex-direction:column; gap:16px;">
+        <label class="tmap-f"><span>عنوان المهمة</span><input type="text" id="ptTitle" value="${esc(pt.title)}" placeholder="اكتب العنوان هنا..."></label>
+        <label class="tmap-f"><span>التفاصيل والوصف</span><textarea id="ptDesc" placeholder="التفاصيل الإضافية..." style="height:100px; padding:8px; border:1px solid var(--line); border-radius:6px; background:var(--surface); color:var(--ink-700); outline:none;">${esc(pt.desc)}</textarea></label>
+      </div>
+      <div style="display:flex; gap:12px; margin-top:20px;">
+        <button class="pill-blue" style="flex:1; justify-content:center;" onclick="savePersonalTask()">حفظ</button>
+        <button class="btn-gray" style="flex:1; justify-content:center; border-radius:100px;" onclick="closePersonalModal()">إلغاء</button>
+      </div>
     </div>
   </div>`;
-  document.getElementById('modalRoot').appendChild(m);
 }
 function closePersonalModal() {
   document.getElementById('modalRoot').innerHTML = '';
@@ -3225,6 +3231,7 @@ function savePersonalTask() {
   const d = document.getElementById('ptDesc').value.trim();
   if(!t) return alert('يرجى إدخال عنوان المهمة');
   
+  if(!store.personal) store.personal = {};
   const uid = store.currentUser;
   if(!store.personal[uid]) store.personal[uid] = [];
   
@@ -3256,26 +3263,53 @@ function viewNotifications(){
   </div>`;
 }
 function viewPersonal(){
+  if(!store.personal) store.personal = {};
   const uid = store.currentUser;
   let ptasks = store.personal[uid] || [];
-  return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${ptasks.length}</strong> مهام خاصة</div>
-  <button class="pill-blue" onclick="addPersonalTask()">+ إضافة مهمة خاصة</button></div>
-  <div class="maps-grid">
-    ${ptasks.map(pt=>`<div class="card fade-up" style="padding:16px;border-right:4px solid ${pt.done?'var(--green-ok)':'var(--blue)'}; position:relative;">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-        <div>
-          <h3 style="margin:0 0 8px 0;text-decoration:${pt.done?'line-through':'none'};color:${pt.done?'var(--ink-400)':'var(--ink-700)'}">${esc(pt.title)}</h3>
-          <p style="margin:0;color:var(--ink-500);font-size:14px;white-space:pre-wrap;">${esc(pt.desc)}</p>
+  
+  // Filter by search
+  if(personalSearch) {
+    const q = personalSearch.trim().toLowerCase();
+    ptasks = ptasks.filter(t => t.title.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q));
+  }
+  
+  // Filter by status tab
+  if(personalFilter === 'active') {
+    ptasks = ptasks.filter(t => !t.done);
+  } else if(personalFilter === 'completed') {
+    ptasks = ptasks.filter(t => t.done);
+  }
+
+  return `<div class="maps-bar fade-up" style="direction:rtl; text-align:right;">
+    <div style="display:flex; gap:12px; align-items:center; flex:1;">
+      <input type="text" placeholder="🔍 بحث في مهامك الخاصة" value="${esc(personalSearch)}" oninput="personalSearch=this.value;render()" style="max-width:300px; height:42px; border:1.5px solid var(--line); border-radius:10px; padding:0 12px; font-size:14px; outline:none; background:#fff;">
+      <div style="display:flex; background:var(--surface-2); border-radius:10px; padding:3px; gap:4px;">
+        <button onclick="personalFilter='all';render()" style="border:none; padding:6px 14px; font-size:13px; font-weight:700; border-radius:8px; cursor:pointer; background:${personalFilter==='all'?'#fff':'transparent'}; color:${personalFilter==='all'?'var(--blue-600)':'var(--ink-500)'}; box-shadow:${personalFilter==='all'?'var(--shadow-sm)':'none'}; transition:all 0.2s;">الكل</button>
+        <button onclick="personalFilter='active';render()" style="border:none; padding:6px 14px; font-size:13px; font-weight:700; border-radius:8px; cursor:pointer; background:${personalFilter==='active'?'#fff':'transparent'}; color:${personalFilter==='active'?'var(--blue-600)':'var(--ink-500)'}; box-shadow:${personalFilter==='active'?'var(--shadow-sm)':'none'}; transition:all 0.2s;">قيد العمل</button>
+        <button onclick="personalFilter='completed';render()" style="border:none; padding:6px 14px; font-size:13px; font-weight:700; border-radius:8px; cursor:pointer; background:${personalFilter==='completed'?'#fff':'transparent'}; color:${personalFilter==='completed'?'var(--blue-600)':'var(--ink-500)'}; box-shadow:${personalFilter==='completed'?'var(--shadow-sm)':'none'}; transition:all 0.2s;">المنجزة</button>
+      </div>
+    </div>
+    <button class="pill-blue" onclick="addPersonalTask()">+ إضافة مهمة خاصة</button>
+  </div>
+  
+  <div style="display:flex; flex-direction:column; gap:12px; margin-top:20px; direction:rtl; text-align:right;" class="fade-up">
+    ${ptasks.length ? ptasks.map(pt=>`<div class="card" style="padding:18px; display:flex; justify-content:space-between; align-items:center; border-right:4px solid ${pt.done?'var(--green-ok)':'var(--blue)'}; background:dots;${pt.done?'var(--surface-2)':'#fff'}; opacity:dots;${pt.done?0.75:1}; transition:all 0.2s;">
+      <div style="display:flex; gap:16px; align-items:flex-start; flex:1;">
+        <input type="checkbox" dots;${pt.done?'checked':''} onchange="togglePersonalTask('dots;${pt.id}')" style="width:22px; height:22px; cursor:pointer; border-radius:6px; margin-top:3px; accent-color:var(--green-ok);">
+        <div style="flex:1;">
+          <h3 style="margin:0 0 4px 0; text-decoration:dots;${pt.done?'line-through':'none'}; color:dots;${pt.done?'var(--ink-400)':'var(--ink-850)'}; font-size:16px; font-weight:700;">dots;${esc(pt.title)}</h3>
+          dots;${pt.desc ? `<p style="margin:0; color:var(--ink-500); font-size:13.5px; white-space:pre-wrap; line-height:1.6;">dots;${esc(pt.desc)}</p>` : ''}
         </div>
-        <input type="checkbox" ${pt.done?'checked':''} onchange="togglePersonalTask('${pt.id}')" style="width:20px;height:20px;cursor:pointer;">
       </div>
-      <div style="margin-top:16px;display:flex;gap:8px;">
-        <button class="btn-sm btn-gray" onclick="editPersonalTask('${pt.id}')">${icon('edit', 14)} تعديل</button>
-        <button class="btn-sm btn-gray" style="color:var(--red)" onclick="deletePersonalTask('${pt.id}')">${icon('trash', 14)} حذف</button>
+      <div style="display:flex; gap:8px; margin-right:16px;">
+        <button class="btn-sm" style="background:var(--surface-2); color:var(--ink-600); border:none;" onclick="editPersonalTask('dots;${pt.id}')">dots;${icon('edit', 14)} تعديل</button>
+        <button class="btn-sm" style="background:var(--red-soft); color:var(--red); border:none;" onclick="deletePersonalTask('dots;${pt.id}')">dots;${icon('trash', 14)} حذف</button>
       </div>
-    </div>`).join('')}
+    </div>`).join('') : `<div class="empty card">${personalSearch?'لا توجد نتائج مطابقة للبحث':'لا توجد مهام خاصة مضافة حالياً'}</div>`}
   </div>`;
 }
+
+
 
 function toggleNode(tid,sid){openNode[tid]=openNode[tid]===sid?null:sid;render();}
 function closeNode(tid){openNode[tid]=null;render();}
@@ -3519,24 +3553,24 @@ function renderPublicDashboard() {
   
   let html = `<table style="width:100%; border-collapse:collapse; text-align:right; direction:rtl;">
     <thead>
-      <tr style="border-bottom:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02);">
-        <th style="padding:20px; color:rgba(255,255,255,0.6); font-weight:700; font-size:16px;">اسم المهمة</th>
-        ${cols.map(c => `<th style="padding:20px; text-align:center; color:rgba(255,255,255,0.6); font-weight:700; font-size:16px;">${c.name}</th>`).join('')}
+      <tr style="border-bottom:1px solid var(--line); background:var(--surface-2);">
+        <th style="padding:20px; color:var(--ink-600); font-weight:700; font-size:16px;">اسم المهمة</th>
+        ${cols.map(c => `<th style="padding:20px; text-align:center; color:var(--ink-600); font-weight:700; font-size:16px;">${c.name}</th>`).join('')}
       </tr>
     </thead>
     <tbody>`;
     
   tasks.forEach(t => {
-    html += `<tr style="border-bottom:1px solid rgba(255,255,255,0.04); transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.01)'" onmouseout="this.style.background='transparent'">
-      <td style="padding:20px; font-weight:bold; font-size:16px; color:#fff;">
+    html += `<tr style="border-bottom:1px solid var(--line); transition:background 0.2s;" onmouseover="this.style.background='var(--surface-2)'" onmouseout="this.style.background='transparent'">
+      <td style="padding:20px; font-weight:bold; font-size:16px; color:var(--ink-800);">
         ${esc(t.title)}
-        <div style="font-size:12px; color:rgba(255,255,255,0.4); font-weight:normal; margin-top:4px;">⏱ ${esc(t.due)}</div>
+        <div style="font-size:12px; color:var(--ink-400); font-weight:normal; margin-top:4px;">⏱ ${esc(t.due)}</div>
       </td>`;
       
     cols.forEach(c => {
       const stages = t.stages.filter(s => c.kinds.includes(s.kind));
       if(stages.length === 0) {
-        html += `<td style="padding:20px; text-align:center;"><span style="color:rgba(255,255,255,0.15); font-size:20px;">—</span></td>`;
+        html += `<td style="padding:20px; text-align:center;"><span style="color:var(--ink-200); font-size:20px;">—</span></td>`;
       } else {
         let state = 'pending';
         if(stages.every(s => ['done', 'approved', 'published'].includes(s.state))) state = 'done';
@@ -3556,7 +3590,7 @@ function renderPublicDashboard() {
         } else if(state === 'rejected') {
           boxHtml = `<div style="width:36px; height:36px; background:#ff547025; border:2px solid #ff5470; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#ff5470; font-weight:bold; box-shadow:0 0 10px rgba(255,84,112,0.2);">✕</div>`;
         } else {
-          boxHtml = `<div style="width:36px; height:36px; background:rgba(255,255,255,0.03); border:2px solid rgba(255,255,255,0.1); border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:rgba(255,255,255,0.2);">•</div>`;
+          boxHtml = `<div style="width:36px; height:36px; background:var(--surface-2); border:2px solid var(--line); border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:var(--ink-300);">•</div>`;
         }
         
         html += `<td style="padding:20px; text-align:center;">${boxHtml}</td>`;
