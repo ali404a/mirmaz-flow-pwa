@@ -637,18 +637,14 @@ function performLogin(){
   const user = store.team.find(x => (x.user||x.id) === u && (x.pass||'1234') === p);
   if(user){
     localStorage.setItem('mirmaz_session', user.id);
-    store.currentUser = user.id;
-    document.getElementById('loginScreen').style.display='none';
+    store.currentUser = user.id; save(); document.getElementById('loginScreen').style.display='none';
     document.querySelector('.shell').style.display='flex';
     render();
   } else {
     document.getElementById('loginError').style.display='block';
   }
 }
-function logout(){
-  localStorage.removeItem('mirmaz_session');
-  location.reload();
-}
+function logout() { localStorage.removeItem('mirmaz_session'); if(typeof store !== 'undefined') { store.currentUser = null; save(); } location.reload(); }
 </script>
 
 <div class="shell">
@@ -660,7 +656,7 @@ function logout(){
     </div>
     <nav class="sb-nav" id="sbNav"></nav>
     <div class="sb-summary glass-card" id="sbSummary"></div>
-      <div style="margin-top:auto;padding-top:16px"><button onclick="logout()" style="width:100%;padding:12px;background:var(--red-soft);color:var(--red);border:none;border-radius:8px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">${icon("cross", 16)} تسجيل الخروج</button></div>
+      <div style="margin-top:auto;padding-top:16px"><button onclick="logout()" style="width:100%;padding:12px;background:var(--red-soft);color:var(--red);border:none;border-radius:8px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px"><svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg> تسجيل الخروج</button></div>
   </aside>
   <div class="main">
     <header class="topbar">
@@ -2413,6 +2409,7 @@ function renderNav(){
   const u = userById(store.currentUser);
   let navItems = NAV;
   if(u && u.role === 'شريك خارجي') { navItems = NAV.filter(n => ['partnerships', 'settings', 'notifications'].includes(n.id)); }
+  else if (u && !['الإدارة','مانيجر','كوردنيتر'].includes(u.role)) { navItems = NAV.filter(n => n.id !== 'team'); }
   document.getElementById('sbNav').innerHTML=navItems.map(n=>{
     const badge=(n.id==='notifications'&&unread)?`<span class="sb-badge">${unread}</span>`:'';
     const onClick = (n.id==='chat') ? `openTeamsPopup(event)` : `go('${n.id}')`;
@@ -2915,30 +2912,79 @@ function viewAnalytics(){
 }
 
 
+
+let currentProfileId = null;
+
 function viewTeam(){
-  const canEdit = ['الإدارة','مانيجر','كوردنيتر'].includes(userById(store.currentUser).role);
+  if(currentProfileId) return viewProfile(currentProfileId);
+  const u = userById(store.currentUser);
+  const canEdit = ['الإدارة','مانيجر','كوردنيتر'].includes(u.role);
+  if(!canEdit) return '<div class="empty card">غير مصرح لك بعرض هذه الصفحة</div>';
+
   return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${store.team.length}</strong> أعضاء</div>
-  ${canEdit ? `<button class="pill-blue" onclick="openProfileModal()">+ إضافة عضو</button>` : ''}</div>
+  <button class="pill-blue" onclick="openProfileModal()">+ إضافة موظف</button></div>
   <div class="maps-grid">
-    ${store.team.map(u=>{
+    ${store.team.map(member=>{
       let tCount=0, dCount=0;
-      store.tasks.forEach(t=>t.stages.forEach(s=>{if(s.person===u.id){tCount++;if(['done','approved'].includes(s.state))dCount++;}}));
+      store.tasks.forEach(t=>t.stages.forEach(s=>{if(s.person===member.id){tCount++;if(['done','approved'].includes(s.state))dCount++;}}));
       const rate = tCount ? Math.round(dCount/tCount*100) : 0;
-      return `<div class="card fade-up" style="padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;transition:transform 0.2s" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'" onclick="openProfileModal('${u.id}')">
-        <div style="width:70px;height:70px;border-radius:50%;background:${u.av}18;color:${u.av};display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:bold;">${u.name[0]}</div>
+      return `<div class="card fade-up" style="padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px;">
+        <div style="width:70px;height:70px;border-radius:50%;background:${member.av}18;color:${member.av};display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:bold;">${member.name[0]}</div>
         <div style="text-align:center;">
-          <h3 style="margin:0;color:var(--ink-700)">${esc(u.name)}</h3>
-          <p style="margin:4px 0 0 0;color:var(--ink-500);font-size:14px">${esc(u.role)}</p>
+          <h3 style="margin:0;color:var(--ink-700)">${esc(member.name)}</h3>
+          <p style="margin:4px 0 0 0;color:var(--ink-500);font-size:14px">${esc(member.role)}</p>
         </div>
         <div style="width:100%;height:1px;background:var(--line);margin:8px 0"></div>
-        <div style="display:flex;width:100%;justify-content:space-between;font-size:13px;color:var(--ink-600)">
+        <div style="display:flex;width:100%;justify-content:space-between;font-size:13px;color:var(--ink-600);margin-bottom:12px;">
           <span>المهام: <strong>${tCount}</strong></span>
           <span>الإنجاز: <strong style="color:var(--green-ok)">${rate}%</strong></span>
         </div>
+        <button class="btn-sm btn-gray" style="width:100%;justify-content:center" onclick="currentProfileId='${member.id}';render()">عرض التفاصيل والملف</button>
       </div>`;
     }).join('')}
   </div>`;
 }
+
+function viewProfile(uid) {
+  const member = store.team.find(x=>x.id===uid);
+  if(!member) return '<div class="empty card">المستخدم غير موجود</div>';
+  
+  let mine=[];
+  store.tasks.forEach(t=>t.stages.forEach(st=>{if(st.person===uid)mine.push({task:t,st});}));
+
+  return `<div class="maps-bar fade-up">
+    <button class="btn-sm btn-gray" onclick="currentProfileId=null;render()">${icon('arrow-right', 16)} رجوع للفريق</button>
+    <button class="btn-sm btn-blue" onclick="openProfileModal('${uid}')">${icon('edit', 14)} تعديل بيانات الموظف</button>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 2fr;gap:24px;margin-top:20px;" class="fade-up">
+    <div class="card" style="padding:24px;text-align:center;">
+      <div style="width:100px;height:100px;border-radius:50%;background:${member.av}18;color:${member.av};display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:bold;margin:0 auto 16px auto;">${member.name[0]}</div>
+      <h2 style="margin:0 0 8px 0;">${esc(member.name)}</h2>
+      <p style="margin:0 0 20px 0;color:var(--ink-500)">${esc(member.role)}</p>
+      
+      <div style="display:flex;flex-direction:column;gap:12px;text-align:right;background:var(--surface-2);padding:16px;border-radius:8px;">
+        <div><small style="color:var(--ink-400)">رقم الهاتف:</small><br><strong>${esc(member.phone||'غير محدد')}</strong></div>
+        <div><small style="color:var(--ink-400)">معرف التليجرام:</small><br><strong>${esc(member.telegram||'غير محدد')}</strong></div>
+        <div><small style="color:var(--ink-400)">اسم المستخدم (للدخول):</small><br><strong>${esc(member.user||member.id)}</strong></div>
+        <div><small style="color:var(--ink-400)">الرمز السري:</small><br><strong>${esc(member.pass||'1234')}</strong></div>
+      </div>
+    </div>
+    
+    <div class="card" style="padding:24px;">
+      <h3 style="margin:0 0 16px 0;">المهام الموكلة (${mine.length})</h3>
+      ${mine.length ? `<div style="display:flex;flex-direction:column;gap:12px;">
+        ${mine.map(m=>`<div style="border:1px solid var(--line);border-radius:8px;padding:12px;display:flex;justify-content:space-between;align-items:center;border-right:4px solid ${m.st.state==='done'?'var(--green-ok)':'var(--blue)'}">
+          <div>
+            <div style="font-weight:bold;margin-bottom:4px;">${esc(m.task.title)}</div>
+            <div style="font-size:13px;color:var(--ink-500)">${(STAGE_KINDS[m.st.kind]||{ar:'غير معروف'}).ar}</div>
+          </div>
+          <span class="chip" style="background:var(--surface-2)">${m.st.state==='done'?'✅ منجز':'⏳ قيد العمل'}</span>
+        </div>`).join('')}
+      </div>` : '<div class="empty" style="margin:0">لا توجد مهام حالية</div>'}
+    </div>
+  </div>`;
+}
+
 
 let profileEditId = null;
 function openProfileModal(uid = null){
@@ -3026,6 +3072,63 @@ function viewSettings(){ return `<div class="set-grid">
     </div>
   </div>`;
 }
+
+function addPersonalTask() {
+  const t = prompt('عنوان المهمة الخاصة:');
+  if(!t) return;
+  const d = prompt('التفاصيل (اختياري):');
+  const uid = store.currentUser;
+  if(!store.personal[uid]) store.personal[uid]=[];
+  store.personal[uid].push({id:'p'+Date.now(), title:t, desc:d||'', done:false});
+  save();
+  render();
+}
+function editPersonalTask(pid) {
+  const uid = store.currentUser;
+  const pt = store.personal[uid].find(x=>x.id===pid);
+  if(!pt) return;
+  const t = prompt('عنوان المهمة:', pt.title);
+  if(!t) return;
+  const d = prompt('التفاصيل:', pt.desc);
+  pt.title = t;
+  pt.desc = d||'';
+  save();
+  render();
+}
+function deletePersonalTask(pid) {
+  if(!confirm('حذف المهمة؟')) return;
+  const uid = store.currentUser;
+  store.personal[uid] = store.personal[uid].filter(x=>x.id!==pid);
+  save();
+  render();
+}
+function togglePersonalTask(pid) {
+  const uid = store.currentUser;
+  const pt = store.personal[uid].find(x=>x.id===pid);
+  if(pt) { pt.done = !pt.done; save(); render(); }
+}
+function viewPersonal(){
+  const uid = store.currentUser;
+  let ptasks = store.personal[uid] || [];
+  return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${ptasks.length}</strong> مهام خاصة</div>
+  <button class="pill-blue" onclick="addPersonalTask()">+ إضافة مهمة خاصة</button></div>
+  <div class="maps-grid">
+    ${ptasks.map(pt=>`<div class="card fade-up" style="padding:16px;border-right:4px solid ${pt.done?'var(--green-ok)':'var(--blue)'}; position:relative;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <h3 style="margin:0 0 8px 0;text-decoration:${pt.done?'line-through':'none'};color:${pt.done?'var(--ink-400)':'var(--ink-700)'}">${esc(pt.title)}</h3>
+          <p style="margin:0;color:var(--ink-500);font-size:14px;white-space:pre-wrap;">${esc(pt.desc)}</p>
+        </div>
+        <input type="checkbox" ${pt.done?'checked':''} onchange="togglePersonalTask('${pt.id}')" style="width:20px;height:20px;cursor:pointer;">
+      </div>
+      <div style="margin-top:16px;display:flex;gap:8px;">
+        <button class="btn-sm btn-gray" onclick="editPersonalTask('${pt.id}')">${icon('edit', 14)} تعديل</button>
+        <button class="btn-sm btn-gray" style="color:var(--red)" onclick="deletePersonalTask('${pt.id}')">${icon('trash', 14)} حذف</button>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
 function toggleNode(tid,sid){openNode[tid]=openNode[tid]===sid?null:sid;render();}
 function closeNode(tid){openNode[tid]=null;render();}
 function findStage(tid,sid){const t=store.tasks.find(x=>x.id===tid);return[t,t.stages.find(s=>s.id===sid)];}
