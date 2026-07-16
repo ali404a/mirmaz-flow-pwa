@@ -641,6 +641,7 @@ input,select,textarea{font-family:inherit}
 <script>
 /* ============ مكتبة أيقونات SVG مصمّمة خصيصاً (ستايل موحّد) ============ */
 const SVG={
+  sheet:'<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="9" x2="9" y2="21"/><line x1="15" y1="9" x2="15" y2="21"/>',
   // مراحل العمل
   caption:'<path d="M4 7h16M4 12h10M4 17h7"/><circle cx="18" cy="16" r="3"/><path d="m20 18 2 2"/>',
   textdesign:'<path d="M7 7h10M12 7v10"/><rect x="3" y="3" width="18" height="18" rx="3"/>',
@@ -759,10 +760,125 @@ function defaultChat(){return{
     c4:[{from:'u4',text:'رفعت تصميم البوست على الدرايف',time:'12:30'}],
   }
 };}
-function load(){try{const r=localStorage.getItem(KEY);if(r){const d=JSON.parse(r);if(!d.notifications)d.notifications=DEFAULT_NOTIFS;if(!d.personal)d.personal={};if(!d.chat)d.chat=defaultChat();return d;}}catch(e){}return{team:DEFAULT_TEAM,sections:DEFAULT_SECTIONS,tasks:seedTasks(),notifications:DEFAULT_NOTIFS,personal:{u3:[{id:'p1',title:'تعلّم اختصارات After Effects',desc:'مراجعة 10 اختصارات جديدة لتسريع المونتاج',done:false},{id:'p2',title:'تنظيم مجلد المراجع',desc:'ترتيب ملفات Drive حسب البراند',done:true}]},chat:defaultChat(),currentUser:'u3'};}
+function load(){try{const r=localStorage.getItem(KEY);if(r){const d=JSON.parse(r);if(!d.notifications)d.notifications=DEFAULT_NOTIFS;if(!d.personal)d.personal={};if(!d.chat)d.chat=defaultChat();if(!d.sheet)d.sheet=[];return d;}}catch(e){}return{team:DEFAULT_TEAM,sections:DEFAULT_SECTIONS,tasks:seedTasks(),notifications:DEFAULT_NOTIFS,personal:{u3:[{id:'p1',title:'تعلّم اختصارات After Effects',desc:'مراجعة 10 اختصارات جديدة لتسريع المونتاج',done:false},{id:'p2',title:'تنظيم مجلد المراجع',desc:'ترتيب ملفات Drive حسب البراند',done:true}]},chat:defaultChat(),sheet:[],currentUser:'u3'};}
 let store=load();
 function save(){localStorage.setItem(KEY,JSON.stringify(store));}
 const userById=id=>store.team.find(u=>u.id===id)||{name:'؟',av:'#8995AE',role:''};
+// --- SHEET MODULE ---
+let sheetEditId = null;
+function openSheetModal(id = null) {
+  sheetEditId = id;
+  const item = id ? store.sheet.find(x => x.id === id) : { teacher: '', brief: '', date: '', time: '', caption: '', thumbnail: '', video: '', deadline: '', approval: '', comments: '', update: '' };
+  
+  const m = document.createElement('div');
+  m.className = 'modal-ov fade-up';
+  m.innerHTML = `<div class="modal"><div class="modal-head"><h3>${id ? 'تعديل الصف' : 'إضافة صف جديد'}</h3><button class="modal-close" onclick="closeSheetModal()">✕</button></div>
+  <div class="modal-body" style="display:flex;flex-direction:column;gap:12px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <label class="tmap-f"><span>الاستاذ</span><input type="text" id="sh_teacher" value="${esc(item.teacher||'')}"></label>
+      <label class="tmap-f"><span>الاعتماد (Approval)</span><input type="text" id="sh_approval" value="${esc(item.approval||'')}"></label>
+      <label class="tmap-f"><span>التاريخ</span><input type="text" id="sh_date" value="${esc(item.date||'')}"></label>
+      <label class="tmap-f"><span>الوقت</span><input type="text" id="sh_time" value="${esc(item.time||'')}"></label>
+      <label class="tmap-f"><span>موعد التسليم (Deadline)</span><input type="text" id="sh_deadline" value="${esc(item.deadline||'')}"></label>
+      <label class="tmap-f"><span>حالة التحديث (Update)</span><input type="text" id="sh_update" value="${esc(item.update||'')}"></label>
+    </div>
+    <label class="tmap-f"><span>الكابشن والتايتل (Caption)</span><textarea id="sh_caption" rows="4">${esc(item.caption||'')}</textarea></label>
+    <label class="tmap-f"><span>البريف (Brief)</span><textarea id="sh_brief" rows="2">${esc(item.brief||'')}</textarea></label>
+    <label class="tmap-f"><span>الصورة المصغرة (Thumbnail Link)</span><input type="text" id="sh_thumbnail" value="${esc(item.thumbnail||'')}"></label>
+    <label class="tmap-f"><span>الفيديو (Video Link)</span><input type="text" id="sh_video" value="${esc(item.video||'')}"></label>
+    <label class="tmap-f"><span>الملاحظات (Comments)</span><textarea id="sh_comments" rows="2">${esc(item.comments||'')}</textarea></label>
+  </div>
+  <div class="modal-foot">${id ? `<button class="btn-sm" style="color:var(--red)" onclick="deleteSheetItem('${id}')">حذف الصف</button>` : ''}<button class="pill-blue" onclick="saveSheetItem()">✓ حفظ</button></div></div>`;
+  document.getElementById('modalRoot').appendChild(m);
+}
+function closeSheetModal() { document.getElementById('modalRoot').innerHTML = ''; sheetEditId = null; }
+function saveSheetItem() {
+  const item = {
+    id: sheetEditId || 'sh' + Date.now(),
+    teacher: document.getElementById('sh_teacher').value.trim(),
+    brief: document.getElementById('sh_brief').value.trim(),
+    date: document.getElementById('sh_date').value.trim(),
+    time: document.getElementById('sh_time').value.trim(),
+    caption: document.getElementById('sh_caption').value.trim(),
+    thumbnail: document.getElementById('sh_thumbnail').value.trim(),
+    video: document.getElementById('sh_video').value.trim(),
+    deadline: document.getElementById('sh_deadline').value.trim(),
+    approval: document.getElementById('sh_approval').value.trim(),
+    comments: document.getElementById('sh_comments').value.trim(),
+    update: document.getElementById('sh_update').value.trim()
+  };
+  if (sheetEditId) {
+    const idx = store.sheet.findIndex(x => x.id === sheetEditId);
+    if (idx !== -1) store.sheet[idx] = item;
+  } else {
+    store.sheet.push(item);
+  }
+  save(); closeSheetModal(); render();
+}
+function deleteSheetItem(id) {
+  if(!confirm('هل أنت متأكد من حذف هذا الصف؟')) return;
+  store.sheet = store.sheet.filter(x => x.id !== id);
+  save(); closeSheetModal(); render();
+}
+
+function viewSheet() {
+  const items = store.sheet || [];
+  const canEdit = ['الإدارة','مانيجر','كوردنيتر'].includes(userById(store.currentUser).role);
+  
+  if (window.innerWidth <= 768) {
+    return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${items.length}</strong> صفوف</div>${canEdit ? `<button class="pill-blue" onclick="openSheetModal()">+ إضافة صف</button>` : ''}</div>
+    ${items.length ? `<div style="display:flex;flex-direction:column;gap:12px;padding:0 16px 20px;">${items.map(r => 
+      `<div class="card" style="padding:16px;display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <h4 style="color:var(--blue-600);margin:0">${esc(r.teacher||'بدون اسم')}</h4>
+          ${canEdit ? `<button class="btn-sm" style="color:var(--ink-500);background:var(--line)" onclick="openSheetModal('${r.id}')">${icon('edit',14)} تعديل</button>` : ''}
+        </div>
+        ${r.approval ? `<div style="font-size:13px"><span class="chip" style="background:var(--line)">الاعتماد: ${esc(r.approval)}</span></div>` : ''}
+        ${r.caption ? `<div style="font-size:13px;background:var(--surface-2);padding:8px;border-radius:6px;white-space:pre-wrap">${esc(r.caption)}</div>` : ''}
+        ${r.update ? `<div style="font-size:13px;color:var(--amber)"><strong>التحديث:</strong> ${esc(r.update)}</div>` : ''}
+      </div>`
+    ).join('')}</div>` : `<div class="empty card">لا توجد بيانات في الشيت</div>`}`;
+  }
+  
+  return `<div class="maps-bar fade-up" style="margin-bottom:12px;"><div class="maps-count"><strong>${items.length}</strong> صفوف</div>${canEdit ? `<button class="pill-blue" onclick="openSheetModal()">+ إضافة صف</button>` : ''}</div>
+  <div class="card fade-up" style="overflow-x:auto;max-height:calc(100vh - 120px);">
+    <table class="sh-table" style="width:100%;border-collapse:collapse;min-width:1200px;font-size:13px;text-align:right;">
+      <thead style="background:var(--surface-2);position:sticky;top:0;z-index:10;box-shadow:0 1px 0 var(--line);">
+        <tr>
+          <th style="padding:10px;border-bottom:1px solid var(--line);min-width:120px;">الاستاذ</th>
+          <th style="padding:10px;border-bottom:1px solid var(--line);min-width:150px;">Brief</th>
+          <th style="padding:10px;border-bottom:1px solid var(--line);min-width:80px;">Date</th>
+          <th style="padding:10px;border-bottom:1px solid var(--line);min-width:70px;">Time</th>
+          <th style="padding:10px;border-bottom:1px solid var(--line);min-width:250px;">Caption / Title</th>
+          <th style="padding:10px;border-bottom:1px solid var(--line);min-width:100px;">Thumbnail</th>
+          <th style="padding:10px;border-bottom:1px solid var(--line);min-width:100px;">Video</th>
+          <th style="padding:10px;border-bottom:1px solid var(--line);min-width:100px;">Deadline</th>
+          <th style="padding:10px;border-bottom:1px solid var(--line);min-width:100px;">Approval</th>
+          <th style="padding:10px;border-bottom:1px solid var(--line);min-width:150px;">Comments</th>
+          <th style="padding:10px;border-bottom:1px solid var(--line);min-width:150px;">Update</th>
+          ${canEdit ? `<th style="padding:10px;border-bottom:1px solid var(--line);min-width:60px;">إجراء</th>` : ''}
+        </tr>
+      </thead>
+      <tbody>
+        ${items.length ? items.map(r => `<tr style="border-bottom:1px solid var(--line);transition:background 0.2s;" onmouseover="this.style.background='var(--surface-2)'" onmouseout="this.style.background='transparent'">
+          <td style="padding:10px;font-weight:600;">${esc(r.teacher)}</td>
+          <td style="padding:10px;white-space:pre-wrap;color:var(--ink-600)">${esc(r.brief)}</td>
+          <td style="padding:10px;">${esc(r.date)}</td>
+          <td style="padding:10px;">${esc(r.time)}</td>
+          <td style="padding:10px;white-space:pre-wrap;background:var(--bg);border-radius:4px;margin:4px 0;">${esc(r.caption)}</td>
+          <td style="padding:10px;">${r.thumbnail ? `<a href="${r.thumbnail}" target="_blank" style="color:var(--blue-500)">رابط 🔗</a>` : ''}</td>
+          <td style="padding:10px;">${r.video ? `<a href="${r.video}" target="_blank" style="color:var(--blue-500)">رابط 🔗</a>` : ''}</td>
+          <td style="padding:10px;color:var(--red)">${esc(r.deadline)}</td>
+          <td style="padding:10px;">${r.approval ? `<span class="chip" style="background:var(--line)">${esc(r.approval)}</span>` : ''}</td>
+          <td style="padding:10px;white-space:pre-wrap;">${esc(r.comments)}</td>
+          <td style="padding:10px;white-space:pre-wrap;color:var(--amber)">${esc(r.update)}</td>
+          ${canEdit ? `<td style="padding:10px;"><button class="btn-sm" style="background:var(--line);color:var(--ink-600)" onclick="openSheetModal('${r.id}')">${icon('edit', 14)}</button></td>` : ''}
+        </tr>`).join('') : `<tr><td colspan="${canEdit ? 12 : 11}" style="padding:20px;text-align:center;color:var(--ink-500);">لا توجد بيانات</td></tr>`}
+      </tbody>
+    </table>
+  </div>`;
+}
+
 let page='home';let openNode={};let searchQuery='';let openEdit={};
 function doSearch(v){searchQuery=v;if(v&&page!=='maps'){page='maps';}render();
   const si=document.getElementById('searchInput');if(si){si.value=searchQuery;si.focus();const L=si.value.length;si.setSelectionRange(L,L);}}
@@ -777,6 +893,7 @@ const NAV=[
   {id:'home',title:'الرئيسية',svg:'home'},
   {id:'maps',title:'خرائط المهام',svg:'maps'},
   {id:'partnerships',title:'الشراكات',svg:'team'},
+  {id:'sheet',title:'الشيت',svg:'sheet'},
   {id:'mytasks',title:'مهامي',svg:'mytasks'},
   {id:'personal',title:'مهامي الخاصة',svg:'personal'},
   {id:'calendar',title:'التقويم',svg:'calendar'},
@@ -1583,11 +1700,11 @@ function renderTaskModal(){
     <div class="modal-foot"><span style="font-size:12px;color:var(--ink-400)">${tForm.stages.length} مراحل</span><button class="pill-blue" onclick="tSubmit()">${isEdit?'✓ حفظ التعديلات':'✓ إنشاء التاسك وخريطته'}</button></div>
   </div></div>`;
 }
-const META={home:['لوحة التحكم 👋','مرحباً، إليك نظرة عامة على أداء الإنتاج اليوم'],maps:['خرائط المهام','كل تاسك خريطته الخاصة — اضغط أي مرحلة لفتحها وإضافة محتواها'],partnerships:['الشراكات','المهام المخصصة للشركات الخارجية وشركاء مرماز'],mytasks:['مهامي','المراحل المعيّنة لك عبر كل المهام'],personal:['مهامي الخاصة','مساحة شخصية معزولة — يراها صاحبها فقط'],calendar:['تقويم النشر','مواعيد النشر تتزامن تلقائياً من خرائط المهام'],chat:['المحادثة','دردشة الفريق مدعومة بـ Microsoft Teams — مشفّرة وآمنة'],analytics:['التقارير والتحليلات','أداء الفريق والإنتاج حسب الجهة والأولوية'],team:['الفريق','كل موظف وإحصائياته ومهامه'],notifications:['الإشعارات','آخر التنبيهات والتحديثات'],settings:['إعدادات المانيجر','إدارة الموظفين والأقسام المتاحة']};
+const META={home:['لوحة التحكم 👋','مرحباً، إليك نظرة عامة على أداء الإنتاج اليوم'],maps:['خرائط المهام','كل تاسك خريطته الخاصة — اضغط أي مرحلة لفتحها وإضافة محتواها'],partnerships:['الشراكات','المهام المخصصة للشركات الخارجية وشركاء مرماز'],sheet:['الشيت 📋','جدول المهام والتفاصيل الخاصة للأساتذة'],mytasks:['مهامي','المراحل المعيّنة لك عبر كل المهام'],personal:['مهامي الخاصة','مساحة شخصية معزولة — يراها صاحبها فقط'],calendar:['تقويم النشر','مواعيد النشر تتزامن تلقائياً من خرائط المهام'],chat:['المحادثة','دردشة الفريق مدعومة بـ Microsoft Teams — مشفّرة وآمنة'],analytics:['التقارير والتحليلات','أداء الفريق والإنتاج حسب الجهة والأولوية'],team:['الفريق','كل موظف وإحصائياته ومهامه'],notifications:['الإشعارات','آخر التنبيهات والتحديثات'],settings:['إعدادات المانيجر','إدارة الموظفين والأقسام المتاحة']};
 function render(){renderNav();renderRoleSwitch();renderSummary();
   const unread=store.notifications?store.notifications.filter(n=>!n.read).length:0;
   const bd=document.getElementById('bellDot');if(bd){if(unread){bd.textContent=unread;bd.style.display='grid';}else bd.style.display='none';}
-  document.getElementById('pageTitle').textContent=META[page][0];document.getElementById('pageSub').textContent=META[page][1];const v=document.getElementById('view');if(page==='home')v.innerHTML=viewHome();else if(page==='maps')v.innerHTML=viewMaps();else if(page==='partnerships')v.innerHTML=viewPartnerships();else if(page==='mytasks')v.innerHTML=viewMyTasks();else if(page==='personal')v.innerHTML=viewPersonal();else if(page==='calendar')v.innerHTML=viewCalendar();else if(page==='chat')v.innerHTML=viewChat();else if(page==='analytics')v.innerHTML=viewAnalytics();else if(page==='team')v.innerHTML=viewTeam();else if(page==='notifications')v.innerHTML=viewNotifications();else if(page==='settings')v.innerHTML=viewSettings();}
+  document.getElementById('pageTitle').textContent=META[page][0];document.getElementById('pageSub').textContent=META[page][1];const v=document.getElementById('view');if(page==='home')v.innerHTML=viewHome();else if(page==='maps')v.innerHTML=viewMaps();else if(page==='partnerships')v.innerHTML=viewPartnerships();else if(page==='sheet')v.innerHTML=viewSheet();else if(page==='mytasks')v.innerHTML=viewMyTasks();else if(page==='personal')v.innerHTML=viewPersonal();else if(page==='calendar')v.innerHTML=viewCalendar();else if(page==='chat')v.innerHTML=viewChat();else if(page==='analytics')v.innerHTML=viewAnalytics();else if(page==='team')v.innerHTML=viewTeam();else if(page==='notifications')v.innerHTML=viewNotifications();else if(page==='settings')v.innerHTML=viewSettings();}
 render();
 </script>
 </body>
