@@ -45,7 +45,7 @@ input,select,textarea{font-family:inherit}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 
 .shell{display:flex;height:100vh;position:relative;z-index:1;gap:0}
-.sidebar{width:248px;flex-shrink:0;background:var(--surface);border-left:1px solid var(--line);display:flex;flex-direction:column;padding:22px 16px;height:100vh}
+.sidebar{width:248px;flex-shrink:0;background:var(--surface);border-left:1px solid var(--line);display:flex;flex-direction:column;padding:22px 16px;height:100vhoverflow-y: auto; overflow-x: hidden;}
 .sb-logo{display:flex;align-items:center;gap:11px;padding:6px 10px 22px;justify-content:flex-end}
 .sb-logo-text{text-align:right;line-height:1.1}
 .sb-logo-text b{font-size:19px;font-weight:800;display:block}
@@ -357,7 +357,7 @@ input,select,textarea{font-family:inherit}
 @media(max-width:900px){.set-grid,.an-grid,.home-grid{grid-template-columns:1fr}.stat-row{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:768px){
   .role-switch{display:none}.me-info{display:none}.content{padding:16px;padding-bottom:90px;height:100vh}.bottom-nav{display:flex}
-  .sidebar{display:flex;position:fixed;top:0;right:-300px;bottom:0;width:260px;z-index:100;background:var(--surface);box-shadow:-4px 0 24px rgba(0,0,0,0.1);transition:right 0.3s cubic-bezier(0.4, 0, 0.2, 1);padding-bottom:env(safe-area-inset-bottom);border-left:none}
+  .sidebar{display:flex;position:fixed;top:0;right:-300px;bottom:0;width:260px;z-index:100;background:var(--surface);box-shadow:-4px 0 24px rgba(0,0,0,0.1);transition:right 0.3s cubic-bezier(0.4, 0, 0.2, 1);padding-bottom:env(safe-area-inset-bottom);border-left:noneoverflow-y: auto; overflow-x: hidden;}
   .sidebar.open{right:0}
   .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:99;backdrop-filter:blur(3px)}
   .sidebar-overlay.open{display:block}
@@ -698,7 +698,7 @@ const STAGE_KINDS={
   design:{ar:'التصميم',svg:'design',color:'#21C07A',hasText:false},
   review:{ar:'المراجعة والتدقيق',svg:'review',color:'#A1693C',hasText:false},
   approval:{ar:'طلب الموافقة',svg:'approval',color:'#F6A609',hasText:false,isApproval:true},
-  publish:{ar:'النشر',svg:'publish',color:'#FF7BAC',hasText:false,isPublish:true},
+  publish:{ar:'النشر',svg:'publish',color:'#FF7BAC',hasText:false,isPublish:true},video:{ar:'المونتاج',svg:'video',color:'#EAB308',hasText:false},
 };
 const DEFAULT_TEAM=[
   {id:'u1',name:'علي المرتضى',role:'الإدارة',av:'#1E5BFF'},
@@ -2465,7 +2465,7 @@ function renderRoleSwitch(){
 function switchUser(id){store.currentUser=id;save();render();}
 
 function nodeCard(task,st,idx){
-  const k=STAGE_KINDS[st.kind],person=st.person?userById(st.person):null,ns=NSTATE[st.state];
+  const k=(STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}),person=st.person?userById(st.person):null,ns=NSTATE[st.state];
   const opened=openNode[task.id]===st.id;
   const prevDone=idx>0?['done','approved'].includes(task.stages[idx-1].state):true;
   // تحديد حالة الدائرة بصرياً
@@ -2492,7 +2492,7 @@ function nodeCard(task,st,idx){
   </div>`;
 }
 function nodePanel(task,st){
-  const k=STAGE_KINDS[st.kind],u=store.currentUser;
+  const k=(STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}),u=store.currentUser;
   const isOwner=st.person===u,isCoord=task.coordinator===u||userById(u).role==='مانيجر',isAdmin=userById(u).role==='الإدارة';
   const canEdit=isOwner||isCoord;
   let inner='';
@@ -2512,7 +2512,7 @@ function nodePanel(task,st){
       else inner+=`<p style="font-size:12px;color:var(--ink-400);margin-top:8px">الموافقة من صلاحية الإدارة فقط.</p>`;}
   }else if(k.isPublish){
     // هل تمت موافقة الإدارة؟
-    const approvalStage=task.stages.find(s=>STAGE_KINDS[s.kind].isApproval);
+    const approvalStage=task.stages.find(s=>(STAGE_KINDS[s.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}).isApproval);
     const isApproved=approvalStage?approvalStage.state==='approved':true;
     // الكابشن النهائي (من مرحلة الكتابة)
     const captionStage=task.stages.find(s=>s.kind==='caption');
@@ -2520,7 +2520,7 @@ function nodePanel(task,st){
     const captionLink=captionStage?captionStage.link:'';
     // ملف التصميم/المونتاج (رابط درايف)
     const fileStages=[];
-    task.stages.forEach(s=>{const sk=STAGE_KINDS[s.kind];
+    task.stages.forEach(s=>{const sk=(STAGE_KINDS[s.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true});
       if((s.kind==='design'||s.kind==='textdesign'||sk.ar.includes('مونتاج')||sk.ar.includes('فيديو'))&&s.link){
         fileStages.push({name:sk.ar,person:s.person?userById(s.person).name:'',link:s.link});}});
 
@@ -2635,7 +2635,7 @@ function viewHome(){
   const brandCount={academy:0,zone:0};
   tasks.forEach(t=>{brandCount[t.brand]++;if(t.priority==='critical')critTasks++;
     t.stages.forEach(st=>{totalStages++;if(['done','approved'].includes(st.state))doneStages++;
-      if(STAGE_KINDS[st.kind].isPublish&&st.publishDate)pubScheduled++;});});
+      if((STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}).isPublish&&st.publishDate)pubScheduled++;});});
   const rate=totalStages?Math.round(doneStages/totalStages*100):0;
   const stats=[
     {ic:'doc',c:'var(--blue-600)',sc:'var(--blue-50)',v:tasks.length,l:'إجمالي المهام',d:'+18%',up:true},
@@ -2653,7 +2653,7 @@ function viewHome(){
   // النشاطات (من المراحل المنجزة)
   const acts=[];
   tasks.forEach(t=>t.stages.forEach(st=>{if(['done','approved','working'].includes(st.state)){
-    const k=STAGE_KINDS[st.kind],ns=NSTATE[st.state],u=st.person?userById(st.person):null;
+    const k=(STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}),ns=NSTATE[st.state],u=st.person?userById(st.person):null;
     acts.push({ic:k.svg,c:k.color,title:k.ar+' — '+t.title,who:u?u.name:'',state:ns.ar,sc:ns.color});}}));
   const recent=acts.slice(0,6);
   // حلقات الأداء
@@ -2684,17 +2684,17 @@ function viewHome(){
   </div>`;
 }
 function viewMaps(){
-  let tasks=[...getVisibleTasks()].filter(t=>!t.isPartnership).sort((a,b)=>PRIORITIES[b.priority].rank-PRIORITIES[a.priority].rank);
+  let tasks=[...getVisibleTasks()].filter(t=>!t.isPartnership).sort((a,b)=>(PRIORITIES[b.priority]||{rank:0}).rank-(PRIORITIES[a.priority]||{rank:0}).rank);
   if(searchQuery){const q=searchQuery.trim();
-    tasks=tasks.filter(t=>t.title.includes(q)||t.desc.includes(q)||BRANDS[t.brand].name.includes(q)||t.stages.some(s=>s.person&&userById(s.person).name.includes(q)));}
+    tasks=tasks.filter(t=>t.title.includes(q)||t.desc.includes(q)||(BRANDS[t.brand]||{name:'غير معروف',bg:'#eee',c:'#333'}).name.includes(q)||t.stages.some(s=>s.person&&userById(s.person).name.includes(q)));}
   const critN=tasks.filter(t=>t.priority==='critical').length;
   const canCreate=['كوردنيتر','مانيجر','الإدارة'].includes(userById(store.currentUser).role);
   return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${tasks.length}</strong> خريطة مهمة ${searchQuery?`<span class="crit-tag" style="background:var(--blue-50);color:var(--blue-600)">🔍 "${esc(searchQuery)}"</span>`:''} ${critN?`<span class="crit-tag">🔥 ${critN} قصوى</span>`:''}</div>${canCreate?`<button class="pill-blue" onclick="openTaskModal()">+ تاسك جديد</button>`:''}</div>${tasks.length?`<div class="maps-grid">${tasks.map(taskMap).join('')}</div>`:'<div class="empty card">لا توجد نتائج مطابقة للبحث</div>'}`;
 }
 function viewPartnerships(){
-  let tasks=[...getVisibleTasks()].filter(t=>t.isPartnership).sort((a,b)=>PRIORITIES[b.priority].rank-PRIORITIES[a.priority].rank);
+  let tasks=[...getVisibleTasks()].filter(t=>t.isPartnership).sort((a,b)=>(PRIORITIES[b.priority]||{rank:0}).rank-(PRIORITIES[a.priority]||{rank:0}).rank);
   if(searchQuery){const q=searchQuery.trim();
-    tasks=tasks.filter(t=>t.title.includes(q)||t.desc.includes(q)||BRANDS[t.brand].name.includes(q)||t.stages.some(s=>s.person&&userById(s.person).name.includes(q)));}
+    tasks=tasks.filter(t=>t.title.includes(q)||t.desc.includes(q)||(BRANDS[t.brand]||{name:'غير معروف',bg:'#eee',c:'#333'}).name.includes(q)||t.stages.some(s=>s.person&&userById(s.person).name.includes(q)));}
   const critN=tasks.filter(t=>t.priority==='critical').length;
   const canCreate=['كوردنيتر','مانيجر','الإدارة'].includes(userById(store.currentUser).role);
   return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${tasks.length}</strong> شراكة ${searchQuery?`<span class="crit-tag" style="background:var(--blue-50);color:var(--blue-600)">🔍 "${esc(searchQuery)}"</span>`:''} ${critN?`<span class="crit-tag">🔥 ${critN} قصوى</span>`:''}</div>${canCreate?`<button class="pill-blue" onclick="openTaskModal(null,true)">+ إضافة شراكة</button>`:''}</div>${tasks.length?`<div class="maps-grid">${tasks.map(taskMap).join('')}</div>`:'<div class="empty card">لا توجد شراكات</div>'}`;
@@ -2704,7 +2704,7 @@ function viewMyTasks(){
   getVisibleTasks().forEach(t=>t.stages.forEach(st=>{if(st.person===u)mine.push({task:t,st});}));
   mine.sort((a,b)=>PRIORITIES[b.task.priority].rank-PRIORITIES[a.task.priority].rank);
   if(!mine.length)return `<div class="empty card">لا توجد مهام معيّنة لك حالياً. بدّل المستخدم من الأعلى لتجربة الأدوار.</div>`;
-  return `<div class="mylist">${mine.map(({task,st})=>{const k=STAGE_KINDS[st.kind],ns=NSTATE[st.state],b=BRANDS[task.brand],p=PRIORITIES[task.priority];
+  return `<div class="mylist">${mine.map(({task,st})=>{const k=(STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}),ns=NSTATE[st.state],b=BRANDS[task.brand],p=PRIORITIES[task.priority];
     return `<div class="myitem" style="--c:${k.color}"><div class="myitem-top"><span class="chip" style="background:${k.color}15;color:${k.color}">${icon(k.svg,14)} ${k.ar}</span><span class="chip ${task.priority==='critical'?'chip-crit':''}" style="${task.priority==='critical'?'':`background:${p.color}18;color:${p.color}`}">${p.emoji} ${p.name}</span></div><h4>${esc(task.title)}</h4><div class="myitem-task">${b.emoji} ${b.name} · ⏱ ${task.due}</div><div class="myitem-foot"><span class="chip" style="background:${ns.color}18;color:${ns.color}">${ns.ar}</span><button class="btn-sm btn-blue" onclick="openFromMy('${task.id}','${st.id}')">فتح في الخريطة ←</button></div></div>`;}).join('')}</div>`;
 }
 function openFromMy(tid,sid){const t=store.tasks.find(x=>x.id===tid);page=t&&t.isPartnership?'partnerships':'maps';openNode={};openNode[tid]=sid;render();}
@@ -2716,7 +2716,7 @@ function calToday(){calY=2026;calM=5;calSelDay=null;render();}
 function calEvents(){
   const events=[];
   getVisibleTasks().forEach(t=>t.stages.forEach(st=>{
-    if(STAGE_KINDS[st.kind].isPublish&&st.publishDate){
+    if((STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}).isPublish&&st.publishDate){
       const link=st.note&&st.note.includes('.')?st.note:(st.link||'');
       events.push({date:st.publishDate,time:st.publishTime||'',title:t.title,brand:t.brand,taskId:t.id,stageId:st.id,person:st.person,state:st.state,link});
     }
@@ -2999,7 +2999,7 @@ function viewSettings(){
       <div class="set-add"><input id="newName" placeholder="اسم الموظف"><select id="newRole">${roles.map(r=>`<option>${r}</option>`).join('')}</select><button class="pill-blue" onclick="addTeam()" style="height:42px">+ إضافة</button></div>
     </div>
     <div class="set-card card fade-up"><h3>🧩 الأقسام (مراحل العمل)</h3><p>المانيجر يحدّد الأقسام المتاحة — الكوردنيتر يختار منها عند بناء خريطة التاسك.</p>
-      <div class="set-list">${store.sections.map((s,i)=>{const k=STAGE_KINDS[s];return `<div class="set-row"><span class="ico" style="background:${k.color}18;color:${k.color}">${icon(k.svg,16)}</span><span class="nm">${k.ar}</span><button class="set-del" onclick="delSection(${i})">${icon("cross",15)}</button></div>`;}).join('')}</div>
+      <div class="set-list">${store.sections.map((s,i)=>{const k=(STAGE_KINDS[s]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true});return `<div class="set-row"><span class="ico" style="background:${k.color}18;color:${k.color}">${icon(k.svg,16)}</span><span class="nm">${k.ar}</span><button class="set-del" onclick="delSection(${i})">${icon("cross",15)}</button></div>`;}).join('')}</div>
       <div class="set-add"><select id="newSection">${avail.length?avail.map(([k,v])=>`<option value="${k}">${v.ar}</option>`).join(''):'<option value="">كل الأقسام مُضافة</option>'}</select><button class="pill-blue" onclick="addSection()" style="height:42px">+ إضافة</button></div>
     </div>
   </div>`;
@@ -3013,12 +3013,12 @@ function setNodeField(tid,sid,f,v){
   if(oldVal===v)return; // لا تغيير فعلي
   st[f]=v;
   // إعادة التدقيق: لو حصل تعديل على مرحلة عمل (كابشن/تصميم...) ومرّت المراحل التالية بالمراجعة/الموافقة/النشر، رجّعها للانتظار
-  const k=STAGE_KINDS[st.kind];
+  const k=(STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true});
   if(!k.isApproval&&!k.isPublish){
     const idx=t.stages.findIndex(s=>s.id===sid);
     let reverted=false;
     for(let i=idx+1;i<t.stages.length;i++){
-      const ns=t.stages[i],nk=STAGE_KINDS[ns.kind];
+      const ns=t.stages[i],nk=(STAGE_KINDS[ns.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true});
       // المراحل التي تحتاج إعادة بعد التعديل: المراجعة، الموافقة، النشر
       if((nk.ar.includes('مراجعة')||nk.isApproval||nk.isPublish)&&['done','approved','approval','published','working'].includes(ns.state)){
         ns.state='pending';if(nk.isApproval)ns.reason='';reverted=true;
@@ -3029,7 +3029,7 @@ function setNodeField(tid,sid,f,v){
     if(reverted){st._needsRecheck=true;addNotif('critical','يتطلب إعادة تدقيق','تم تعديل «'+k.ar+'» في "'+t.title+'" — أُعيدت المراجعة والموافقة');}
   }
   save();
-  if(STAGE_KINDS[st.kind] && (document.querySelector('.node-panel')))render();
+  if((STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}) && (document.querySelector('.node-panel')))render();
 }
 // ===== تعديل المرحلة مع سجل (من، متى) + إعادة تدقيق =====
 function nowStamp(){const d=new Date();const D=String(d.getDate()).padStart(2,'0'),M=String(d.getMonth()+1).padStart(2,'0'),h=String(d.getHours()).padStart(2,'0'),m=String(d.getMinutes()).padStart(2,'0');return `${d.getFullYear()}-${M}-${D} ${h}:${m}`;}
@@ -3037,7 +3037,7 @@ function startEdit(tid,sid){openEdit[tid+'_'+sid]=true;render();}
 function cancelEdit(tid,sid){delete openEdit[tid+'_'+sid];render();}
 function stageEdit(tid,sid,f,v){const[,st]=findStage(tid,sid);st['_draft_'+f]=v;} // مسوّدة مؤقتة
 function saveEdit(tid,sid){
-  const[t,st]=findStage(tid,sid);const k=STAGE_KINDS[st.kind];
+  const[t,st]=findStage(tid,sid);const k=(STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true});
   // طبّق المسودّات
   let changed=false;
   ['text','note','link'].forEach(f=>{if(st['_draft_'+f]!==undefined){if(st[f]!==st['_draft_'+f])changed=true;st[f]=st['_draft_'+f];delete st['_draft_'+f];}});
@@ -3046,22 +3046,22 @@ function saveEdit(tid,sid){
   st.state='working';
   // أعِد كل المراحل التالية (مراجعة/موافقة/نشر) للانتظار
   const idx=t.stages.findIndex(s=>s.id===sid);let reverted=false;
-  for(let i=idx+1;i<t.stages.length;i++){const ns=t.stages[i],nk=STAGE_KINDS[ns.kind];
+  for(let i=idx+1;i<t.stages.length;i++){const ns=t.stages[i],nk=(STAGE_KINDS[ns.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true});
     if((nk.ar.includes('مراجعة')||nk.isApproval||nk.isPublish)&&['done','approved','approval','published','working','rejected'].includes(ns.state)){
       ns.state='pending';if(nk.isApproval)ns.reason='';reverted=true;}}
-  if(reverted)t.stages.forEach(s=>{if(STAGE_KINDS[s.kind].ar.includes('مراجعة')||STAGE_KINDS[s.kind].isApproval)s._needsRecheck=true;});
+  if(reverted)t.stages.forEach(s=>{if((STAGE_KINDS[s.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}).ar.includes('مراجعة')||(STAGE_KINDS[s.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}).isApproval)s._needsRecheck=true;});
   addNotif('critical','تعديل يتطلب إعادة تدقيق',userById(store.currentUser).name+' عدّل «'+k.ar+'» في "'+t.title+'" — أُعيدت للتدقيق ثم موافقة الإدارة');
   delete openEdit[tid+'_'+sid];save();render();
 }
-function setNodeState(tid,sid,state){const[t,st]=findStage(tid,sid);st.state=state;if(state==='done'&&st.kind==='review'){const ap=t.stages.find(s=>STAGE_KINDS[s.kind].isApproval);if(ap&&ap.state==='pending')ap.state='approval';t.stages.forEach(s=>s._needsRecheck=false);}save();render();}
+function setNodeState(tid,sid,state){const[t,st]=findStage(tid,sid);st.state=state;if(state==='done'&&st.kind==='review'){const ap=t.stages.find(s=>(STAGE_KINDS[s.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}).isApproval);if(ap&&ap.state==='pending')ap.state='approval';t.stages.forEach(s=>s._needsRecheck=false);}save();render();}
 function addNotif(type,title,body){if(!store.notifications)store.notifications=[];store.notifications.unshift({id:'n'+Date.now(),type,title,body,time:'الآن',read:false});}
-function approveNode(tid,sid){const[t,st]=findStage(tid,sid);st.state='approved';const pub=t.stages.find(s=>STAGE_KINDS[s.kind].isPublish);if(pub)pub.state='working';addNotif('done','تمت الموافقة','تمت الموافقة على "'+t.title+'" — انتقلت للنشر');save();render();}
+function approveNode(tid,sid){const[t,st]=findStage(tid,sid);st.state='approved';const pub=t.stages.find(s=>(STAGE_KINDS[s.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}).isPublish);if(pub)pub.state='working';addNotif('done','تمت الموافقة','تمت الموافقة على "'+t.title+'" — انتقلت للنشر');save();render();}
 function rejectNode(tid,sid){const reason=prompt('سبب الرفض:');if(reason===null)return;const[t,st]=findStage(tid,sid);st.state='rejected';st.reason=reason;addNotif('critical','تم رفض المهمة','"'+t.title+'": '+reason);save();render();}
 function setPublishDate(tid,sid,v){const[,st]=findStage(tid,sid);st.publishDate=v;save();render();}
 function copyText(btn,txt){const v=txt!==undefined?txt:(btn.getAttribute('data-copy')||'');if(navigator.clipboard)navigator.clipboard.writeText(v);const o=btn.innerHTML;btn.innerHTML='✓ نُسخ';setTimeout(()=>{btn.innerHTML=o;},1500);}
 // ===== مشاركة المهمة =====
 function shareTask(tid,sid){
-  const t=store.tasks.find(x=>x.id===tid);const b=BRANDS[t.brand];
+  const t=store.tasks.find(x=>x.id===tid);const b=(BRANDS[t.brand]||{name:'غير معروف',bg:'#eee',c:'#333'});
   const shareUrl=location.origin+location.pathname+'#task='+tid+(sid?('/'+sid):'');
   const summary=`📋 ${t.title}\n${b.emoji} ${b.name} · ⏱ ${t.due}\n${t.desc||''}\n🔗 ${shareUrl}`;
   document.getElementById('modalRoot').innerHTML=`<div class="ov" onclick="if(event.target===this)closeShare()"><div class="modal" style="max-width:480px">
@@ -3105,7 +3105,7 @@ function openTaskModal(editId, isPartnership = false){
   tEditId=editId||null;
   if(editId){
     const t=store.tasks.find(x=>x.id===editId);
-    const pSt=t.stages.find(s=>STAGE_KINDS[s.kind]&&STAGE_KINDS[s.kind].isPublish);
+    const pSt=t.stages.find(s=>(STAGE_KINDS[s.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true})&&(STAGE_KINDS[s.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}).isPublish);
     tForm={brand:t.brand,priority:t.priority,title:t.title,desc:t.desc,due:t.due,pubDate:pSt?pSt.publishDate||'':'',coordNote:t.coordNote||'',coordLink:t.coordLink||'',
       isPartnership: t.isPartnership,
       stages:t.stages.map(s=>({...s}))};
@@ -3131,7 +3131,7 @@ function tSubmit(){
   const coordLink=document.getElementById('tk_link').value.trim();
   
   tForm.stages.forEach(st => {
-    if(STAGE_KINDS[st.kind] && STAGE_KINDS[st.kind].isPublish) st.publishDate = pubDate;
+    if((STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}) && (STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}).isPublish) st.publishDate = pubDate;
   });
 
   if(tEditId){
