@@ -3556,6 +3556,12 @@ function renderPublicDashboard() {
   if(!container) return;
   
   const tasks = store.tasks.filter(t => !t.isPartnership);
+  
+  // Divide tasks into 2 columns
+  const mid = Math.ceil(tasks.length / 2);
+  const col1Tasks = tasks.slice(0, mid);
+  const col2Tasks = tasks.slice(mid);
+  
   const cols = [
     { name: 'النصوص', kinds: ['caption', 'textdesign'] },
     { name: 'التصاميم', kinds: ['design'] },
@@ -3564,57 +3570,72 @@ function renderPublicDashboard() {
     { name: 'النشر', kinds: ['publish'] }
   ];
   
-  let html = `<table style="width:100%; border-collapse:collapse; text-align:right; direction:rtl;">
-    <thead>
-      <tr style="border-bottom:1px solid var(--line); background:var(--surface-2);">
-        <th style="padding:20px; color:var(--ink-600); font-weight:700; font-size:16px;">اسم المهمة</th>
-        ${cols.map(c => `<th style="padding:20px; text-align:center; color:var(--ink-600); font-weight:700; font-size:16px;">${c.name}</th>`).join('')}
-      </tr>
-    </thead>
-    <tbody>`;
-    
-  tasks.forEach(t => {
-    html += `<tr style="border-bottom:1px solid var(--line); transition:background 0.2s;" onmouseover="this.style.background='var(--surface-2)'" onmouseout="this.style.background='transparent'">
-      <td style="padding:20px; font-weight:bold; font-size:16px; color:var(--ink-800);">
-        ${esc(t.title)}
-        <div style="font-size:12px; color:var(--ink-400); font-weight:normal; margin-top:4px;">⏱ ${esc(t.due)}</div>
-      </td>`;
-      
-    cols.forEach(c => {
-      const stages = t.stages.filter(s => c.kinds.includes(s.kind));
-      if(stages.length === 0) {
-        html += `<td style="padding:20px; text-align:center;"><span style="color:var(--ink-200); font-size:20px;">—</span></td>`;
-      } else {
-        let state = 'pending';
-        if(stages.every(s => ['done', 'approved', 'published'].includes(s.state))) state = 'done';
-        else if(stages.some(s => s.state === 'rejected')) state = 'rejected';
-        else if(stages.some(s => s.state === 'approval')) state = 'approval';
-        else if(stages.some(s => s.state === 'working')) state = 'working';
-        
-        let boxHtml = '';
-        if(state === 'done') {
-          boxHtml = `<div style="width:36px; height:36px; background:#21C07A25; border:2px solid #21C07A; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#21C07A; font-weight:bold; box-shadow:0 0 10px rgba(33,192,122,0.2);">✓</div>`;
-        } else if(state === 'working') {
-          boxHtml = `<div style="width:36px; height:36px; background:#2f6bff25; border:2px solid #2f6bff; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#2f6bff; position:relative; box-shadow:0 0 10px rgba(47,107,255,0.2);">
-            <div style="position:absolute; width:8px; height:8px; background:#2f6bff; border-radius:50%; animation:pulse 1.5s infinite;"></div>
-          </div>`;
-        } else if(state === 'approval') {
-          boxHtml = `<div style="width:36px; height:36px; background:#f6a60925; border:2px solid #f6a609; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#f6a609; box-shadow:0 0 10px rgba(246,166,9,0.2);">⏳</div>`;
-        } else if(state === 'rejected') {
-          boxHtml = `<div style="width:36px; height:36px; background:#ff547025; border:2px solid #ff5470; border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:#ff5470; font-weight:bold; box-shadow:0 0 10px rgba(255,84,112,0.2);">✕</div>`;
-        } else {
-          boxHtml = `<div style="width:36px; height:36px; background:var(--surface-2); border:2px solid var(--line); border-radius:8px; display:inline-flex; align-items:center; justify-content:center; color:var(--ink-300);">•</div>`;
-        }
-        
-        html += `<td style="padding:20px; text-align:center;">${boxHtml}</td>`;
-      }
-    });
-    
-    html += `</tr>`;
-  });
+  const renderTable = (tableTasks) => {
+    if (tableTasks.length === 0) return `<div class="empty" style="padding:40px; text-align:center; color:var(--ink-400);">لا توجد مهام</div>`;
+    return `<table style="width:100%; border-collapse:collapse; text-align:right; direction:rtl;">
+      <thead>
+        <tr style="border-bottom:1px solid var(--line); background:var(--surface-2);">
+          <th style="padding:12px 14px; color:var(--ink-600); font-weight:700; font-size:14px;">اسم المهمة</th>
+          ${cols.map(c => `<th style="padding:12px 10px; text-align:center; color:var(--ink-600); font-weight:700; font-size:14px; width:65px;">${c.name}</th>`).join('')}
+        </tr>
+      </thead>
+      <tbody>
+        ${tableTasks.map(t => {
+          let rowHtml = `<tr style="border-bottom:1px solid var(--line); transition:background 0.2s;" onmouseover="this.style.background='var(--surface-2)'" onmouseout="this.style.background='transparent'">
+            <td style="padding:12px 14px; font-weight:bold; font-size:14px; color:var(--ink-850); max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${esc(t.title)}">
+              ${esc(t.title)}
+              <div style="font-size:11px; color:var(--ink-400); font-weight:normal; margin-top:2px;">⏱ ${esc(t.due)}</div>
+            </td>`;
+            
+          cols.forEach(c => {
+            const stages = t.stages.filter(s => c.kinds.includes(s.kind));
+            if(stages.length === 0) {
+              rowHtml += `<td style="padding:12px 10px; text-align:center;"><span style="color:var(--ink-200); font-size:16px;">—</span></td>`;
+            } else {
+              let state = 'pending';
+              if(stages.every(s => ['done', 'approved', 'published'].includes(s.state))) state = 'done';
+              else if(stages.some(s => s.state === 'rejected')) state = 'rejected';
+              else if(stages.some(s => s.state === 'approval')) state = 'approval';
+              else if(stages.some(s => s.state === 'working')) state = 'working';
+              
+              let boxHtml = '';
+              if(state === 'done') {
+                boxHtml = `<div style="width:28px; height:28px; background:#21C07A15; border:1.5px solid #21C07A; border-radius:6px; display:inline-flex; align-items:center; justify-content:center; color:#21C07A; font-weight:bold; font-size:12px; box-shadow:0 0 6px rgba(33,192,122,0.1);">✓</div>`;
+              } else if(state === 'working') {
+                boxHtml = `<div style="width:28px; height:28px; background:#2f6bff15; border:1.5px solid #2f6bff; border-radius:6px; display:inline-flex; align-items:center; justify-content:center; color:#2f6bff; position:relative; box-shadow:0 0 6px rgba(47,107,255,0.1);">
+                  <div style="position:absolute; width:6px; height:6px; background:#2f6bff; border-radius:50%; animation:pulse 1.5s infinite;"></div>
+                </div>`;
+              } else if(state === 'approval') {
+                boxHtml = `<div style="width:28px; height:28px; background:#f6a60915; border:1.5px solid #f6a609; border-radius:6px; display:inline-flex; align-items:center; justify-content:center; color:#f6a609; font-size:12px; box-shadow:0 0 6px rgba(246,166,9,0.1);">⏳</div>`;
+              } else if(state === 'rejected') {
+                boxHtml = `<div style="width:28px; height:28px; background:#ff547015; border:1.5px solid #ff5470; border-radius:6px; display:inline-flex; align-items:center; justify-content:center; color:#ff5470; font-weight:bold; font-size:12px; box-shadow:0 0 6px rgba(255,84,112,0.1);">✕</div>`;
+              } else {
+                boxHtml = `<div style="width:28px; height:28px; background:var(--surface-2); border:1.5px solid var(--line); border-radius:6px; display:inline-flex; align-items:center; justify-content:center; color:var(--ink-300); font-size:12px;">•</div>`;
+              }
+              rowHtml += `<td style="padding:12px 10px; text-align:center;">${boxHtml}</td>`;
+            }
+          });
+          
+          rowHtml += `</tr>`;
+          return rowHtml;
+        }).join('')}
+      </tbody>
+    </table>`;
+  };
+
+  container.style.background = 'transparent';
+  container.style.border = 'none';
+  container.style.boxShadow = 'none';
+  container.style.padding = '0';
   
-  html += `</tbody></table>`;
-  container.innerHTML = html;
+  container.innerHTML = `<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap:24px; width:100%;">
+    <div class="card" style="padding:0; overflow:hidden; border:1px solid var(--line); background:#fff; border-radius:16px; box-shadow:var(--shadow-sm);">
+      ${renderTable(col1Tasks)}
+    </div>
+    <div class="card" style="padding:0; overflow:hidden; border:1px solid var(--line); background:#fff; border-radius:16px; box-shadow:var(--shadow-sm);">
+      ${renderTable(col2Tasks)}
+    </div>
+  </div>`;
 }
 
 function render(){renderNav();
