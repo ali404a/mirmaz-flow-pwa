@@ -45,7 +45,7 @@ input,select,textarea{font-family:inherit}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 
 .shell{display:flex;height:100vh;position:relative;z-index:1;gap:0}
-.sidebar{width:248px;flex-shrink:0;background:var(--surface);border-left:1px solid var(--line);display:flex;flex-direction:column;padding:22px 16px;height:100vhoverflow-y: auto; overflow-x: hidden;}
+.sidebar { padding-bottom: 80px; width:248px;flex-shrink:0;background:var(--surface);border-left:1px solid var(--line);display:flex;flex-direction:column;padding:22px 16px;height:100vhoverflow-y: auto; overflow-x: hidden;}
 .sb-logo{display:flex;align-items:center;gap:11px;padding:6px 10px 22px;justify-content:flex-end}
 .sb-logo-text{text-align:right;line-height:1.1}
 .sb-logo-text b{font-size:19px;font-weight:800;display:block}
@@ -625,7 +625,7 @@ input,select,textarea{font-family:inherit}
         <input id="searchInput" placeholder="ابحث عن مهمة، موظف، حملة..." oninput="doSearch(this.value)">
       </div>
       <div class="top-actions">
-        <div class="role-switch" id="roleSwitch"></div>
+        
         <button class="icon-btn" onclick="go('notifications')"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><i class="dot" id="bellDot">3</i></button>
       </div>
     </header>
@@ -2218,13 +2218,13 @@ function load(){try{const r=localStorage.getItem(KEY);if(r){const d=JSON.parse(r
       }
     ]
   }
-]);d.tasks.forEach(t=>t.isSeeded2026=true);} d.tasks.forEach(t=>t.stages.forEach(s=>{if(s.isPublish && !s.kind)s.kind='publish';})); return d;}}catch(e){}return{team:DEFAULT_TEAM,sections:DEFAULT_SECTIONS,tasks:seedTasks().map(t=>({ ...t, stages: t.stages.map(s => (s.isPublish && !s.kind) ? { ...s, kind: 'publish' } : s) })),notifications:DEFAULT_NOTIFS,personal:{u3:[{id:'p1',title:'تعلّم اختصارات After Effects',desc:'مراجعة 10 اختصارات جديدة لتسريع المونتاج',done:false},{id:'p2',title:'تنظيم مجلد المراجع',desc:'ترتيب ملفات Drive حسب البراند',done:true}]},chat:defaultChat(),sheet:[],currentUser:'u3'};}
+]);d.tasks.forEach(t=>t.isSeeded2026=true);} d.tasks.forEach(t=>t.stages.forEach(s=>{if(s.isPublish && !s.kind)s.kind='publish';})); return d;}}catch(e){}return {team:DEFAULT_TEAM.map(u=>({...u, user: u.id, pass: '1234'})),sections:DEFAULT_SECTIONS,tasks:seedTasks().map(t=>({ ...t, stages: t.stages.map(s => (s.isPublish && !s.kind) ? { ...s, kind: 'publish' } : s) })),notifications:DEFAULT_NOTIFS,personal:{u3:[{id:'p1',title:'تعلّم اختصارات After Effects',desc:'مراجعة 10 اختصارات جديدة لتسريع المونتاج',done:false},{id:'p2',title:'تنظيم مجلد المراجع',desc:'ترتيب ملفات Drive حسب البراند',done:true}]},chat:defaultChat(),sheet:[],currentUser:null};}
 let store=load();
 function save(){localStorage.setItem(KEY,JSON.stringify(store));}
 const userById=id=>store.team.find(u=>u.id===id)||{name:'؟',av:'#8995AE',role:''};
 // --- SHEET MODULE ---
 let sheetEditId = null;
-function openSheetTaskModal(taskId) {
+function openTaskModal(taskId) {
   sheetEditId = taskId;
   const t = store.tasks.find(x => x.id === taskId);
   if (!t) return;
@@ -2269,28 +2269,7 @@ function openSheetTaskModal(taskId) {
 }
 function closeSheetModal() { document.getElementById('modalRoot').innerHTML = ''; sheetEditId = null; }
 
-function saveSheetItem() {
-  const t = store.tasks.find(x => x.id === sheetEditId);
-  if (!t) return;
-  
-  t.title = document.getElementById('sh_teacher').value.trim();
-  t.desc = document.getElementById('sh_brief').value.trim();
-  t.due = document.getElementById('sh_deadline').value.trim();
-  t.sheetApproval = document.getElementById('sh_approval').value.trim();
-  t.coordNote = document.getElementById('sh_comments').value.trim();
-  t.sheetUpdate = document.getElementById('sh_update').value.trim();
-  
-  const capSt = t.stages.find(s => s.kind === 'caption');
-  if (capSt) capSt.text = document.getElementById('sh_caption').value.trim();
-  
-  const desSt = t.stages.find(s => s.kind === 'design');
-  if (desSt) desSt.link = document.getElementById('sh_thumbnail').value.trim();
-  
-  const vidSt = t.stages.find(s => s.kind === 'video');
-  if (vidSt) vidSt.link = document.getElementById('sh_video').value.trim();
-  
-  save(); closeSheetModal(); render();
-}
+
 
 function getApprStyle(val) {
   if (val === 'Approved') return 'background:var(--green-soft);color:var(--green-ok);';
@@ -2311,7 +2290,7 @@ function viewSheet() {
       return `<div class="card" style="padding:16px;display:flex;flex-direction:column;gap:8px;">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;">
           <h4 style="color:var(--blue-600);margin:0">${esc(t.title||'بدون اسم')}</h4>
-          ${canEdit ? `<button class="btn-sm" style="color:var(--ink-500);background:var(--line)" onclick="openSheetTaskModal('${t.id}')">${icon('edit',14)} تعديل</button>` : ''}
+          ${canEdit ? `<button class="btn-sm" style="color:var(--ink-500);background:var(--line)" onclick="openTaskModal('${t.id}')">${icon('edit',14)} تعديل</button>` : ''}
         </div>
         ${t.sheetApproval ? `<div style="font-size:13px"><span class="chip" style="${getApprStyle(t.sheetApproval)}">${esc(t.sheetApproval)}</span></div>` : ''}
         ${capSt.text ? `<div style="font-size:13px;background:var(--surface-2);padding:8px;border-radius:6px;white-space:pre-wrap">${esc(capSt.text)}</div>` : ''}
@@ -2352,7 +2331,7 @@ function viewSheet() {
             <td style="padding:10px;">${t.sheetApproval ? `<span class="chip" style="${getApprStyle(t.sheetApproval)}">${esc(t.sheetApproval)}</span>` : ''}</td>
             <td style="padding:10px;white-space:pre-wrap;">${esc(t.coordNote||'')}</td>
             <td style="padding:10px;white-space:pre-wrap;color:var(--amber)">${esc(t.sheetUpdate||'')}</td>
-            ${canEdit ? `<td style="padding:10px;"><button class="btn-sm" style="background:var(--line);color:var(--ink-600)" onclick="openSheetTaskModal('${t.id}')">${icon('edit', 14)}</button></td>` : ''}
+            ${canEdit ? `<td style="padding:10px;"><button class="btn-sm" style="background:var(--line);color:var(--ink-600)" onclick="openTaskModal('${t.id}')">${icon('edit', 14)}</button></td>` : ''}
           </tr>`;
         }).join('') : `<tr><td colspan="${canEdit ? 10 : 9}" style="padding:20px;text-align:center;color:var(--ink-500);">لا توجد بيانات</td></tr>`}
       </tbody>
@@ -2638,11 +2617,11 @@ function viewHome(){
       if((STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}).isPublish&&st.publishDate)pubScheduled++;});});
   const rate=totalStages?Math.round(doneStages/totalStages*100):0;
   const stats=[
-    {ic:'doc',c:'var(--blue-600)',sc:'var(--blue-50)',v:tasks.length,l:'إجمالي المهام',d:'+18%',up:true},
-    {ic:'check',c:'var(--green-ok)',sc:'var(--green-soft)',v:doneStages,l:'مراحل منجزة',d:'+24%',up:true},
-    {ic:'flame',c:'var(--red)',sc:'var(--red-soft)',v:critTasks,l:'مهام قصوى',d:'عاجل',up:false},
-    {ic:'publish',c:'var(--violet)',sc:'var(--violet-soft)',v:pubScheduled,l:'منشورات مجدولة',d:'+12%',up:true},
-    {ic:'target',c:'var(--amber)',sc:'var(--amber-soft)',v:rate+'%',l:'معدل الإنجاز',d:'+5.6%',up:true},
+    {ic:'doc',c:'var(--blue-600)',sc:'var(--blue-50)',v:tasks.length,l:'إجمالي المهام',d:'+18%',up:true, page:'maps'},
+    {ic:'check',c:'var(--green-ok)',sc:'var(--green-soft)',v:doneStages,l:'مراحل منجزة',d:'+24%',up:true, page:'mytasks'},
+    {ic:'flame',c:'var(--red)',sc:'var(--red-soft)',v:critTasks,l:'مهام قصوى',d:'عاجل',up:false, page:'maps', query:'critical'},
+    {ic:'publish',c:'var(--violet)',sc:'var(--violet-soft)',v:pubScheduled,l:'منشورات مجدولة',d:'+12%',up:true, page:'calendar'},
+    {ic:'target',c:'var(--amber)',sc:'var(--amber-soft)',v:rate+'%',l:'معدل الإنجاز',d:'+5.6%',up:true, page:'analytics'},
   ];
   // قمع المراحل
   const stageNames=['caption','textdesign','design','review','approval','publish'];
@@ -2663,7 +2642,7 @@ function viewHome(){
     {v:Math.round(critTasks/(tasks.length||1)*100),c:'#F43F5E',l:'نسبة العاجل'},
   ];
   const ring=(r)=>{const R=30,C=2*Math.PI*R,off=C-(r.v/100)*C;
-    return `<div class="ring"><svg width="76" height="76"><circle cx="38" cy="38" r="${R}" fill="none" stroke="var(--surface-2)" stroke-width="8"/><circle cx="38" cy="38" r="${R}" fill="none" stroke="${r.c}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}"/></svg><div class="rval" style="margin-top:-50px;color:${r.c}">${r.v}%</div><p style="margin-top:30px">${r.l}</p></div>`;};
+    return `<div class="ring"><svg width="76" height="76"><circle cx="38" cy="38" r="${R}" fill="none" stroke="var(--surface-2)" stroke-width="12"/><circle cx="38" cy="38" r="${R}" fill="none" stroke="${r.c}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}"/></svg><div class="rval" style="margin-top:-50px;color:${r.c}">${r.v}%</div><p style="margin-top:30px">${r.l}</p></div>`;};
 
   return `<div class="stat-row fade-up">${stats.map(s=>`<div class="stat">
     <div class="stat-top"><div class="stat-ico" style="background:${s.sc};color:${s.c}">${icon(s.ic,20)}</div><span class="stat-delta ${s.up?'up':'down'}">${s.up?'↑':'•'} ${s.d}</span></div>
@@ -2868,132 +2847,108 @@ function viewAnalytics(){
   </div>`;
 }
 
+
 function viewTeam(){
-  // لكل موظف: عدد مهامه وحالاتها
-  const data=store.team.map(u=>{
-    let total=0,done=0,working=0,pending=0;
-    getVisibleTasks().forEach(t=>t.stages.forEach(st=>{if(st.person===u.id){total++;
-      if(['done','approved'].includes(st.state))done++;else if(st.state==='working')working++;else pending++;}}));
-    return{u,total,done,working,pending};
-  });
-  return `<div class="team-grid">${data.map(({u,total,done,working,pending})=>{
-    const pct=total?Math.round(done/total*100):0;
-    return `<div class="team-card fade-up">
-      <div class="team-top">
-        <span class="team-av" style="background:${u.av}">${u.name[0]}</span>
-        <div class="team-info"><b>${esc(u.name)}</b><span>${esc(u.role)}</span></div>
-      </div>
-      <div class="team-stats">
-        <div class="team-stat"><b>${total}</b><span>مهام</span></div>
-        <div class="team-stat"><b style="color:var(--green-ok)">${done}</b><span>منجزة</span></div>
-        <div class="team-stat"><b style="color:var(--blue-600)">${working}</b><span>جارية</span></div>
-        <div class="team-stat"><b style="color:var(--ink-400)">${pending}</b><span>منتظرة</span></div>
-      </div>
-      <div class="team-prog"><div class="team-prog-head"><span>نسبة الإنجاز</span><b>${pct}%</b></div><div class="an-track"><div class="an-fill" style="width:${pct}%;background:${u.av}"></div></div></div>
-    </div>`;}).join('')}</div>`;
-}
-
-function viewNotifications(){
-  const NICONS={critical:{ic:'flame',c:'var(--red)'},approval:{ic:'approval',c:'var(--amber)'},done:{ic:'check',c:'var(--green-ok)'},assign:{ic:'pin',c:'var(--blue-600)'},deadline:{ic:'clock',c:'var(--violet)'}};
-  const ns=store.notifications;
-  const unread=ns.filter(n=>!n.read).length;
-  return `<div class="notif-bar fade-up">
-    <div class="maps-count"><strong>${unread}</strong> إشعار غير مقروء</div>
-    ${unread?`<button class="pill-ghost" onclick="markAllRead()">✓ تعليم الكل كمقروء</button>`:''}
-  </div>
-  <div class="notif-list">${ns.map(n=>{const ni=NICONS[n.type]||NICONS.assign;
-    return `<div class="notif ${n.read?'':'unread'} fade-up" onclick="toggleNotif('${n.id}')">
-      <div class="notif-ico" style="background:${ni.c}18;color:${ni.c}">${icon(ni.ic,20)}</div>
-      <div class="notif-body"><b>${esc(n.title)}</b><span>${esc(n.body)}</span></div>
-      <div class="notif-side"><span class="notif-time">${n.time}</span>${n.read?'':'<i class="notif-dot"></i>'}</div>
-    </div>`;}).join('')}</div>`;
-}
-function markAllRead(){store.notifications.forEach(n=>n.read=true);save();render();}
-function toggleNotif(id){const n=store.notifications.find(x=>x.id===id);if(n)n.read=!n.read;save();render();}
-
-function viewPersonal(){
-  const u=store.currentUser;
-  if(!store.personal)store.personal={};
-  const list=store.personal[u]||[];
-  const active=list.filter(t=>!t.done);
-  const done=list.filter(t=>t.done);
-  const card=(t)=>`<div class="ptask ${t.done?'done':''}">
-    <button class="ptask-check ${t.done?'on':''}" onclick="togglePersonal('${t.id}')">${t.done?icon('check',15):''}</button>
-    <div class="ptask-body"><b>${esc(t.title)}</b>${t.desc?`<span>${esc(t.desc)}</span>`:''}</div>
-    <button class="ptask-del" onclick="delPersonal('${t.id}')">${icon('cross',15)}</button>
-  </div>`;
-  return `<div class="pcard glass-card glossy fade-up">
-    <div class="pcard-head">
-      <div class="pcard-title">${icon('personal',22)}<div><b>مساحتي الخاصة</b><span>مهام شخصية يراها ${esc(userById(u).name)} فقط — معزولة تماماً عن مهام الفريق ولا تظهر في النظام العام</span></div></div>
-    </div>
-    <div class="padd">
-      <input id="pTitle" placeholder="اسم المهمة الخاصة..." onkeydown="if(event.key==='Enter')addPersonal()">
-      <input id="pDesc" placeholder="تفاصيل (اختياري)" onkeydown="if(event.key==='Enter')addPersonal()">
-      <button class="pill-blue" onclick="addPersonal()">${icon('plus',16)} إضافة</button>
-    </div>
-  </div>
-  <div class="pgrid">
-    <div class="pcol fade-up">
-      <div class="pcol-head">${icon('dot',14)} قيد التنفيذ <em>${active.length}</em></div>
-      ${active.length?active.map(card).join(''):'<div class="pempty">لا مهام نشطة — أضف واحدة بالأعلى</div>'}
-    </div>
-    <div class="pcol fade-up">
-      <div class="pcol-head done">${icon('check',14)} مكتملة <em>${done.length}</em></div>
-      ${done.length?done.map(card).join(''):'<div class="pempty">لا مهام مكتملة بعد</div>'}
-    </div>
+  const canEdit = ['الإدارة','مانيجر','كوردنيتر'].includes(userById(store.currentUser).role);
+  return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${store.team.length}</strong> أعضاء</div>
+  ${canEdit ? `<button class="pill-blue" onclick="openProfileModal()">+ إضافة عضو</button>` : ''}</div>
+  <div class="maps-grid">
+    ${store.team.map(u=>{
+      let tCount=0, dCount=0;
+      store.tasks.forEach(t=>t.stages.forEach(s=>{if(s.person===u.id){tCount++;if(['done','approved'].includes(s.state))dCount++;}}));
+      const rate = tCount ? Math.round(dCount/tCount*100) : 0;
+      return `<div class="card fade-up" style="padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px;cursor:pointer;transition:transform 0.2s" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'" onclick="openProfileModal('${u.id}')">
+        <div style="width:70px;height:70px;border-radius:50%;background:${u.av}18;color:${u.av};display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:bold;">${u.name[0]}</div>
+        <div style="text-align:center;">
+          <h3 style="margin:0;color:var(--ink-700)">${esc(u.name)}</h3>
+          <p style="margin:4px 0 0 0;color:var(--ink-500);font-size:14px">${esc(u.role)}</p>
+        </div>
+        <div style="width:100%;height:1px;background:var(--line);margin:8px 0"></div>
+        <div style="display:flex;width:100%;justify-content:space-between;font-size:13px;color:var(--ink-600)">
+          <span>المهام: <strong>${tCount}</strong></span>
+          <span>الإنجاز: <strong style="color:var(--green-ok)">${rate}%</strong></span>
+        </div>
+      </div>`;
+    }).join('')}
   </div>`;
 }
-function pArr(){const u=store.currentUser;if(!store.personal)store.personal={};if(!store.personal[u])store.personal[u]=[];return store.personal[u];}
-function addPersonal(){const t=document.getElementById('pTitle'),d=document.getElementById('pDesc');const title=t.value.trim();if(!title)return;pArr().unshift({id:'p'+Date.now(),title,desc:d.value.trim(),done:false});save();render();}
-function togglePersonal(id){const a=pArr();const t=a.find(x=>x.id===id);if(t)t.done=!t.done;save();render();}
-function delPersonal(id){const u=store.currentUser;store.personal[u]=pArr().filter(x=>x.id!==id);save();render();}
 
-let chatChannel='c1';
-function viewChat(){
-  const ch=store.chat.channels;
-  const active=ch.find(c=>c.id===chatChannel)||ch[0];
-  const msgs=store.chat.messages[active.id]||[];
-  return `<div class="chat-teams-bar">
-    <div class="ctb-left">${icon('teams',18)} <b>مدعوم بـ Microsoft Teams</b><span class="ctb-badge">🔒 مشفّر</span></div>
-    <span class="ctb-note">الرسائل تُرسل وتُستقبل عبر تيمز (يُفعّل الربط الفعلي بالباكند)</span>
-  </div>
-  <div class="chat-wrap">
-    <div class="chat-side glass-card">
-      <div class="chat-side-head">${icon('chat',16)} القنوات</div>
-      ${ch.map(c=>{const last=(store.chat.messages[c.id]||[]).slice(-1)[0];
-        return `<button class="chat-ch ${c.id===chatChannel?'on':''}" onclick="chatChannel='${c.id}';render()">
-          <span class="chat-ch-ico">${icon(c.icon,16)}</span>
-          <span class="chat-ch-info"><b># ${esc(c.name)}</b>${last?`<small>${esc(last.text.slice(0,26))}${last.text.length>26?'…':''}</small>`:'<small>لا رسائل</small>'}</span>
-        </button>`;}).join('')}
-    </div>
-    <div class="chat-main glass-card">
-      <div class="chat-head"><span class="chat-head-title"># ${esc(active.name)}</span><span class="chat-head-sub">${store.team.length} عضو · عبر تيمز</span></div>
-      <div class="chat-msgs" id="chatMsgs">
-        ${msgs.map(m=>{const u=userById(m.from);const mine=m.from===store.currentUser;
-          return `<div class="chat-msg ${mine?'mine':''}">
-            ${!mine?`<span class="chat-av" style="background:${u.av}">${u.name[0]}</span>`:''}
-            <div class="chat-bubble"><div class="chat-meta">${!mine?`<b>${esc(u.name)}</b>`:''}<span>${m.time}</span></div><p>${esc(m.text)}</p></div>
-          </div>`;}).join('')}
-      </div>
-      <div class="chat-input">
-        <input id="chatInput" placeholder="اكتب رسالة في # ${esc(active.name)}..." onkeydown="if(event.key==='Enter')sendChat()">
-        <button class="chat-send" onclick="sendChat()">${icon('send',18)}</button>
-      </div>
-    </div>
-  </div>`;
-}
-function sendChat(){
-  const inp=document.getElementById('chatInput');const txt=inp.value.trim();if(!txt)return;
-  const d=new Date();const time=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
-  if(!store.chat.messages[chatChannel])store.chat.messages[chatChannel]=[];
-  store.chat.messages[chatChannel].push({from:store.currentUser,text:txt,time});
-  save();render();
-  setTimeout(()=>{const m=document.getElementById('chatMsgs');if(m)m.scrollTop=m.scrollHeight;const ci=document.getElementById('chatInput');if(ci)ci.focus();},50);
-}
-function viewSettings(){
+let profileEditId = null;
+function openProfileModal(uid = null){
+  const canEdit = ['الإدارة','مانيجر','كوردنيتر'].includes(userById(store.currentUser).role);
+  profileEditId = uid;
+  let u = uid ? store.team.find(x=>x.id===uid) : {id:'u'+Date.now(), name:'', role:'مصمم', av:'#3B6FF0', user:'', pass:''};
+  
   const roles=['الإدارة','مانيجر','كوردنيتر','مصمم','كاتب محتوى','كاتب كابشن','مونتير','شريك خارجي'];
-  const avail=Object.entries(STAGE_KINDS).filter(([k])=>!store.sections.includes(k));
-  return `<div class="set-grid">
+  
+  let myTasksHTML = '';
+  if(uid) {
+    let mine=[];
+    store.tasks.forEach(t=>t.stages.forEach(st=>{if(st.person===uid)mine.push({task:t,st});}));
+    if(mine.length) {
+      myTasksHTML = `<h4 style="margin-top:20px;border-top:1px solid var(--line);padding-top:16px;">المهام الحالية (${mine.length})</h4>
+      <div style="max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;">
+        ${mine.map(m=>`<div style="background:var(--surface-2);padding:10px;border-radius:6px;font-size:13px;">
+          <strong>${esc(m.task.title)}</strong> - ${(STAGE_KINDS[m.st.kind]||{ar:'غير معروف'}).ar}
+          <span style="float:left;color:${m.st.state==='done'?'var(--green-ok)':'var(--amber)'}">${m.st.state==='done'?'منجز':'قيد العمل'}</span>
+        </div>`).join('')}
+      </div>`;
+    } else {
+      myTasksHTML = `<div style="margin-top:20px;color:var(--ink-500);font-size:14px;text-align:center;">لا توجد مهام حالية</div>`;
+    }
+  }
+
+  const m=document.createElement('div');
+  m.className='modal-overlay';
+  m.innerHTML=`<div class="modal fade-up" style="max-width:500px;">
+    <div class="modal-head"><h3>${uid ? 'ملف الموظف' : 'إضافة موظف جديد'}</h3><button class="modal-close" onclick="closeProfileModal()">${icon('cross',20)}</button></div>
+    <div class="modal-body" style="display:flex;flex-direction:column;gap:16px;">
+      <label class="tmap-f"><span>الاسم الكامل</span><input type="text" id="prof_name" value="${esc(u.name)}" ${!canEdit?'disabled':''}></label>
+      <label class="tmap-f"><span>الدور (المنصب)</span>
+        <select id="prof_role" ${!canEdit?'disabled':''}>
+          ${roles.map(r=>`<option ${u.role===r?'selected':''}>${r}</option>`).join('')}
+        </select>
+      </label>
+      <div style="display:flex;gap:16px;">
+        <label class="tmap-f" style="flex:1"><span>اسم المستخدم (Login)</span><input type="text" id="prof_user" value="${esc(u.user||'')}" ${!canEdit?'disabled':''}></label>
+        <label class="tmap-f" style="flex:1"><span>كلمة المرور (Password)</span><input type="text" id="prof_pass" value="${esc(u.pass||'')}" ${!canEdit?'disabled':''}></label>
+      </div>
+      <label class="tmap-f"><span>اللون الرمزي</span><input type="color" id="prof_av" value="${u.av}" ${!canEdit?'disabled':''} style="width:100%;height:40px;border:none;border-radius:6px;cursor:pointer;"></label>
+      ${myTasksHTML}
+    </div>
+    ${canEdit ? `<div class="modal-foot">
+      ${uid && uid !== store.currentUser ? `<button class="btn-sm" style="color:var(--red);background:var(--red-soft);" onclick="deleteProfile('${uid}')">حذف الموظف</button>` : '<div></div>'}
+      <button class="pill-blue" onclick="saveProfile()">${uid ? '✓ حفظ التعديلات' : '✓ إضافة الموظف'}</button>
+    </div>` : ''}
+  </div>`;
+  document.getElementById('modalRoot').appendChild(m);
+}
+function closeProfileModal(){document.getElementById('modalRoot').innerHTML=''; profileEditId=null;}
+function saveProfile(){
+  const name = document.getElementById('prof_name').value.trim();
+  const role = document.getElementById('prof_role').value;
+  const user = document.getElementById('prof_user').value.trim();
+  const pass = document.getElementById('prof_pass').value.trim();
+  const av = document.getElementById('prof_av').value;
+  
+  if(!name || !user || !pass) { alert('الرجاء تعبئة جميع الحقول المطلوبة'); return; }
+  
+  if(profileEditId) {
+    const u = store.team.find(x=>x.id===profileEditId);
+    if(u) { u.name=name; u.role=role; u.user=user; u.pass=pass; u.av=av; }
+  } else {
+    store.team.push({id:'u'+Date.now(), name, role, user, pass, av});
+  }
+  save(); closeProfileModal(); render();
+}
+function deleteProfile(uid) {
+  if(confirm('هل أنت متأكد من حذف هذا الموظف؟')) {
+    store.team = store.team.filter(x=>x.id!==uid);
+    save(); closeProfileModal(); render();
+  }
+}
+
+function viewSettings(){ return `<div class="set-grid">
     <div class="set-card card fade-up"><h3>👥 الموظفون</h3><p>المانيجر يضيف الموظفين — يظهرون في القوائم المنسدلة عند إنشاء التاسك.</p>
       <div class="set-list">${store.team.map(u=>`<div class="set-row"><span class="ico" style="background:${u.av}18;color:${u.av}">${u.name[0]}</span><span class="nm">${esc(u.name)}<div class="rl">${esc(u.role)}</div></span><button class="set-del" onclick="delTeam('${u.id}')">${icon("cross",15)}</button></div>`).join('')}</div>
       <div class="set-add"><input id="newName" placeholder="اسم الموظف"><select id="newRole">${roles.map(r=>`<option>${r}</option>`).join('')}</select><button class="pill-blue" onclick="addTeam()" style="height:42px">+ إضافة</button></div>
@@ -3182,7 +3137,17 @@ function renderTaskModal(){
   </div></div>`;
 }
 const META={home:['لوحة التحكم 👋','مرحباً، إليك نظرة عامة على أداء الإنتاج اليوم'],maps:['خرائط المهام','كل تاسك خريطته الخاصة — اضغط أي مرحلة لفتحها وإضافة محتواها'],partnerships:['الشراكات','المهام المخصصة للشركات الخارجية وشركاء مرماز'],sheet:['الشيت 📋','جدول المهام والتفاصيل الخاصة للأساتذة'],mytasks:['مهامي','المراحل المعيّنة لك عبر كل المهام'],personal:['مهامي الخاصة','مساحة شخصية معزولة — يراها صاحبها فقط'],calendar:['تقويم النشر','مواعيد النشر تتزامن تلقائياً من خرائط المهام'],chat:['المحادثة','دردشة الفريق مدعومة بـ Microsoft Teams — مشفّرة وآمنة'],analytics:['التقارير والتحليلات','أداء الفريق والإنتاج حسب الجهة والأولوية'],team:['الفريق','كل موظف وإحصائياته ومهامه'],notifications:['الإشعارات','آخر التنبيهات والتحديثات'],settings:['إعدادات المانيجر','إدارة الموظفين والأقسام المتاحة']};
-function render(){renderNav();renderRoleSwitch();renderSummary();
+function render(){renderNav();
+  if(!store.currentUser) {
+    document.querySelector('.app-layout').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    return;
+  } else {
+    document.querySelector('.app-layout').style.display = 'flex';
+    const ls = document.getElementById('loginScreen');
+    if(ls) ls.style.display = 'none';
+  }
+renderSummary();
   const unread=store.notifications?store.notifications.filter(n=>!n.read).length:0;
   const bd=document.getElementById('bellDot');if(bd){if(unread){bd.textContent=unread;bd.style.display='grid';}else bd.style.display='none';}
   document.getElementById('pageTitle').textContent=META[page][0];document.getElementById('pageSub').textContent=META[page][1];const v=document.getElementById('view');if(page==='home')v.innerHTML=viewHome();else if(page==='maps')v.innerHTML=viewMaps();else if(page==='partnerships')v.innerHTML=viewPartnerships();else if(page==='sheet')v.innerHTML=viewSheet();else if(page==='mytasks')v.innerHTML=viewMyTasks();else if(page==='personal')v.innerHTML=viewPersonal();else if(page==='calendar')v.innerHTML=viewCalendar();else if(page==='chat')v.innerHTML=viewChat();else if(page==='analytics')v.innerHTML=viewAnalytics();else if(page==='team')v.innerHTML=viewTeam();else if(page==='notifications')v.innerHTML=viewNotifications();else if(page==='settings')v.innerHTML=viewSettings();}
