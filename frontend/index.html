@@ -660,6 +660,7 @@ function logout(){
     </div>
     <nav class="sb-nav" id="sbNav"></nav>
     <div class="sb-summary glass-card" id="sbSummary"></div>
+      <div style="margin-top:auto;padding-top:16px"><button onclick="logout()" style="width:100%;padding:12px;background:var(--red-soft);color:var(--red);border:none;border-radius:8px;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">${icon("cross", 16)} تسجيل الخروج</button></div>
   </aside>
   <div class="main">
     <header class="topbar">
@@ -2685,10 +2686,24 @@ function viewHome(){
     {v:Math.round(brandCount.academy/(tasks.length||1)*100),c:'#16B981',l:'حصة Academy'},
     {v:Math.round(critTasks/(tasks.length||1)*100),c:'#F43F5E',l:'نسبة العاجل'},
   ];
-  const ring=(r)=>{const R=30,C=2*Math.PI*R,off=C-(r.v/100)*C;
-    return `<div class="ring"><svg width="76" height="76"><circle cx="38" cy="38" r="${R}" fill="none" stroke="var(--surface-2)" stroke-width="12"/><circle cx="38" cy="38" r="${R}" fill="none" stroke="${r.c}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}"/></svg><div class="rval" style="margin-top:-50px;color:${r.c}">${r.v}%</div><p style="margin-top:30px">${r.l}</p></div>`;};
+  const ring=(r)=>{const R=38,C=2*Math.PI*R,off=C-(r.v/100)*C;
+    return `<div class="ring" style="position:relative;display:flex;flex-direction:column;align-items:center;padding:12px;background:var(--surface);border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.05);flex:1">
+      <svg width="90" height="90" style="filter:drop-shadow(0 4px 6px rgba(0,0,0,0.1));">
+        <defs>
+          <linearGradient id="g-${r.c.replace('#','')}" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="${r.c}" />
+            <stop offset="100%" stop-color="${r.c}88" />
+          </linearGradient>
+        </defs>
+        <circle cx="45" cy="45" r="${R}" fill="none" stroke="var(--surface-2)" stroke-width="12"/>
+        <circle cx="45" cy="45" r="${R}" fill="none" stroke="url(#g-${r.c.replace('#','')})" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}"/>
+      </svg>
+      <div class="rval" style="position:absolute;top:45px;color:${r.c};font-size:20px;font-weight:800;transform:translateY(-50%);">${r.v}%</div>
+      <p style="margin:16px 0 0 0;font-weight:bold;color:var(--ink-700);font-size:13px">${r.l}</p>
+    </div>`;
+  };
 
-  return `<div class="stat-row fade-up">${stats.map(s=>`<div class="stat">
+  return `<div class="stat-row fade-up">${stats.map(s=>`<div class="stat" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='none';this.style.boxShadow='none'" onclick="if(s.query) { searchQuery = s.query; } go(s.page)">
     <div class="stat-top"><div class="stat-ico" style="background:${s.sc};color:${s.c}">${icon(s.ic,20)}</div><span class="stat-delta ${s.up?'up':'down'}">${s.up?'↑':'•'} ${s.d}</span></div>
     <b>${s.v}</b><span>${s.l}</span></div>`).join('')}</div>
   <div class="home-grid">
