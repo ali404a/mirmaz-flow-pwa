@@ -2625,7 +2625,7 @@ function nodePanel(task,st){
   return `<div class="node-panel"><div class="np-head"><div class="np-title"><span class="dot" style="background:${k.color}"></span>${k.ar} ${st.person?`— ${esc(userById(st.person).name)}`:''}</div><div class="np-head-actions"><button class="np-share" onclick="shareTask('${task.id}','${st.id}')" title="مشاركة">${icon('link',15)}</button><button class="np-close" onclick="closeNode('${task.id}')">✕</button></div></div>${inner}</div>`;
 }
 function taskMap(task){
-  const b=BRANDS[task.brand],p=PRIORITIES[task.priority],coord=userById(task.coordinator),crit=task.priority==='critical';
+  const b=BRANDS[task.brand]||{name:'غير معروف',emoji:'🏷',color:'#999',soft:'#f1f1f1'}, p=PRIORITIES[task.priority]||{name:'عادي',emoji:'🟢',color:'#999',rank:0}, coord=userById(task.coordinator)||{name:'غير محدد'}, crit=task.priority==='critical';
   const openStId=openNode[task.id],openSt=openStId?task.stages.find(s=>s.id===openStId):null;
   const doneN=task.stages.filter(s=>['done','approved','published'].includes(s.state)).length;
   const role=userById(store.currentUser).role;
@@ -2677,7 +2677,7 @@ function viewHome(){
   // النشاطات (من المراحل المنجزة)
   const acts=[];
   tasks.forEach(t=>t.stages.forEach(st=>{if(['done','approved','working'].includes(st.state)){
-    const k=(STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}),ns=NSTATE[st.state],u=st.person?userById(st.person):null;
+    const k=(STAGE_KINDS[st.kind]||{ar:'غير معروف',svg:'doc',color:'#999',hasText:true}), ns=NSTATE[st.state]||{ar:'غير معروف',color:'#999'}, u=st.person?userById(st.person):null;
     acts.push({ic:k.svg,c:k.color,title:k.ar+' — '+t.title,who:u?u.name:'',state:ns.ar,sc:ns.color});}}));
   const recent=acts.slice(0,6);
   // حلقات الأداء
@@ -2724,7 +2724,7 @@ function viewHome(){
 function viewMaps(){
   let tasks=[...getVisibleTasks()].filter(t=>!t.isPartnership).sort((a,b)=>(PRIORITIES[b.priority]||{rank:0}).rank-(PRIORITIES[a.priority]||{rank:0}).rank);
   if(searchQuery){const q=searchQuery.trim();
-    tasks=tasks.filter(t=>t.title.includes(q)||t.desc.includes(q)||(BRANDS[t.brand]||{name:'غير معروف',bg:'#eee',c:'#333'}).name.includes(q)||t.stages.some(s=>s.person&&userById(s.person).name.includes(q)));}
+    tasks=tasks.filter(t=>t.title.includes(q)||t.desc.includes(q)||(BRANDS[t.brand]||{name:'غير معروف'}).name.includes(q)||t.stages.some(s=>{ const u = userById(s.person); return u && u.name.includes(q); }));}
   const critN=tasks.filter(t=>t.priority==='critical').length;
   const canCreate=['كوردنيتر','مانيجر','الإدارة'].includes(userById(store.currentUser).role);
   return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${tasks.length}</strong> خريطة مهمة ${searchQuery?`<span class="crit-tag" style="background:var(--blue-50);color:var(--blue-600)">🔍 "${esc(searchQuery)}"</span>`:''} ${critN?`<span class="crit-tag">🔥 ${critN} قصوى</span>`:''}</div>${canCreate?`<button class="pill-blue" onclick="openTaskModal()">+ تاسك جديد</button>`:''}</div>${tasks.length?`<div class="maps-grid">${tasks.map(taskMap).join('')}</div>`:'<div class="empty card">لا توجد نتائج مطابقة للبحث</div>'}`;
@@ -2732,7 +2732,7 @@ function viewMaps(){
 function viewPartnerships(){
   let tasks=[...getVisibleTasks()].filter(t=>t.isPartnership).sort((a,b)=>(PRIORITIES[b.priority]||{rank:0}).rank-(PRIORITIES[a.priority]||{rank:0}).rank);
   if(searchQuery){const q=searchQuery.trim();
-    tasks=tasks.filter(t=>t.title.includes(q)||t.desc.includes(q)||(BRANDS[t.brand]||{name:'غير معروف',bg:'#eee',c:'#333'}).name.includes(q)||t.stages.some(s=>s.person&&userById(s.person).name.includes(q)));}
+    tasks=tasks.filter(t=>t.title.includes(q)||t.desc.includes(q)||(BRANDS[t.brand]||{name:'غير معروف'}).name.includes(q)||t.stages.some(s=>{ const u = userById(s.person); return u && u.name.includes(q); }));}
   const critN=tasks.filter(t=>t.priority==='critical').length;
   const canCreate=['كوردنيتر','مانيجر','الإدارة'].includes(userById(store.currentUser).role);
   return `<div class="maps-bar fade-up"><div class="maps-count"><strong>${tasks.length}</strong> شراكة ${searchQuery?`<span class="crit-tag" style="background:var(--blue-50);color:var(--blue-600)">🔍 "${esc(searchQuery)}"</span>`:''} ${critN?`<span class="crit-tag">🔥 ${critN} قصوى</span>`:''}</div>${canCreate?`<button class="pill-blue" onclick="openTaskModal(null,true)">+ إضافة شراكة</button>`:''}</div>${tasks.length?`<div class="maps-grid">${tasks.map(taskMap).join('')}</div>`:'<div class="empty card">لا توجد شراكات</div>'}`;
